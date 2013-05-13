@@ -167,7 +167,7 @@ class pxplugin_asazuke_admin{
 	 */
 	private function set_sitemap(){
 
-		$this->local_sitemap[ ':'                                                 ] = array( 'title'=>'Pickles Crawler'               );
+		$this->local_sitemap[ ':'                                                 ] = array( 'title'=>'ASAZUKE'                            );
 		$this->local_sitemap[ ':create_proj'                                      ] = array( 'title'=>'新規プロジェクト作成'               );
 		$this->local_sitemap[ ':configcheck'                                      ] = array( 'title'=>'設定の確認'                         );
 		$this->local_sitemap[ ':export'                                           ] = array( 'title'=>'設定をエクスポート'                 );
