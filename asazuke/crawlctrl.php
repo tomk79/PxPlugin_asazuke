@@ -141,7 +141,7 @@ class pxplugin_asazuke_crawlctrl{
 		$this->msg( '-------------------------------------' );
 		$this->msg( 'Executing Project ['.$project_model->get_project_name().'] Program ['.$program_model->get_program_name().']....' );
 		$this->msg( 'Process ID ['.getmypid().']' );
-		$this->msg( 'Start page URL => '.$project_model->get_url_startpage() );
+		$this->msg( 'Start page URL => '.$project_model->get_path_startpage() );
 		$this->msg( 'Program Type => '.$program_model->get_program_type() );
 		$this->msg( 'crawl_max_url_number => '.$this->pcconf->get_value( 'crawl_max_url_number' ) );
 		if( !is_int( $this->pcconf->get_value( 'crawl_max_url_number' ) ) ){
@@ -187,7 +187,7 @@ class pxplugin_asazuke_crawlctrl{
 
 		#--------------------------------------
 		#	スタートページを登録
-		$startpage = $project_model->get_url_startpage();
+		$startpage = $project_model->get_path_startpage();
 		$this->msg( 'set ['.$startpage.'] as the Startpage.' );
 		$this->add_target_url( $startpage );
 		unset( $startpage );
@@ -597,7 +597,7 @@ class pxplugin_asazuke_crawlctrl{
 			if( !is_dir( $path_copyto ) ){
 				$this->error_log( 'コンテンツの複製先が存在しません。' , __FILE__ , __LINE__ );
 			}else{
-				preg_match( '/^(https?)\:\/\/([a-zA-Z0-9\-\_\.\:]+)/si' , $this->project_model->get_url_startpage() , $matched );
+				preg_match( '/^(https?)\:\/\/([a-zA-Z0-9\-\_\.\:]+)/si' , $this->project_model->get_path_startpage() , $matched );
 				$matched[2] = preg_replace( '/\:/' , '_' , $matched[2] );
 				$path_copyfrom = realpath( $this->get_path_download_to().'/'.$matched[1].'/'.$matched[2] );
 				$this->msg( '複製元パス：'.$path_copyfrom );
@@ -1043,8 +1043,8 @@ class pxplugin_asazuke_crawlctrl{
 		$FIN .= '[Project Info]'."\n";
 		$FIN .= 'Project ID: '.$project_model->get_project_id()."\n";
 		$FIN .= 'Project Name: '.$project_model->get_project_name()."\n";
-		$FIN .= 'Start page URL: '.$project_model->get_url_startpage()."\n";
-		$FIN .= 'Document root URL: '.$project_model->get_url_docroot()."\n";
+		$FIN .= 'Start page URL: '.$project_model->get_path_startpage()."\n";
+		$FIN .= 'Document root URL: '.$project_model->get_path_docroot()."\n";
 		$FIN .= 'Default filename: '.$project_model->get_default_filename()."\n";
 		$FIN .= 'Omit filename(s): '.implode( ', ' , $project_model->get_omit_filename() )."\n";
 		$FIN .= 'Path convert method: '.$project_model->get_path_conv_method()."\n";
@@ -1379,7 +1379,7 @@ class pxplugin_asazuke_crawlctrl{
 
 }
 
-?>s->dbh->rmdir( $lockfilepath );
+?>h->rmdir( $lockfilepath );
 	}
 
 	#--------------------------------------

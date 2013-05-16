@@ -12,22 +12,22 @@ class pxplugin_asazuke_model_project{
 
 	private $info_project_id = null;
 	private $info_project_name = null;
-	private $info_url_startpage = null;
-	private $info_url_docroot = null;
+	private $info_path_startpage = null;
+	private $info_path_docroot = null;
 	private $info_default_filename = null;
 	private $info_omit_filename = false;//22:53 2011/08/15 PxCrawler 0.4.3 追加
 	private $info_urllist_outofsite = array();
 	private $info_urllist_startpages = array();
-	private $info_param_define = array();
+	// private $info_param_define = array();
 	private $info_send_unknown_params_flg = false;//0:07 2008/04/17 追加
 	private $info_send_form_flg = false;//23:41 2008/04/17 追加
 	private $info_parse_jsinhtml_flg = false;//9:39 2011/08/11 PxCrawler 0.4.3 追加
 	private $info_save404_flg = false;//23:21 2009/03/11 追加
 	private $info_path_copyto = false;//0:51 2009/08/27 追加
-	private $info_charset_charset = null;//23:28 2009/03/30 追加
-	private $info_charset_crlf = null;//23:28 2009/03/30 追加
-	private $info_charset_ext = null;//23:28 2009/03/30 追加
-	private $info_localfilename_rewriterules = array();
+	// private $info_charset_charset = null;//23:28 2009/03/30 追加
+	// private $info_charset_crlf = null;//23:28 2009/03/30 追加
+	// private $info_charset_ext = null;//23:28 2009/03/30 追加
+	// private $info_localfilename_rewriterules = array();
 	private $info_preg_replace_rules = array();//23:28 2009/03/30 追加
 	private $info_path_conv_method = 'relative';
 	private $info_outofsite2url_flg = false;//PxCrawler 0.4.2 追加
@@ -75,8 +75,8 @@ class pxplugin_asazuke_model_project{
 			$MEMO = array();
 			$MEMO['id'] = $filename;
 			$MEMO['name'] = $project_ini['common']['name'];
-			$MEMO['url_docroot'] = $project_ini['common']['url_docroot'];
-			$MEMO['url_startpage'] = $project_ini['common']['url_startpage'];
+			$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
+			$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
 
 			array_push( $RTN , $MEMO );
 			unset( $MEMO );
@@ -97,8 +97,8 @@ class pxplugin_asazuke_model_project{
 		#	基本情報
 		$project_ini = $this->load_ini( $path_project_dir.'/project.ini' );
 		$this->set_project_name( $project_ini['common']['name'] );
-		$this->set_url_startpage( $project_ini['common']['url_startpage'] );
-		$this->set_url_docroot( $project_ini['common']['url_docroot'] );
+		$this->set_path_startpage( $project_ini['common']['path_startpage'] );
+		$this->set_path_docroot( $project_ini['common']['path_docroot'] );
 		$this->set_default_filename( $project_ini['common']['default_filename'] );
 		$this->set_omit_filename( $project_ini['common']['omit_filename'] );
 		$this->set_path_conv_method( $project_ini['common']['path_conv_method'] );
@@ -106,11 +106,11 @@ class pxplugin_asazuke_model_project{
 		$this->set_send_unknown_params_flg( $project_ini['common']['send_unknown_params_flg'] );
 		$this->set_send_form_flg( $project_ini['common']['send_form_flg'] );
 		$this->set_parse_jsinhtml_flg( $project_ini['common']['parse_jsinhtml_flg'] );
-		$this->set_save404_flg( $project_ini['common']['save404_flg'] );
+		// $this->set_save404_flg( $project_ini['common']['save404_flg'] );
 		$this->set_path_copyto( $project_ini['common']['path_copyto'] );
-		$this->set_charset_charset( $project_ini['common']['charset_charset'] );
-		$this->set_charset_crlf( $project_ini['common']['charset_crlf'] );
-		$this->set_charset_ext( $project_ini['common']['charset_ext'] );
+		// $this->set_charset_charset( $project_ini['common']['charset_charset'] );
+		// $this->set_charset_crlf( $project_ini['common']['charset_crlf'] );
+		// $this->set_charset_ext( $project_ini['common']['charset_ext'] );
 
 		#	基本認証情報
 		$this->set_authentication_type( $project_ini['common']['authentication_type'] );
@@ -136,48 +136,48 @@ class pxplugin_asazuke_model_project{
 
 		#	追加スタートURLリスト
 		$this->clear_urllist_startpages();//一旦リセット
-		if( is_array( $project_ini['sec']['url_startpages'] ) ){
-			foreach( $project_ini['sec']['url_startpages'] as $url=>$status ){
+		if( is_array( $project_ini['sec']['path_startpages'] ) ){
+			foreach( $project_ini['sec']['path_startpages'] as $url=>$status ){
 				if( !$status ){ continue; }
 				$this->put_urllist_startpages( $url );
 			}
 		}
-		if( is_file( $path_project_dir.'/url_startpages.txt' ) ){
+		if( is_file( $path_project_dir.'/path_startpages.txt' ) ){
 			#	PxCrawler 0.3.7 追加
-			foreach( $this->px->dbh()->file_get_lines( $path_project_dir.'/url_startpages.txt' ) as $url ){
+			foreach( $this->px->dbh()->file_get_lines( $path_project_dir.'/path_startpages.txt' ) as $url ){
 				$url = trim( $url );
 				if( !strlen( $url ) ){ continue; }
 				$this->put_urllist_startpages( $url );
 			}
 		}
 
-		#	URLパラメータ定義情報
-		$this->clear_param_define();//一旦リセット
-		$param_define_ini = $this->load_ini( $path_project_dir.'/param_define.ini' );
-		if( is_array( $param_define_ini['sec'] ) ){
-			foreach( $param_define_ini['sec'] as $param_key=>$defines ){
-				foreach( $defines as $define_key=>$value ){
-					$this->set_param_define( $param_key , $define_key , $value );
-				}
-			}
-		}
+		// #	URLパラメータ定義情報
+		// $this->clear_param_define();//一旦リセット
+		// $param_define_ini = $this->load_ini( $path_project_dir.'/param_define.ini' );
+		// if( is_array( $param_define_ini['sec'] ) ){
+		// 	foreach( $param_define_ini['sec'] as $param_key=>$defines ){
+		// 		foreach( $defines as $define_key=>$value ){
+		// 			$this->set_param_define( $param_key , $define_key , $value );
+		// 		}
+		// 	}
+		// }
 
-		#	保存ファイル名のリライトルール情報
-		$this->clear_localfilename_rewriterules();//一旦リセット
-		$rewriterules_ini = $this->load_ini( $path_project_dir.'/localfilename_rewriterules.ini' );
-		if( is_array( $rewriterules_ini['sec'] ) ){
-			foreach( $rewriterules_ini['sec'] as $rules_key=>$rules_value ){
-				$MEMO = array();
-				$priorityNum = intval( preg_replace( '/[^0-9]/' , '' , $rules_key ) );
-				$MEMO['priority'] = $priorityNum;
-				$MEMO['before'] = $rules_value['before'];
-				$MEMO['requiredparam'] = $rules_value['requiredparam'];
-				$MEMO['after'] = $rules_value['after'];
-				$this->info_localfilename_rewriterules[$priorityNum] = $MEMO;
-				unset($MEMO);
-			}
-		}
-		uasort( $this->info_localfilename_rewriterules , create_function( '$a,$b' , 'if($a[\'priority\']>$b[\'priority\']){return 1;}elseif($a[\'priority\']<$b[\'priority\']){return -1;}return 0;' ) );
+		// #	保存ファイル名のリライトルール情報
+		// $this->clear_localfilename_rewriterules();//一旦リセット
+		// $rewriterules_ini = $this->load_ini( $path_project_dir.'/localfilename_rewriterules.ini' );
+		// if( is_array( $rewriterules_ini['sec'] ) ){
+		// 	foreach( $rewriterules_ini['sec'] as $rules_key=>$rules_value ){
+		// 		$MEMO = array();
+		// 		$priorityNum = intval( preg_replace( '/[^0-9]/' , '' , $rules_key ) );
+		// 		$MEMO['priority'] = $priorityNum;
+		// 		$MEMO['before'] = $rules_value['before'];
+		// 		$MEMO['requiredparam'] = $rules_value['requiredparam'];
+		// 		$MEMO['after'] = $rules_value['after'];
+		// 		$this->info_localfilename_rewriterules[$priorityNum] = $MEMO;
+		// 		unset($MEMO);
+		// 	}
+		// }
+		// uasort( $this->info_localfilename_rewriterules , create_function( '$a,$b' , 'if($a[\'priority\']>$b[\'priority\']){return 1;}elseif($a[\'priority\']<$b[\'priority\']){return -1;}return 0;' ) );
 
 		#	一括置換設定情報
 		$this->clear_preg_replace_rules();//一旦リセット
@@ -223,8 +223,8 @@ class pxplugin_asazuke_model_project{
 		#	基本情報
 		$project_ini_src = '';
 		$project_ini_src .= 'name='.$this->get_project_name()."\n";
-		$project_ini_src .= 'url_startpage='.$this->get_url_startpage()."\n";
-		$project_ini_src .= 'url_docroot='.$this->get_url_docroot()."\n";
+		$project_ini_src .= 'path_startpage='.$this->get_path_startpage()."\n";
+		$project_ini_src .= 'path_docroot='.$this->get_path_docroot()."\n";
 		$project_ini_src .= 'default_filename='.$this->get_default_filename()."\n";
 		$project_ini_src .= 'omit_filename='.implode(',',$this->get_omit_filename())."\n";
 		$project_ini_src .= 'path_conv_method='.$this->get_path_conv_method()."\n";
@@ -248,21 +248,21 @@ class pxplugin_asazuke_model_project{
 		}else{
 			$project_ini_src .= 'parse_jsinhtml_flg=0'."\n";
 		}
-		if( $this->get_save404_flg() ){
-			$project_ini_src .= 'save404_flg=1'."\n";
-		}else{
-			$project_ini_src .= 'save404_flg=0'."\n";
-		}
-		$project_ini_src .= 'path_copyto='.$this->get_path_copyto()."\n";
-		if( $this->get_charset_charset() ){
-			$project_ini_src .= 'charset_charset='.$this->get_charset_charset()."\n";
-		}
-		if( $this->get_charset_crlf() ){
-			$project_ini_src .= 'charset_crlf='.$this->get_charset_crlf()."\n";
-		}
-		if( $this->get_charset_ext() ){
-			$project_ini_src .= 'charset_ext='.$this->get_charset_ext()."\n";
-		}
+		// if( $this->get_save404_flg() ){
+		// 	$project_ini_src .= 'save404_flg=1'."\n";
+		// }else{
+		// 	$project_ini_src .= 'save404_flg=0'."\n";
+		// }
+		// $project_ini_src .= 'path_copyto='.$this->get_path_copyto()."\n";
+		// if( $this->get_charset_charset() ){
+		// 	$project_ini_src .= 'charset_charset='.$this->get_charset_charset()."\n";
+		// }
+		// if( $this->get_charset_crlf() ){
+		// 	$project_ini_src .= 'charset_crlf='.$this->get_charset_crlf()."\n";
+		// }
+		// if( $this->get_charset_ext() ){
+		// 	$project_ini_src .= 'charset_ext='.$this->get_charset_ext()."\n";
+		// }
 
 		#	基本認証情報
 		$project_ini_src .= 'authentication_type='.$this->get_authentication_type()."\n";
@@ -283,7 +283,7 @@ class pxplugin_asazuke_model_project{
 		$project_ini_src .= ''."\n";
 
 		#	追加スタートURLリスト
-		$project_ini_src .= '[url_startpages]'."\n";
+		$project_ini_src .= '[path_startpages]'."\n";
 #		#	PxCrawler 0.3.7 別ファイル化
 #		$urllist_startpages = $this->get_urllist_startpages();
 #		if( is_array( $urllist_startpages ) ){
@@ -316,7 +316,7 @@ class pxplugin_asazuke_model_project{
 		$this->px->dbh()->fclose($path_project_dir.'/url_outofsite.txt');
 
 		#======================================
-		#	url_startpages.txt
+		#	path_startpages.txt
 		#	【追加スタートURLリスト】
 		$project_ini_src = '';
 		$urllist_startpages = $this->get_urllist_startpages();
@@ -326,52 +326,52 @@ class pxplugin_asazuke_model_project{
 				$project_ini_src .= trim($url)."\n";
 			}
 		}
-		if( !$this->px->dbh()->save_file( $path_project_dir.'/url_startpages.txt' , $project_ini_src ) ){
+		if( !$this->px->dbh()->save_file( $path_project_dir.'/path_startpages.txt' , $project_ini_src ) ){
 			return	false;
 		}
-		$this->px->dbh()->fclose($path_project_dir.'/url_startpages.txt');
+		$this->px->dbh()->fclose($path_project_dir.'/path_startpages.txt');
 
 
-		#======================================
-		#	param_define.ini
+		// #======================================
+		// #	param_define.ini
 
-		#	URLパラメータ定義情報
-		$param_list = $this->get_param_define_list();
-		$param_define_ini_src = '';
-		if( is_array( $param_list ) ){
-			foreach( $param_list as $param_key ){
-				$param_define_ini_src .= '['.$param_key.']'."\n";
-				$param_define_ini_src .= 'name='.$this->get_param_define( $param_key , 'name' ).''."\n";
-				$param_define_ini_src .= 'request='.$this->get_param_define( $param_key , 'request' ).''."\n";
-				$param_define_ini_src .= "\n";
-			}
-		}
-		if( !$this->px->dbh()->save_file( $path_project_dir.'/param_define.ini' , $param_define_ini_src ) ){
-			return	false;
-		}
-		$this->px->dbh()->fclose($path_project_dir.'/param_define.ini');
+		// #	URLパラメータ定義情報
+		// $param_list = $this->get_param_define_list();
+		// $param_define_ini_src = '';
+		// if( is_array( $param_list ) ){
+		// 	foreach( $param_list as $param_key ){
+		// 		$param_define_ini_src .= '['.$param_key.']'."\n";
+		// 		$param_define_ini_src .= 'name='.$this->get_param_define( $param_key , 'name' ).''."\n";
+		// 		$param_define_ini_src .= 'request='.$this->get_param_define( $param_key , 'request' ).''."\n";
+		// 		$param_define_ini_src .= "\n";
+		// 	}
+		// }
+		// if( !$this->px->dbh()->save_file( $path_project_dir.'/param_define.ini' , $param_define_ini_src ) ){
+		// 	return	false;
+		// }
+		// $this->px->dbh()->fclose($path_project_dir.'/param_define.ini');
 
-		#======================================
-		#	localfilename_rewriterules.ini
+		// #======================================
+		// #	localfilename_rewriterules.ini
 
-		#	保存ファイル名のリライトルール情報
-		$rewriterules = $this->get_localfilename_rewriterules();
-		$rewriterules_src = '';
-		$i = 0;
-		if( is_array( $rewriterules ) ){
-			foreach( $rewriterules as $Line ){
-				$i ++;
-				$rewriterules_src .= '[priority'.$i.']'."\n";
-				$rewriterules_src .= 'before='.$Line['before'].''."\n";
-				$rewriterules_src .= 'requiredparam='.$Line['requiredparam'].''."\n";
-				$rewriterules_src .= 'after='.$Line['after'].''."\n";
-				$rewriterules_src .= "\n";
-			}
-		}
-		if( !$this->px->dbh()->save_file( $path_project_dir.'/localfilename_rewriterules.ini' , $rewriterules_src ) ){
-			return	false;
-		}
-		$this->px->dbh()->fclose($path_project_dir.'/localfilename_rewriterules.ini');
+		// #	保存ファイル名のリライトルール情報
+		// $rewriterules = $this->get_localfilename_rewriterules();
+		// $rewriterules_src = '';
+		// $i = 0;
+		// if( is_array( $rewriterules ) ){
+		// 	foreach( $rewriterules as $Line ){
+		// 		$i ++;
+		// 		$rewriterules_src .= '[priority'.$i.']'."\n";
+		// 		$rewriterules_src .= 'before='.$Line['before'].''."\n";
+		// 		$rewriterules_src .= 'requiredparam='.$Line['requiredparam'].''."\n";
+		// 		$rewriterules_src .= 'after='.$Line['after'].''."\n";
+		// 		$rewriterules_src .= "\n";
+		// 	}
+		// }
+		// if( !$this->px->dbh()->save_file( $path_project_dir.'/localfilename_rewriterules.ini' , $rewriterules_src ) ){
+		// 	return	false;
+		// }
+		// $this->px->dbh()->fclose($path_project_dir.'/localfilename_rewriterules.ini');
 
 		#======================================
 		#	preg_replace.ini
@@ -438,22 +438,22 @@ class pxplugin_asazuke_model_project{
 
 	#--------------------------------------
 	#	スタートページURLの入出力
-	public function set_url_startpage( $url_startpage ){
-		$this->info_url_startpage = $url_startpage;
+	public function set_path_startpage( $path_startpage ){
+		$this->info_path_startpage = $path_startpage;
 		return	true;
 	}
-	public function get_url_startpage(){
-		return	$this->info_url_startpage;
+	public function get_path_startpage(){
+		return	$this->info_path_startpage;
 	}
 
 	#--------------------------------------
 	#	ドキュメントルートURLの入出力
-	public function set_url_docroot( $url_docroot ){
-		$this->info_url_docroot = $url_docroot;
+	public function set_path_docroot( $path_docroot ){
+		$this->info_path_docroot = $path_docroot;
 		return	true;
 	}
-	public function get_url_docroot(){
-		return	$this->info_url_docroot;
+	public function get_path_docroot(){
+		return	$this->info_path_docroot;
 	}
 
 	#--------------------------------------
@@ -647,56 +647,56 @@ class pxplugin_asazuke_model_project{
 		return	$this->info_charset_ext;
 	}
 
-	#--------------------------------------
-	#	パラメータの扱い定義の入出力
-	public function set_param_define( $param_key , $define_key , $value ){
-		$this->info_param_define[$param_key][$define_key] = $value;
-		return	true;
-	}
-	public function get_param_define( $param_key , $define_key = null ){
-		if( is_null( $define_key ) ){
-			return	$this->info_param_define[$param_key];
-		}
-		return	$this->info_param_define[$param_key][$define_key];
-	}
-	public function get_param_define_list(){
-		return	array_keys( $this->info_param_define );
-	}
-	public function is_param_allowed( $key ){
-		#	送信していいパラメータ名か調べる
-		if( !array_key_exists( $key , $this->info_param_define ) ){
-			#	未定義のパラメータなら
-			if( $this->get_send_unknown_params_flg() ){
-				return	true;
-			}
-			return	false;
-		}
-		$def = $this->get_param_define( $key , 'request' );
-		if( !$def ){
-			return	false;
-		}
-		return	true;
-	}
-	public function clear_param_define(){
-		return	$this->info_param_define = array();
-	}
+	// #--------------------------------------
+	// #	パラメータの扱い定義の入出力
+	// public function set_param_define( $param_key , $define_key , $value ){
+	// 	$this->info_param_define[$param_key][$define_key] = $value;
+	// 	return	true;
+	// }
+	// public function get_param_define( $param_key , $define_key = null ){
+	// 	if( is_null( $define_key ) ){
+	// 		return	$this->info_param_define[$param_key];
+	// 	}
+	// 	return	$this->info_param_define[$param_key][$define_key];
+	// }
+	// public function get_param_define_list(){
+	// 	return	array_keys( $this->info_param_define );
+	// }
+	// public function is_param_allowed( $key ){
+	// 	#	送信していいパラメータ名か調べる
+	// 	if( !array_key_exists( $key , $this->info_param_define ) ){
+	// 		#	未定義のパラメータなら
+	// 		if( $this->get_send_unknown_params_flg() ){
+	// 			return	true;
+	// 		}
+	// 		return	false;
+	// 	}
+	// 	$def = $this->get_param_define( $key , 'request' );
+	// 	if( !$def ){
+	// 		return	false;
+	// 	}
+	// 	return	true;
+	// }
+	// public function clear_param_define(){
+	// 	return	$this->info_param_define = array();
+	// }
 
-	#--------------------------------------
-	#	保存ファイル名のリライトルール情報の入出力
-	public function get_localfilename_rewriterules(){
-		return	$this->info_localfilename_rewriterules;
-	}
-	public function set_localfilename_rewriterules( $rules ){
-		if( !is_array( $rules ) ){
-			return	false;
-		}
-		$this->info_localfilename_rewriterules = $rules;
-		return	true;
-	}
-	public function clear_localfilename_rewriterules(){
-		$this->info_localfilename_rewriterules = array();
-		return	true;
-	}
+	// #--------------------------------------
+	// #	保存ファイル名のリライトルール情報の入出力
+	// public function get_localfilename_rewriterules(){
+	// 	return	$this->info_localfilename_rewriterules;
+	// }
+	// public function set_localfilename_rewriterules( $rules ){
+	// 	if( !is_array( $rules ) ){
+	// 		return	false;
+	// 	}
+	// 	$this->info_localfilename_rewriterules = $rules;
+	// 	return	true;
+	// }
+	// public function clear_localfilename_rewriterules(){
+	// 	$this->info_localfilename_rewriterules = array();
+	// 	return	true;
+	// }
 
 	#--------------------------------------
 	#	一括置換設定情報の入出力
@@ -759,8 +759,8 @@ class pxplugin_asazuke_model_project{
 		#	パラメータを削除
 		$url = preg_replace( '/^(.*?)\?.*$/si' , '\1' , $url );
 
-		$url_docroot = $this->get_url_docroot();
-		if( !preg_match( '/^'.preg_quote( $url_docroot , '/' ).'/is' , $url ) ){
+		$path_docroot = $this->get_path_docroot();
+		if( !preg_match( '/^'.preg_quote( $path_docroot , '/' ).'/is' , $url ) ){
 			#	ドキュメントルートURLから始まっていなければ、サイト外URLとみなす。
 			return	true;
 		}
@@ -788,22 +788,22 @@ class pxplugin_asazuke_model_project{
 		$this->info_urllist_startpages = array();//一旦リセット
 		return	true;
 	}
-	public function put_urllist_startpages( $url_startpages ){
-		if( is_array( $url_startpages ) ){
+	public function put_urllist_startpages( $path_startpages ){
+		if( is_array( $path_startpages ) ){
 			#	配列をもらったら、全部処理
-			foreach( $url_startpages as $url ){
+			foreach( $path_startpages as $url ){
 				$this->put_urllist_startpages( $url );
 			}
 			return	true;
 		}
-		if( !is_string( $url_startpages ) ){
+		if( !is_string( $path_startpages ) ){
 			#	文字列じゃないと突っ込めない。
 			return	false;
 		}
 
 		if( !is_array( $this->info_urllist_startpages ) ){ $this->info_urllist_startpages = array(); }
 
-		$urllist_startpages = preg_split( '/\r\n|\r|\n/' , $url_startpages );
+		$urllist_startpages = preg_split( '/\r\n|\r|\n/' , $path_startpages );
 		if( !is_array( $urllist_startpages ) ){ $urllist_startpages = array(); }
 		foreach( $urllist_startpages as $url ){
 			if( !strlen( $url ) ){ continue; }

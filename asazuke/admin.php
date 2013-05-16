@@ -71,15 +71,15 @@ class pxplugin_asazuke_admin{
 		}elseif( $this->cmd[0] == 'create_proj' || $this->cmd[0] == 'edit_proj' ){
 			#	プロジェクト作成/編集
 			return	$this->start_edit_proj();
-		}elseif( $this->cmd[0] == 'edit_param_define' ){
-			#	プロジェクトのパラメータ定義を編集
-			return	$this->start_edit_param_define();
-		}elseif( $this->cmd[0] == 'edit_localfilename_rewriterules' ){
-			#	保存ファイル名のリライトルール編集
-			return	$this->start_edit_localfilename_rewriterules();
-		}elseif( $this->cmd[0] == 'edit_charset' ){
-			#	文字コード・改行コード変換設定編集
-			return	$this->start_edit_charset();
+		// }elseif( $this->cmd[0] == 'edit_param_define' ){
+		// 	#	プロジェクトのパラメータ定義を編集
+		// 	return	$this->start_edit_param_define();
+		// }elseif( $this->cmd[0] == 'edit_localfilename_rewriterules' ){
+		// 	#	保存ファイル名のリライトルール編集
+		// 	return	$this->start_edit_localfilename_rewriterules();
+		// }elseif( $this->cmd[0] == 'edit_charset' ){
+		// 	#	文字コード・改行コード変換設定編集
+		// 	return	$this->start_edit_charset();
 		}elseif( $this->cmd[0] == 'edit_preg_replace' ){
 			#	一括置換設定編集
 			return	$this->start_edit_preg_replace();
@@ -173,13 +173,13 @@ class pxplugin_asazuke_admin{
 		$this->local_sitemap[ ':export'                                           ] = array( 'title'=>'設定をエクスポート'                 );
 		$this->local_sitemap[ ':detail.'.$this->cmd[1]                            ] = array( 'title'=>'プロジェクト詳細'                   );
 		$this->local_sitemap[ ':edit_proj.'.$this->cmd[1]                         ] = array( 'title'=>'プロジェクト編集'                   );
-		$this->local_sitemap[ ':edit_param_define.'.$this->cmd[1]                 ] = array( 'title'=>'パラメータ定義の編集'               );
-		$this->local_sitemap[ ':edit_localfilename_rewriterules.'.$this->cmd[1]   ] = array( 'title'=>'保存ファイル名のリライトルール編集' );
+		// $this->local_sitemap[ ':edit_param_define.'.$this->cmd[1]                 ] = array( 'title'=>'パラメータ定義の編集'               );
+		// $this->local_sitemap[ ':edit_localfilename_rewriterules.'.$this->cmd[1]   ] = array( 'title'=>'保存ファイル名のリライトルール編集' );
 		$this->local_sitemap[ ':create_program.'.$this->cmd[1]                    ] = array( 'title'=>'新規プログラム作成'                 );
 		$this->local_sitemap[ ':edit_program.'.$this->cmd[1].'.'.$this->cmd[2]    ] = array( 'title'=>'プログラム編集'                     );
 		$this->local_sitemap[ ':execute_program.'.$this->cmd[1].'.'.$this->cmd[2] ] = array( 'title'=>'プログラム実行'                     );
 		$this->local_sitemap[ ':delete_program.'.$this->cmd[1].'.'.$this->cmd[2]  ] = array( 'title'=>'プログラム削除'                     );
-		$this->local_sitemap[ ':edit_charset.'.$this->cmd[1]                      ] = array( 'title'=>'文字コード・改行コード変換設定'     );
+		// $this->local_sitemap[ ':edit_charset.'.$this->cmd[1]                      ] = array( 'title'=>'文字コード・改行コード変換設定'     );
 		$this->local_sitemap[ ':edit_preg_replace.'.$this->cmd[1]                 ] = array( 'title'=>'一括置換設定'                       );
 		$this->local_sitemap[ ':delete_proj.'.$this->cmd[1]                       ] = array( 'title'=>'プロジェクトを削除'                 );
 		$this->local_sitemap[ ':delete_program_content.'.$this->cmd[1]            ] = array( 'title'=>'プログラムコンテンツの削除'         );
@@ -217,7 +217,7 @@ class pxplugin_asazuke_admin{
 				$RTN .= '	<tr>'."\n";
 				$RTN .= '		<th class="left">'.$this->mk_link(':detail.'.$Line['id'],array('label'=>$Line['name'],'style'=>'inside')).'</th>'."\n";
 				$RTN .= '		<td class="left">'.htmlspecialchars( $Line['id'] ).'</td>'."\n";
-				$RTN .= '		<td class="left">'.htmlspecialchars( $Line['url_docroot'] ).'</td>'."\n";
+				$RTN .= '		<td class="left">'.htmlspecialchars( $Line['path_docroot'] ).'</td>'."\n";
 				$RTN .= '		<td class="left">'."\n";
 				$RTN .= '			'.$this->mk_link(':detail.'.$Line['id'],array('label'=>'詳細','style'=>'inside'))."\n";
 //				$RTN .= '			'.$this->mk_link(':edit_proj.'.$Line['id'],array('label'=>'編集','style'=>'inside'))."\n";
@@ -261,12 +261,12 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		<td style="width:70%;"><div><strong>'.htmlspecialchars( $project_model->get_project_name() ).'</strong> ('.htmlspecialchars( $this->cmd[1] ).')</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートURL</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_url_docroot() ).'</div></td>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
+		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_docroot() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>スタートページURL</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_url_startpage() ).'</div></td>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
+		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名</div></th>'."\n";
@@ -344,11 +344,11 @@ class pxplugin_asazuke_admin{
 		$label = array( '0'=>'解析しない','1'=>'解析する' );
 		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_parse_jsinhtml_flg())] ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>Not Found ページ収集</div></th>'."\n";
-		$label = array( '0'=>'収集しない','1'=>'収集する' );
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_save404_flg())] ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>Not Found ページ収集</div></th>'."\n";
+		// $label = array( '0'=>'収集しない','1'=>'収集する' );
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_save404_flg())] ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_copyto() ).'</div></td>'."\n";
@@ -404,87 +404,87 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	<p class="center"><input type="submit" value="新規プログラムを追加する" /></p>'."\n";
 		$RTN .= '</form>'."\n";
 
-		#======================================
-		$RTN .= ''.$this->mk_hx( 'URLパラメータ定義' ).''."\n";
+		// #======================================
+		// $RTN .= ''.$this->mk_hx( 'URLパラメータ定義' ).''."\n";
 
-		$param_def_list = $project_model->get_param_define_list();
-		if( is_array( $param_def_list ) && count( $param_def_list ) ){
-			$RTN .= '	<table class="def" style="def:100%;">'."\n";
-			$RTN .= '	<thead>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th>物理名</th>'."\n";
-			$RTN .= '		<th>論理名</th>'."\n";
-			$RTN .= '		<th>リクエストに含めるか</th>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	</thead>'."\n";
-			foreach( $param_def_list as $Line ){
-				$RTN .= '	<tr>'."\n";
-				$RTN .= '		<th>'.htmlspecialchars( $Line ).'</th>'."\n";
-				$RTN .= '		<td>'.htmlspecialchars( $project_model->get_param_define( $Line , 'name' ) ).'</td>'."\n";
-				if( $project_model->get_param_define( $Line , 'request' ) ){
-					$RTN .= '		<td>含める</td>'."\n";
-				}else{
-					$RTN .= '		<td>含めない</td>'."\n";
-				}
-				$RTN .= '	</tr>'."\n";
-			}
-			$RTN .= '	</table>'."\n";
-		}else{
-			$RTN .= '<p>登録されていません。</p>'."\n";
-		}
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_param_define.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="パラメータ定義を編集する" /></p>'."\n";
-		$RTN .= '</form>'."\n";
+		// $param_def_list = $project_model->get_param_define_list();
+		// if( is_array( $param_def_list ) && count( $param_def_list ) ){
+		// 	$RTN .= '	<table class="def" style="def:100%;">'."\n";
+		// 	$RTN .= '	<thead>'."\n";
+		// 	$RTN .= '	<tr>'."\n";
+		// 	$RTN .= '		<th>物理名</th>'."\n";
+		// 	$RTN .= '		<th>論理名</th>'."\n";
+		// 	$RTN .= '		<th>リクエストに含めるか</th>'."\n";
+		// 	$RTN .= '	</tr>'."\n";
+		// 	$RTN .= '	</thead>'."\n";
+		// 	foreach( $param_def_list as $Line ){
+		// 		$RTN .= '	<tr>'."\n";
+		// 		$RTN .= '		<th>'.htmlspecialchars( $Line ).'</th>'."\n";
+		// 		$RTN .= '		<td>'.htmlspecialchars( $project_model->get_param_define( $Line , 'name' ) ).'</td>'."\n";
+		// 		if( $project_model->get_param_define( $Line , 'request' ) ){
+		// 			$RTN .= '		<td>含める</td>'."\n";
+		// 		}else{
+		// 			$RTN .= '		<td>含めない</td>'."\n";
+		// 		}
+		// 		$RTN .= '	</tr>'."\n";
+		// 	}
+		// 	$RTN .= '	</table>'."\n";
+		// }else{
+		// 	$RTN .= '<p>登録されていません。</p>'."\n";
+		// }
+		// $RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_param_define.'.$this->cmd[1] ) ).'" method="post">'."\n";
+		// $RTN .= '	<p class="center"><input type="submit" value="パラメータ定義を編集する" /></p>'."\n";
+		// $RTN .= '</form>'."\n";
 
-		#======================================
-		$RTN .= ''.$this->mk_hx( 'URLのリライトルール' ).''."\n";
+		// #======================================
+		// $RTN .= ''.$this->mk_hx( 'URLのリライトルール' ).''."\n";
 
-		$rule_list = $project_model->get_localfilename_rewriterules();
-		if( is_array( $rule_list ) && count( $rule_list ) ){
-			$RTN .= '	<table class="def" style="width:100%;">'."\n";
-			$RTN .= '		<thead>'."\n";
-			$RTN .= '			<tr>'."\n";
-			$RTN .= '				<th></th>'."\n";
-			$RTN .= '				<th>元のパス</th>'."\n";
-			$RTN .= '				<th>変換後の保存先パス</th>'."\n";
-			$RTN .= '				<th>必須URLパラメータ</th>'."\n";
-			$RTN .= '			</tr>'."\n";
-			$RTN .= '		</thead>'."\n";
-			foreach( $rule_list as $line ){
-				$RTN .= '		<tr>'."\n";
-				$RTN .= '			<th>'.htmlspecialchars( $line['priority'] ).'</th>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['before'] ).'</td>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['after'] ).'</td>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['requiredparam'] ).'</td>'."\n";
-				$RTN .= '		</tr>'."\n";
-			}
-			$RTN .= '	</table>'."\n";
-		}else{
-			$RTN .= '<p>条件は設定されていません。</p>'."\n";
-		}
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_localfilename_rewriterules.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="保存ファイル名のリライトルールを編集" /></p>'."\n";
-		$RTN .= '</form>'."\n";
+		// $rule_list = $project_model->get_localfilename_rewriterules();
+		// if( is_array( $rule_list ) && count( $rule_list ) ){
+		// 	$RTN .= '	<table class="def" style="width:100%;">'."\n";
+		// 	$RTN .= '		<thead>'."\n";
+		// 	$RTN .= '			<tr>'."\n";
+		// 	$RTN .= '				<th></th>'."\n";
+		// 	$RTN .= '				<th>元のパス</th>'."\n";
+		// 	$RTN .= '				<th>変換後の保存先パス</th>'."\n";
+		// 	$RTN .= '				<th>必須URLパラメータ</th>'."\n";
+		// 	$RTN .= '			</tr>'."\n";
+		// 	$RTN .= '		</thead>'."\n";
+		// 	foreach( $rule_list as $line ){
+		// 		$RTN .= '		<tr>'."\n";
+		// 		$RTN .= '			<th>'.htmlspecialchars( $line['priority'] ).'</th>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['before'] ).'</td>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['after'] ).'</td>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['requiredparam'] ).'</td>'."\n";
+		// 		$RTN .= '		</tr>'."\n";
+		// 	}
+		// 	$RTN .= '	</table>'."\n";
+		// }else{
+		// 	$RTN .= '<p>条件は設定されていません。</p>'."\n";
+		// }
+		// $RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_localfilename_rewriterules.'.$this->cmd[1] ) ).'" method="post">'."\n";
+		// $RTN .= '	<p class="center"><input type="submit" value="保存ファイル名のリライトルールを編集" /></p>'."\n";
+		// $RTN .= '</form>'."\n";
 
-		#======================================
-		$RTN .= ''.$this->mk_hx( '文字コード・改行コード変換設定' ).''."\n";
-		$RTN .= '<table class="def" style="width:100%;">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>文字コード</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_charset_charset() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>改行コード</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_charset_crlf() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_charset_ext() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '</table>'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_charset.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="文字コード・改行コード変換設定を編集" /></p>'."\n";
-		$RTN .= '</form>'."\n";
+		// #======================================
+		// $RTN .= ''.$this->mk_hx( '文字コード・改行コード変換設定' ).''."\n";
+		// $RTN .= '<table class="def" style="width:100%;">'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>文字コード</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_charset_charset() ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>改行コード</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_charset_crlf() ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_charset_ext() ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '</table>'."\n";
+		// $RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_charset.'.$this->cmd[1] ) ).'" method="post">'."\n";
+		// $RTN .= '	<p class="center"><input type="submit" value="文字コード・改行コード変換設定を編集" /></p>'."\n";
+		// $RTN .= '</form>'."\n";
 
 		#======================================
 		$RTN .= ''.$this->mk_hx( '一括置換設定' ).''."\n";
@@ -554,15 +554,15 @@ class pxplugin_asazuke_admin{
 				$project_model->load_project( $this->cmd[1] );
 				$this->px->req()->set_param( 'project_id' , $this->cmd[1] );
 				$this->px->req()->set_param( 'project_name' , $project_model->get_project_name() );
-				$this->px->req()->set_param( 'url_stargpage' , $project_model->get_url_startpage() );
-				$this->px->req()->set_param( 'url_docroot' , $project_model->get_url_docroot() );
+				$this->px->req()->set_param( 'path_stargpage' , $project_model->get_path_startpage() );
+				$this->px->req()->set_param( 'path_docroot' , $project_model->get_path_docroot() );
 				$this->px->req()->set_param( 'default_filename' , $project_model->get_default_filename() );
 				$this->px->req()->set_param( 'omit_filename' , implode( ',' , $project_model->get_omit_filename() ) );
 				$this->px->req()->set_param( 'outofsite2url_flg' , $project_model->get_outofsite2url_flg() );
 				$this->px->req()->set_param( 'send_unknown_params_flg' , intval( $project_model->get_send_unknown_params_flg() ) );
 				$this->px->req()->set_param( 'send_form_flg' , intval( $project_model->get_send_form_flg() ) );
 				$this->px->req()->set_param( 'parse_jsinhtml_flg' , intval( $project_model->get_parse_jsinhtml_flg() ) );
-				$this->px->req()->set_param( 'save404_flg' , intval( $project_model->get_save404_flg() ) );
+				// $this->px->req()->set_param( 'save404_flg' , intval( $project_model->get_save404_flg() ) );
 				$this->px->req()->set_param( 'path_copyto' , $project_model->get_path_copyto() );
 				$urllist_outofsite = $project_model->get_urllist_outofsite();
 				$str_urllist = '';
@@ -627,34 +627,34 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>プロジェクト名 <span class="form_elements-must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="project_name" value="'.htmlspecialchars( $this->px->req()->get_param('project_name') ).'" /></div>'."\n";
+		$RTN .= '			<div><input type="text" name="project_name" value="'.htmlspecialchars( $this->px->req()->get_param('project_name') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['project_name'] ) ){
 			$RTN .= '			<div class="error">'.$error['project_name'].'</div>'."\n";
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのURL <span class="form_elements-must">必須</span></div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス <span class="form_elements-must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="url_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('url_docroot') ).'" /></div>'."\n";
-		if( strlen( $error['url_docroot'] ) ){
-			$RTN .= '			<div class="error">'.$error['url_docroot'].'</div>'."\n";
+		$RTN .= '			<div><input type="text" name="path_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'" style="width:80%;" /></div>'."\n";
+		if( strlen( $error['path_docroot'] ) ){
+			$RTN .= '			<div class="error">'.$error['path_docroot'].'</div>'."\n";
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>スタートページのURL <span class="form_elements-must">必須</span></div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>スタートページのパス <span class="form_elements-must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="url_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('url_stargpage') ).'" /></div>'."\n";
-		if( strlen( $error['url_stargpage'] ) ){
-			$RTN .= '			<div class="error">'.$error['url_stargpage'].'</div>'."\n";
+		$RTN .= '			<div><input type="text" name="path_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'" style="width:80%;" /></div>'."\n";
+		if( strlen( $error['path_stargpage'] ) ){
+			$RTN .= '			<div class="error">'.$error['path_stargpage'].'</div>'."\n";
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名 <span class="form_elements-must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="default_filename" value="'.htmlspecialchars( $this->px->req()->get_param('default_filename') ).'" /></div>'."\n";
+		$RTN .= '			<div><input type="text" name="default_filename" value="'.htmlspecialchars( $this->px->req()->get_param('default_filename') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['default_filename'] ) ){
 			$RTN .= '			<div class="error">'.$error['default_filename'].'</div>'."\n";
 		}
@@ -663,7 +663,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="omit_filename" value="'.htmlspecialchars( $this->px->req()->get_param('omit_filename') ).'" /></div>'."\n";
+		$RTN .= '			<div><input type="text" name="omit_filename" value="'.htmlspecialchars( $this->px->req()->get_param('omit_filename') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['omit_filename'] ) ){
 			$RTN .= '			<div class="error">'.$error['omit_filename'].'</div>'."\n";
 		}
@@ -798,25 +798,25 @@ class pxplugin_asazuke_admin{
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>Not Found ページ収集</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('save404_flg')=>' selected="selected"' );
-		$RTN .= '				<select name="save404_flg">'."\n";
-		$RTN .= '					<option value="0"'.$c['0'].'>収集しない</option>'."\n";
-		$RTN .= '					<option value="1"'.$c['1'].'>収集する</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['save404_flg'] ) ){
-			$RTN .= '			<div class="error">'.$error['save404_flg'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>Not Found ページ収集</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'."\n";
+		// $c = array( $this->px->req()->get_param('save404_flg')=>' selected="selected"' );
+		// $RTN .= '				<select name="save404_flg">'."\n";
+		// $RTN .= '					<option value="0"'.$c['0'].'>収集しない</option>'."\n";
+		// $RTN .= '					<option value="1"'.$c['1'].'>収集する</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// if( strlen( $error['save404_flg'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['save404_flg'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="path_copyto" value="'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'" /></div>'."\n";
+		$RTN .= '			<div><input type="text" name="path_copyto" value="'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['path_copyto'] ) ){
 			$RTN .= '			<div class="error">'.$error['path_copyto'].'</div>'."\n";
 		}
@@ -859,17 +859,17 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのURL</div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('url_docroot') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="url_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('url_docroot') ).'" />';
+		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'</div>'."\n";
+		$HIDDEN .= '<input type="hidden" name="path_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>スタートページのURL</div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('url_stargpage') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="url_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('url_stargpage') ).'" />';
+		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'</div>'."\n";
+		$HIDDEN .= '<input type="hidden" name="path_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
@@ -951,14 +951,14 @@ class pxplugin_asazuke_admin{
 		$HIDDEN .= '<input type="hidden" name="parse_jsinhtml_flg" value="'.htmlspecialchars( $this->px->req()->get_param('parse_jsinhtml_flg') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>Not Found ページ収集</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( '0'=>'収集しない','1'=>'収集する' );
-		$RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('save404_flg')] ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="save404_flg" value="'.htmlspecialchars( $this->px->req()->get_param('save404_flg') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>Not Found ページ収集</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( '0'=>'収集しない','1'=>'収集する' );
+		// $RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('save404_flg')] ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="save404_flg" value="'.htmlspecialchars( $this->px->req()->get_param('save404_flg') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
@@ -1024,19 +1024,33 @@ class pxplugin_asazuke_admin{
 			$RTN['omit_filename'] = 'URL変換時に省略するファイル名に改行を含めることはできません。';
 		}
 
-		if( !strlen( $this->px->req()->get_param('url_docroot') ) ){
-			$RTN['url_docroot'] = 'ドキュメントルートURLは必須項目です。';
-		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('url_docroot') ) ){
-			$RTN['url_docroot'] = 'ドキュメントルートURLはに改行を含めることはできません。';
-		}elseif( !t::is_url( $this->px->req()->get_param('url_docroot') ) ){
-			$RTN['url_docroot'] = 'ドキュメントルートURLの形式が不正です。';
+		if( strlen($this->px->req()->get_param('path_docroot')) ){
+			$tmp_val = $this->px->req()->get_param('path_docroot');
+			$tmp_val = preg_replace('/\\\\/','/',$tmp_val);//バックスラッシュをスラッシュに置換
+			$tmp_val = preg_replace('/^[a-zA-Z]\:\//s','/',$tmp_val);//ボリュームラベルを削除
+			$this->px->req()->set_param('path_docroot', $tmp_val);
 		}
-		if( !strlen( $this->px->req()->get_param('url_stargpage') ) ){
-			$RTN['url_stargpage'] = 'スタートページURLは必須項目です。';
-		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('url_stargpage') ) ){
-			$RTN['url_stargpage'] = 'ドキュメントルートURLはに改行を含めることはできません。';
-		}elseif( !t::is_url( $this->px->req()->get_param('url_stargpage') ) ){
-			$RTN['url_stargpage'] = 'スタートページURLの形式が不正です。';
+		if( !strlen( $this->px->req()->get_param('path_docroot') ) ){
+			$RTN['path_docroot'] = 'ドキュメントルートのパスは必須項目です。';
+		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('path_docroot') ) ){
+			$RTN['path_docroot'] = 'ドキュメントルートのパスはに改行を含めることはできません。';
+		}elseif( !$this->px->dbh()->is_dir( $this->px->req()->get_param('path_docroot') ) ){
+			$RTN['path_docroot'] = 'ドキュメントルートのパスのディレクトリが存在しません。';
+		}
+
+		if( strlen($this->px->req()->get_param('path_stargpage')) ){
+			$tmp_val = $this->px->req()->get_param('path_stargpage');
+			$tmp_val = preg_replace('/\\\\/','/',$tmp_val);//バックスラッシュをスラッシュに置換
+			$tmp_val = preg_replace('/^[a-zA-Z]\:\//s','/',$tmp_val);//ボリュームラベルを削除
+			$tmp_val = preg_replace('/\/index\.html$/s','/',$tmp_val);//ファイル名 index.html を省略
+			$this->px->req()->set_param('path_stargpage', $tmp_val);
+		}
+		if( !strlen( $this->px->req()->get_param('path_stargpage') ) ){
+			$RTN['path_stargpage'] = 'スタートページのパスは必須項目です。';
+		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('path_stargpage') ) ){
+			$RTN['path_stargpage'] = 'スタートページのパスはに改行を含めることはできません。';
+		}elseif( !$this->px->dbh()->is_file( $this->px->req()->get_param('path_docroot').'/'.$this->px->req()->get_param('path_stargpage') ) && !$this->px->dbh()->is_file( $this->px->req()->get_param('path_docroot').'/'.$this->px->req()->get_param('path_stargpage').'/index.html' ) ){
+			$RTN['path_stargpage'] = 'スタートページのパスのファイルが存在しません。';
 		}
 		switch( $this->px->req()->get_param('path_conv_method') ){
 			case 'relative':
@@ -1079,8 +1093,8 @@ class pxplugin_asazuke_admin{
 		}
 
 		$project_model->set_project_name( $this->px->req()->get_param('project_name') );
-		$project_model->set_url_startpage( $this->px->req()->get_param('url_stargpage') );
-		$project_model->set_url_docroot( $this->px->req()->get_param('url_docroot') );
+		$project_model->set_path_startpage( $this->px->req()->get_param('path_stargpage') );
+		$project_model->set_path_docroot( $this->px->req()->get_param('path_docroot') );
 		$project_model->set_default_filename( $this->px->req()->get_param('default_filename') );
 		$project_model->set_omit_filename( $this->px->req()->get_param('omit_filename') );
 		$project_model->set_urllist_outofsite( $this->px->req()->get_param('urllist_outofsite') );
@@ -1093,7 +1107,7 @@ class pxplugin_asazuke_admin{
 		$project_model->set_send_unknown_params_flg( $this->px->req()->get_param('send_unknown_params_flg') );
 		$project_model->set_send_form_flg( $this->px->req()->get_param('send_form_flg') );
 		$project_model->set_parse_jsinhtml_flg( $this->px->req()->get_param('parse_jsinhtml_flg') );
-		$project_model->set_save404_flg( $this->px->req()->get_param('save404_flg') );
+		// $project_model->set_save404_flg( $this->px->req()->get_param('save404_flg') );
 		$project_model->set_path_copyto( $this->px->req()->get_param('path_copyto') );
 
 		#	出来上がったプロジェクトを保存
@@ -1808,830 +1822,830 @@ class pxplugin_asazuke_admin{
 
 	###################################################################################################################
 
-	/**
-	 * プロジェクトのパラメータ定義を編集
-	 */
-	private function start_edit_param_define(){
+	// /**
+	//  * プロジェクトのパラメータ定義を編集
+	//  */
+	// private function start_edit_param_define(){
 
-		$in = $this->px->req()->get_all_params();
+	// 	$in = $this->px->req()->get_all_params();
 
-		$param_list = array();
-		foreach( $in as $key=>$val ){
-			if( !preg_match( '/^param:(.+?):(.+)$/' , $key , $matches ) ){
-				continue;
-			}
-			if( !strlen( $this->px->req()->get_param( 'param:'.$matches[1].':key' ) ) ){
-				#	パラメータの削除処理
-				continue;
-			}
-			if( $matches[1] != $this->px->req()->get_param( 'param:'.$matches[1].':key' ) ){
+	// 	$param_list = array();
+	// 	foreach( $in as $key=>$val ){
+	// 		if( !preg_match( '/^param:(.+?):(.+)$/' , $key , $matches ) ){
+	// 			continue;
+	// 		}
+	// 		if( !strlen( $this->px->req()->get_param( 'param:'.$matches[1].':key' ) ) ){
+	// 			#	パラメータの削除処理
+	// 			continue;
+	// 		}
+	// 		if( $matches[1] != $this->px->req()->get_param( 'param:'.$matches[1].':key' ) ){
 
-				#	パラメータキーの変更処理
-				$new_key = $this->px->req()->get_param( 'param:'.$matches[1].':key' );
-				$this->px->req()->set_param( 'param:'.$new_key.':key' , $new_key );
-				$this->px->req()->set_param( 'param:'.$new_key.':name' , $this->px->req()->get_param( 'param:'.$matches[1].':name' ) );
-				$this->px->req()->set_param( 'param:'.$new_key.':request' , $this->px->req()->get_param( 'param:'.$matches[1].':request' ) );
-				$this->px->req()->set_param( 'param:'.$matches[1].':key' , '' );
-				$this->px->req()->set_param( 'param:'.$matches[1].':name' , '' );
-				$this->px->req()->set_param( 'param:'.$matches[1].':request' , '' );
-				$matches[1] = $new_key;
-			}
+	// 			#	パラメータキーの変更処理
+	// 			$new_key = $this->px->req()->get_param( 'param:'.$matches[1].':key' );
+	// 			$this->px->req()->set_param( 'param:'.$new_key.':key' , $new_key );
+	// 			$this->px->req()->set_param( 'param:'.$new_key.':name' , $this->px->req()->get_param( 'param:'.$matches[1].':name' ) );
+	// 			$this->px->req()->set_param( 'param:'.$new_key.':request' , $this->px->req()->get_param( 'param:'.$matches[1].':request' ) );
+	// 			$this->px->req()->set_param( 'param:'.$matches[1].':key' , '' );
+	// 			$this->px->req()->set_param( 'param:'.$matches[1].':name' , '' );
+	// 			$this->px->req()->set_param( 'param:'.$matches[1].':request' , '' );
+	// 			$matches[1] = $new_key;
+	// 		}
 
-			$param_list[$matches[1]] = true;
-		}
-
-
-		if( strlen( $this->px->req()->get_param('newparam:key') ) ){
-			#	新しいパラメータの追加処理
-			$this->px->req()->set_param( 'param:'.$this->px->req()->get_param('newparam:key').':key' , $this->px->req()->get_param('newparam:key') );
-			$this->px->req()->set_param( 'param:'.$this->px->req()->get_param('newparam:key').':name' , $this->px->req()->get_param('newparam:name') );
-			$this->px->req()->set_param( 'param:'.$this->px->req()->get_param('newparam:key').':request' , $this->px->req()->get_param('newparam:request') );
-			$param_list[$this->px->req()->get_param('newparam:key')] = true;
-		}
-
-		$param_list = array_keys( $param_list );
-		sort( $param_list );
-
-		$error = $this->check_edit_param_define_check( $param_list );
-		if( $this->px->req()->get_param('mode') == 'thanks' ){
-			return	$this->page_edit_param_define_thanks();
-		}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
-			return	$this->page_edit_param_define_confirm( $param_list );
-		}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
-			return	$this->execute_edit_param_define_execute( $param_list );
-		}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
-			$error = array();
-			$project_model = &$this->pcconf->factory_model_project();
-			$project_model->load_project( $this->cmd[1] );
-			$param_list = $project_model->get_param_define_list( $this->cmd[2] );
-			if( is_array( $param_list ) && count( $param_list ) ){
-				foreach( $param_list as $param_name ){
-					$param_info = $project_model->get_param_define( $param_name );
-					$this->px->req()->set_param( 'param:'.$param_name.':key' , $param_name );
-					foreach( $param_info as $info_key=>$info_val ){
-						$this->px->req()->set_param( 'param:'.$param_name.':'.$info_key , $info_val );
-					}
-				}
-			}
-
-			$in = $this->px->req()->get_all_params();
-
-			$param_list = array();
-			foreach( $in as $key=>$val ){
-				if( !preg_match( '/^param:(.+?):(.+)$/' , $key , $matches ) ){
-					continue;
-				}
-				$param_list[$matches[1]] = true;
-			}
-			$param_list = array_keys( $param_list );
+	// 		$param_list[$matches[1]] = true;
+	// 	}
 
 
-		}
-		return	$this->page_edit_param_define_input( $error , $param_list );
-	}
-	/**
-	 * プロジェクトのパラメータ定義を編集：入力
-	 */
-	private function page_edit_param_define_input( $error , $param_list ){
+	// 	if( strlen( $this->px->req()->get_param('newparam:key') ) ){
+	// 		#	新しいパラメータの追加処理
+	// 		$this->px->req()->set_param( 'param:'.$this->px->req()->get_param('newparam:key').':key' , $this->px->req()->get_param('newparam:key') );
+	// 		$this->px->req()->set_param( 'param:'.$this->px->req()->get_param('newparam:key').':name' , $this->px->req()->get_param('newparam:name') );
+	// 		$this->px->req()->set_param( 'param:'.$this->px->req()->get_param('newparam:key').':request' , $this->px->req()->get_param('newparam:request') );
+	// 		$param_list[$this->px->req()->get_param('newparam:key')] = true;
+	// 	}
 
-		$RTN = ''."\n";
-		$HIDDEN = ''."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		if( is_array( $param_list ) && count( $param_list ) ){
-			$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-			$RTN .= '	<thead>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;">'."\n";
-			$RTN .= '			<div>物理名</div>'."\n";
-			$RTN .= '		</th>'."\n";
-			$RTN .= '		<th style="width:70%;">'."\n";
-			$RTN .= '			<div>論理名/送信設定</div>'."\n";
-			$RTN .= '		</th>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	</thead>'."\n";
-			foreach( $param_list as $param_name ){
-				$RTN .= '	<tr>'."\n";
-				$RTN .= '		<th style="width:30%;">'."\n";
-				$RTN .= '			<div><input type="text" name="param:'.$param_name.':key" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':key') ).'" /></div>'."\n";
-				$RTN .= '		</th>'."\n";
-				$RTN .= '		<td style="width:70%;">'."\n";
-				$RTN .= '			<div><input type="text" name="param:'.$param_name.':name" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':name') ).'" /></div>'."\n";
-				$check = array( 1=>' checked="checked"' );
-				$RTN .= '			<div><input type="checkbox" name="param:'.$param_name.':request" id="param:'.$param_name.':request" value="1"'.$check[$this->px->req()->get_param('param:'.$param_name.':request')].' /><label for="param:'.$param_name.':request">リクエストに含める</label></div>'."\n";
-				if( strlen( $error{'param:'.$param_name} ) ){
-					$RTN .= '			<div class="error">'.$error{'param:'.$param_name}.'</div>'."\n";
-				}
-				$RTN .= '		</td>'."\n";
-				$RTN .= '	</tr>'."\n";
+	// 	$param_list = array_keys( $param_list );
+	// 	sort( $param_list );
 
-			}
-			$RTN .= '</table>'."\n";
-		}
+	// 	$error = $this->check_edit_param_define_check( $param_list );
+	// 	if( $this->px->req()->get_param('mode') == 'thanks' ){
+	// 		return	$this->page_edit_param_define_thanks();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
+	// 		return	$this->page_edit_param_define_confirm( $param_list );
+	// 	}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
+	// 		return	$this->execute_edit_param_define_execute( $param_list );
+	// 	}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
+	// 		$error = array();
+	// 		$project_model = &$this->pcconf->factory_model_project();
+	// 		$project_model->load_project( $this->cmd[1] );
+	// 		$param_list = $project_model->get_param_define_list( $this->cmd[2] );
+	// 		if( is_array( $param_list ) && count( $param_list ) ){
+	// 			foreach( $param_list as $param_name ){
+	// 				$param_info = $project_model->get_param_define( $param_name );
+	// 				$this->px->req()->set_param( 'param:'.$param_name.':key' , $param_name );
+	// 				foreach( $param_info as $info_key=>$info_val ){
+	// 					$this->px->req()->set_param( 'param:'.$param_name.':'.$info_key , $info_val );
+	// 				}
+	// 			}
+	// 		}
 
-		$RTN .= '<p>新しいパラメータを作成する場合は、ここに記入してください。</p>'."\n";
-		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<thead>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;">'."\n";
-		$RTN .= '			<div>物理名</div>'."\n";
-		$RTN .= '		</th>'."\n";
-		$RTN .= '		<th style="width:70%;">'."\n";
-		$RTN .= '			<div>論理名/送信設定</div>'."\n";
-		$RTN .= '		</th>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	</thead>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div><input type="text" name="newparam:key" value="" /></div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="newparam:name" value="" /></div>'."\n";
-		$RTN .= '			<div><input type="checkbox" name="newparam:request" id="newparam:request" value="1" /><label for="newparam:request">リクエストに含める</label></div>'."\n";
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '</table>'."\n";
+	// 		$in = $this->px->req()->get_all_params();
 
-		$RTN .= '	<p>これでいい場合は「確認する」を、さらに追加する場合は「画面を更新」をクリックしてください。</p>'."\n";
-		$RTN .= '	<div class="center">'."\n";
-		$RTN .= '		<input type="submit" value="確認する" />'."\n";
-		$RTN .= '		<input type="submit" value="画面を更新" onclick="document.getElementById(\'pc_document_form_mode\').value=\'input\'; return true;" />'."\n";
-		$RTN .= '	</div>'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="confirm" id="pc_document_form_mode" />'."\n";
-		$RTN .= '	'.''."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * プロジェクトのパラメータ定義を編集：確認
-	 */
-	private function page_edit_param_define_confirm( $param_list ){
-
-		$RTN = ''."\n";
-		$HIDDEN = ''."\n";
-
-		if( is_array( $param_list ) && count( $param_list ) ){
-			$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-			$RTN .= '	<thead>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;">'."\n";
-			$RTN .= '			<div>物理名</div>'."\n";
-			$RTN .= '		</th>'."\n";
-			$RTN .= '		<th style="width:70%;">'."\n";
-			$RTN .= '			<div>論理名/送信設定</div>'."\n";
-			$RTN .= '		</th>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	</thead>'."\n";
-			foreach( $param_list as $param_name ){
-				$RTN .= '	<tr>'."\n";
-				$RTN .= '		<th style="width:30%;"><div>'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':key') ).'</div></th>'."\n";
-				$HIDDEN .= '<input type="hidden" name="param:'.$param_name.':key" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':key') ).'" />';
-				$RTN .= '		<td style="width:70%;">'."\n";
-				$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':name') ).'</div>'."\n";
-				$HIDDEN .= '<input type="hidden" name="'.htmlspecialchars( 'param:'.$param_name.':name' ).'" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':name') ).'" />';
-				if( $this->px->req()->get_param('param:'.$param_name.':request') ){
-					$RTN .= '			<div>リクエストに含める</div>'."\n";
-				}else{
-					$RTN .= '			<div>リクエストに含めない</div>'."\n";
-				}
-				$HIDDEN .= '<input type="hidden" name="'.htmlspecialchars( 'param:'.$param_name.':request' ).'" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':request') ).'" />';
-				$RTN .= '		</td>'."\n";
-				$RTN .= '	</tr>'."\n";
-			}
-			$RTN .= '</table>'."\n";
-		}else{
-			$RTN .= '<p>パラメータを定義しない。</p>'."\n";
-		}
-
-		$RTN .= '<p>この設定でよろしければ、「保存する」をクリックしてください。</p>'."\n";
-
-		$RTN .= '<div class="unit center">'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="保存する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="訂正する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '</div>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="キャンセル" /></p>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * プロジェクトのパラメータ定義を編集：チェック
-	 */
-	private function check_edit_param_define_check( $param_list ){
-		$RTN = array();
-		return	$RTN;
-	}
-	/**
-	 * プロジェクトのパラメータ定義を編集：実行
-	 */
-	private function execute_edit_param_define_execute( $param_list ){
-		// if( !$this->user->save_t_lastaction() ){
-		// 	#	2重書き込み防止
-		// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
-		// }
-
-		$project_model = &$this->pcconf->factory_model_project();
-		$project_model->load_project( $this->cmd[1] );
-		$project_model->clear_param_define();
-
-		foreach( $param_list as $param_key ){
-			$project_model->set_param_define( $param_key , 'name' , $this->px->req()->get_param('param:'.$param_key.':name') );
-			$project_model->set_param_define( $param_key , 'request' , $this->px->req()->get_param('param:'.$param_key.':request') );
-		}
-
-		$result = $project_model->save_project();
-		if( !$result ){
-			return	'<p class="error">保存に失敗しました。</p>';
-		}
-
-		return	$this->px->redirect( $this->href().'&mode=thanks' );
-	}
-	/**
-	 * プロジェクトのパラメータ定義を編集：完了
-	 */
-	private function page_edit_param_define_thanks(){
-		$RTN = ''."\n";
-		$RTN .= '<p>プロジェクトのパラメータ定義を編集処理を完了しました。</p>';
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<input type="submit" value="戻る" />'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
+	// 		$param_list = array();
+	// 		foreach( $in as $key=>$val ){
+	// 			if( !preg_match( '/^param:(.+?):(.+)$/' , $key , $matches ) ){
+	// 				continue;
+	// 			}
+	// 			$param_list[$matches[1]] = true;
+	// 		}
+	// 		$param_list = array_keys( $param_list );
 
 
+	// 	}
+	// 	return	$this->page_edit_param_define_input( $error , $param_list );
+	// }
+	// /**
+	//  * プロジェクトのパラメータ定義を編集：入力
+	//  */
+	// private function page_edit_param_define_input( $error , $param_list ){
 
-	###################################################################################################################
+	// 	$RTN = ''."\n";
+	// 	$HIDDEN = ''."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	if( is_array( $param_list ) && count( $param_list ) ){
+	// 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 		$RTN .= '	<thead>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;">'."\n";
+	// 		$RTN .= '			<div>物理名</div>'."\n";
+	// 		$RTN .= '		</th>'."\n";
+	// 		$RTN .= '		<th style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>論理名/送信設定</div>'."\n";
+	// 		$RTN .= '		</th>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	</thead>'."\n";
+	// 		foreach( $param_list as $param_name ){
+	// 			$RTN .= '	<tr>'."\n";
+	// 			$RTN .= '		<th style="width:30%;">'."\n";
+	// 			$RTN .= '			<div><input type="text" name="param:'.$param_name.':key" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':key') ).'" /></div>'."\n";
+	// 			$RTN .= '		</th>'."\n";
+	// 			$RTN .= '		<td style="width:70%;">'."\n";
+	// 			$RTN .= '			<div><input type="text" name="param:'.$param_name.':name" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':name') ).'" /></div>'."\n";
+	// 			$check = array( 1=>' checked="checked"' );
+	// 			$RTN .= '			<div><input type="checkbox" name="param:'.$param_name.':request" id="param:'.$param_name.':request" value="1"'.$check[$this->px->req()->get_param('param:'.$param_name.':request')].' /><label for="param:'.$param_name.':request">リクエストに含める</label></div>'."\n";
+	// 			if( strlen( $error{'param:'.$param_name} ) ){
+	// 				$RTN .= '			<div class="error">'.$error{'param:'.$param_name}.'</div>'."\n";
+	// 			}
+	// 			$RTN .= '		</td>'."\n";
+	// 			$RTN .= '	</tr>'."\n";
 
+	// 		}
+	// 		$RTN .= '</table>'."\n";
+	// 	}
 
-	/**
-	 * 保存ファイル名のリライトルール編集
-	 */
-	private function start_edit_localfilename_rewriterules(){
-		if( strlen( $this->px->req()->get_param('add:before') ) ){
-			for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){;}
-			$this->px->req()->set_param( 'p'.$i.':priority' , $i );
-			$this->px->req()->set_param( 'p'.$i.':before' , $this->px->req()->get_param('add:before') );
-			$this->px->req()->set_param( 'p'.$i.':requiredparam' , $this->px->req()->get_param('add:requiredparam') );
-			$this->px->req()->set_param( 'p'.$i.':after' , $this->px->req()->get_param('add:after') );
-		}
+	// 	$RTN .= '<p>新しいパラメータを作成する場合は、ここに記入してください。</p>'."\n";
+	// 	$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 	$RTN .= '	<thead>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;">'."\n";
+	// 	$RTN .= '			<div>物理名</div>'."\n";
+	// 	$RTN .= '		</th>'."\n";
+	// 	$RTN .= '		<th style="width:70%;">'."\n";
+	// 	$RTN .= '			<div>論理名/送信設定</div>'."\n";
+	// 	$RTN .= '		</th>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	</thead>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div><input type="text" name="newparam:key" value="" /></div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="newparam:name" value="" /></div>'."\n";
+	// 	$RTN .= '			<div><input type="checkbox" name="newparam:request" id="newparam:request" value="1" /><label for="newparam:request">リクエストに含める</label></div>'."\n";
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '</table>'."\n";
 
-		$error = $this->check_edit_localfilename_rewriterules_check();
-		if( $this->px->req()->get_param('mode') == 'thanks' ){
-			return	$this->page_edit_localfilename_rewriterules_thanks();
-		}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
-			return	$this->page_edit_localfilename_rewriterules_confirm();
-		}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
-			return	$this->execute_edit_localfilename_rewriterules_execute();
-		}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
-			$error = array();
-			$project_model = &$this->pcconf->factory_model_project();
-			$project_model->load_project( $this->cmd[1] );
-			$rule_list = $project_model->get_localfilename_rewriterules();
-			if( is_array( $rule_list ) && count( $rule_list ) ){
-				$i = 0;
-				foreach( $rule_list as $Line ){
-					$i ++;
-					$this->px->req()->set_param( 'p'.$i.':priority' , $Line['priority'] );
-					$this->px->req()->set_param( 'p'.$i.':before' , $Line['before'] );
-					$this->px->req()->set_param( 'p'.$i.':requiredparam' , $Line['requiredparam'] );
-					$this->px->req()->set_param( 'p'.$i.':after' , $Line['after'] );
-				}
-			}
-		}
-		return	$this->page_edit_localfilename_rewriterules_input( $error );
-	}
-	/**
-	 * 保存ファイル名のリライトルール編集：入力
-	 */
-	private function page_edit_localfilename_rewriterules_input( $error ){
-		$RTN = ''."\n";
+	// 	$RTN .= '	<p>これでいい場合は「確認する」を、さらに追加する場合は「画面を更新」をクリックしてください。</p>'."\n";
+	// 	$RTN .= '	<div class="center">'."\n";
+	// 	$RTN .= '		<input type="submit" value="確認する" />'."\n";
+	// 	$RTN .= '		<input type="submit" value="画面を更新" onclick="document.getElementById(\'pc_document_form_mode\').value=\'input\'; return true;" />'."\n";
+	// 	$RTN .= '	</div>'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="confirm" id="pc_document_form_mode" />'."\n";
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * プロジェクトのパラメータ定義を編集：確認
+	//  */
+	// private function page_edit_param_define_confirm( $param_list ){
 
-		$RTN .= '<script type="text/javascript">'."\n";
-		$RTN .= '	function up_item(num){'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_up.value=num;'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
-		$RTN .= '	}'."\n";
-		$RTN .= '	function down_item(num){'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_down.value=num;'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
-		$RTN .= '	}'."\n";
-		$RTN .= '</script>'."\n";
+	// 	$RTN = ''."\n";
+	// 	$HIDDEN = ''."\n";
 
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post" id="cont_op_document_form">'."\n";
-		$RTN .= '<div class="unit cols">'."\n";
-		$RTN .= '	<div class="cols-col cols-1of2"><div class="cols-pad">'."\n";
-		$RTN .= '		<p>'."\n";
-		$RTN .= '			保存ファイル名の変換ルールを設定してください。<br />'."\n";
-		$RTN .= '		</p>'."\n";
+	// 	if( is_array( $param_list ) && count( $param_list ) ){
+	// 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 		$RTN .= '	<thead>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;">'."\n";
+	// 		$RTN .= '			<div>物理名</div>'."\n";
+	// 		$RTN .= '		</th>'."\n";
+	// 		$RTN .= '		<th style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>論理名/送信設定</div>'."\n";
+	// 		$RTN .= '		</th>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	</thead>'."\n";
+	// 		foreach( $param_list as $param_name ){
+	// 			$RTN .= '	<tr>'."\n";
+	// 			$RTN .= '		<th style="width:30%;"><div>'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':key') ).'</div></th>'."\n";
+	// 			$HIDDEN .= '<input type="hidden" name="param:'.$param_name.':key" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':key') ).'" />';
+	// 			$RTN .= '		<td style="width:70%;">'."\n";
+	// 			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':name') ).'</div>'."\n";
+	// 			$HIDDEN .= '<input type="hidden" name="'.htmlspecialchars( 'param:'.$param_name.':name' ).'" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':name') ).'" />';
+	// 			if( $this->px->req()->get_param('param:'.$param_name.':request') ){
+	// 				$RTN .= '			<div>リクエストに含める</div>'."\n";
+	// 			}else{
+	// 				$RTN .= '			<div>リクエストに含めない</div>'."\n";
+	// 			}
+	// 			$HIDDEN .= '<input type="hidden" name="'.htmlspecialchars( 'param:'.$param_name.':request' ).'" value="'.htmlspecialchars( $this->px->req()->get_param('param:'.$param_name.':request') ).'" />';
+	// 			$RTN .= '		</td>'."\n";
+	// 			$RTN .= '	</tr>'."\n";
+	// 		}
+	// 		$RTN .= '</table>'."\n";
+	// 	}else{
+	// 		$RTN .= '<p>パラメータを定義しない。</p>'."\n";
+	// 	}
 
-		$entry_list = array();
-		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){
-			$MEMO = array();
-			$MEMO['priority']		= $i;
-			$MEMO['before']			= $this->px->req()->get_param( 'p'.$i.':before' );
-			$MEMO['requiredparam']	= $this->px->req()->get_param( 'p'.$i.':requiredparam' );
-			$MEMO['after']			= $this->px->req()->get_param( 'p'.$i.':after' );
-			array_push( $entry_list , $MEMO );
-		}
+	// 	$RTN .= '<p>この設定でよろしければ、「保存する」をクリックしてください。</p>'."\n";
 
-		if( strlen( $this->px->req()->get_param('operation_up') ) && $this->px->req()->get_param('operation_up') > 1 ){
-			foreach( $entry_list as $key=>$line ){
-				if( $line['priority'] == intval( $this->px->req()->get_param('operation_up') ) ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') )-1;
-					continue;
-				}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_up'))-1 ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') );
-					continue;
-				}
-			}
-		}elseif( strlen( $this->px->req()->get_param('operation_down') ) && $this->px->req()->get_param('operation_down') < count( $entry_list ) ){
-			foreach( $entry_list as $key=>$line ){
-				if( $line['priority'] == intval( $this->px->req()->get_param('operation_down') ) ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') )+1;
-					continue;
-				}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_down'))+1 ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') );
-					continue;
-				}
-			}
-		}
+	// 	$RTN .= '<div class="unit center">'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="保存する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="訂正する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '</div>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '	<p class="center"><input type="submit" value="キャンセル" /></p>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * プロジェクトのパラメータ定義を編集：チェック
+	//  */
+	// private function check_edit_param_define_check( $param_list ){
+	// 	$RTN = array();
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * プロジェクトのパラメータ定義を編集：実行
+	//  */
+	// private function execute_edit_param_define_execute( $param_list ){
+	// 	// if( !$this->user->save_t_lastaction() ){
+	// 	// 	#	2重書き込み防止
+	// 	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// 	// }
 
-		usort( $entry_list , create_function( '$a,$b' , 'if( $a[\'priority\'] > $b[\'priority\'] ){ return 1; } if( $a[\'priority\'] < $b[\'priority\'] ){ return -1; } return 0;' ) );
+	// 	$project_model = &$this->pcconf->factory_model_project();
+	// 	$project_model->load_project( $this->cmd[1] );
+	// 	$project_model->clear_param_define();
 
-		foreach( $entry_list as $line ){
-			$btn_operation_up = '<a href="javascript:up_item('.t::data2text( $line['priority'] ).');">上へ</a>';
-			$btn_operation_down = '<a href="javascript:down_item('.t::data2text( $line['priority'] ).');">下へ</a>';
+	// 	foreach( $param_list as $param_key ){
+	// 		$project_model->set_param_define( $param_key , 'name' , $this->px->req()->get_param('param:'.$param_key.':name') );
+	// 		$project_model->set_param_define( $param_key , 'request' , $this->px->req()->get_param('param:'.$param_key.':request') );
+	// 	}
 
-			$RTN .= '<h2>優先度['.$line['priority'].'] <span style="font-weight:normal;">'.$btn_operation_up.' '.$btn_operation_down.'</span></h2>'."\n";
-			$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>元のパス</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':before" value="'.htmlspecialchars( $line['before'] ).'" /></div>'."\n";
-			if( strlen( $error['p'.$line['priority'].':before'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':before'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>変換後の保存先パス</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':after" value="'.htmlspecialchars( $line['after'] ).'" /></div>'."\n";
-			if( strlen( $error['p'.$line['priority'].':after'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':after'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>必須URLパラメータ</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':requiredparam" value="'.htmlspecialchars( $line['requiredparam'] ).'" /></div>'."\n";
-			if( strlen( $error['p'.$line['priority'].':requiredparam'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':requiredparam'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '</table>'."\n";
-		}
+	// 	$result = $project_model->save_project();
+	// 	if( !$result ){
+	// 		return	'<p class="error">保存に失敗しました。</p>';
+	// 	}
 
-		$RTN .= '<hr />'."\n";
+	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// }
+	// /**
+	//  * プロジェクトのパラメータ定義を編集：完了
+	//  */
+	// private function page_edit_param_define_thanks(){
+	// 	$RTN = ''."\n";
+	// 	$RTN .= '<p>プロジェクトのパラメータ定義を編集処理を完了しました。</p>';
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="submit" value="戻る" />'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
 
-		$RTN .= ''.$this->mk_hx( '条件を追加' ).''."\n";
-		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>元のパス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:before" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		if( strlen( $error['add:before'] ) ){
-			$RTN .= '			<div class="error">'.$error['add:before'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>変換後の保存先パス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:after" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		if( strlen( $error{'add:after'} ) ){
-			$RTN .= '			<div class="error">'.$error{'add:after'}.'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>必須URLパラメータ</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:requiredparam" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		if( strlen( $error{'add:requiredparam'} ) ){
-			$RTN .= '			<div class="error">'.$error{'add:requiredparam'}.'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '</table>'."\n";
-
-		$RTN .= '	</div></div>'."\n";
-		$RTN .= '	<div class="cols-col cols-1of2 cols-last"><div class="cols-pad">'."\n";
-		$RTN .= '		<ul>'."\n";
-		$RTN .= '			<li>'."\n";
-		$RTN .= '				元のパス、変換後の保存先パスは、スラッシュから始まる絶対パスで指定してください。先頭のスラッシュは、常にドメイン名の直後の階層に当たります。<br />'."\n";
-		$RTN .= '			</li>'."\n";
-		$RTN .= '			<li>'."\n";
-		$RTN .= '				元のパスでは、アスタリスク(*)記号でワイルドカードを表現できます。<br />'."\n";
-		$RTN .= '			</li>'."\n";
-		$RTN .= '			<li>'."\n";
-		$RTN .= '				<p>'."\n";
-		$RTN .= '					変換後の保存先パスでは、次の特殊変数を利用できます。<br />'."\n";
-		$RTN .= '				</p>'."\n";
-		$RTN .= '				<dl>'."\n";
-		$RTN .= '					<dt>{$param.XXXXX}</dt>'."\n";
-		$RTN .= '						<dd>URLパラメータ($_POST/$_GET)から、キー「XXXXX」で得られた値。</dd>'."\n";
-		$RTN .= '					<dt>{$dirname}</dt>'."\n";
-		$RTN .= '						<dd>本来のパスから、ファイル名を取り除いた値。</dd>'."\n";
-		$RTN .= '					<dt>{$basename}</dt>'."\n";
-		$RTN .= '						<dd>本来のパスから、ファイル名だけを取り出した値。</dd>'."\n";
-		$RTN .= '					<dt>{$extension}</dt>'."\n";
-		$RTN .= '						<dd>本来のパスから、拡張子部分だけを取り出した値。</dd>'."\n";
-		$RTN .= '					<dt>{$basename_body}</dt>'."\n";
-		$RTN .= '						<dd>{$basename}から、拡張子部分を取り除いた値。</dd>'."\n";
-		$RTN .= '					<dt>{$wildcard.XXXXX}</dt>'."\n";
-		$RTN .= '						<dd>ワイルドカード「*(アスタリスク)」を指定したうち、キー「XXXXX」番目(1から数える)にマッチした値。</dd>'."\n";
-		$RTN .= '				</dl>'."\n";
-		$RTN .= '			</li>'."\n";
-		$RTN .= '		</ul>'."\n";
-		$RTN .= '	</div></div>'."\n";
-		$RTN .= '</div><!-- /.cols -->'."\n";
-
-		$RTN .= '	<p>これでいい場合は「確認する」を、さらに追加する場合は「画面を更新」をクリックしてください。</p>'."\n";
-		$RTN .= '	<div class="center">'."\n";
-		$RTN .= '		<input type="submit" value="確認する" />'."\n";
-		$RTN .= '		<input type="submit" value="画面を更新" onclick="document.getElementById(\'cont_op_document_form\').mode.value=\'input\';return true;" />'."\n";
-		$RTN .= '	</div>'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
-		$RTN .= '	<input type="hidden" name="operation_up" value="" />'."\n";
-		$RTN .= '	<input type="hidden" name="operation_down" value="" />'."\n";
-		$RTN .= '	'.''."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * 保存ファイル名のリライトルール編集：確認
-	 */
-	private function page_edit_localfilename_rewriterules_confirm(){
-		$RTN = ''."\n";
-		$HIDDEN = ''."\n";
-
-		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){
-			$RTN .= ''.$this->mk_hx('優先度['.$i.']').''."\n";
-			$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>元のパス</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':before') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':before" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':before') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>変換後の保存先パス</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':after') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':after" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':after') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>必須URLパラメータ</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':requiredparam') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':requiredparam" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':requiredparam') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '</table>'."\n";
-		}
-
-		$RTN .= '<div class="unit center">'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="保存する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="訂正する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '</div>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="キャンセル" /></p>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * 保存ファイル名のリライトルール編集：チェック
-	 */
-	private function check_edit_localfilename_rewriterules_check(){
-		$RTN = array();
-		return	$RTN;
-	}
-	/**
-	 * 保存ファイル名のリライトルール編集：実行
-	 */
-	private function execute_edit_localfilename_rewriterules_execute(){
-		// if( !$this->user->save_t_lastaction() ){
-		// 	#	2重書き込み防止
-		// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
-		// }
-
-		$project_model = &$this->pcconf->factory_model_project();
-		$project_model->load_project( $this->cmd[1] );
-		$project_model->clear_localfilename_rewriterules();
-
-		$rules = array();
-		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){
-			$MEMO = array();
-			$MEMO['priority'] = $i;
-			$MEMO['before'] = $this->px->req()->get_param('p'.$i.':before');
-			$MEMO['requiredparam'] = $this->px->req()->get_param('p'.$i.':requiredparam');
-			$MEMO['after'] = $this->px->req()->get_param('p'.$i.':after');
-			array_push( $rules , $MEMO );
-			unset( $MEMO );
-		}
-		$project_model->set_localfilename_rewriterules( $rules );
-
-		$result = $project_model->save_project();
-		if( !$result ){
-			return	'<p class="error">プロジェクト情報の保存に失敗しました。</p>';
-		}
-
-		return	$this->px->redirect( $this->href().'&mode=thanks' );
-	}
-	/**
-	 * 保存ファイル名のリライトルール編集：完了
-	 */
-	private function page_edit_localfilename_rewriterules_thanks(){
-		$RTN = ''."\n";
-		$RTN .= '<p>保存ファイル名のリライトルール編集処理を完了しました。</p>';
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<input type="submit" value="戻る" />'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
 
 
 	###################################################################################################################
 
 
-	/**
-	 * 文字コード・改行コード変換設定編集
-	 */
-	private function start_edit_charset(){
-		$error = $this->check_edit_charset_check();
-		if( $this->px->req()->get_param('mode') == 'thanks' ){
-			return	$this->page_edit_charset_thanks();
-		}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
-			return	$this->page_edit_charset_confirm();
-		}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
-			return	$this->execute_edit_charset_execute();
-		}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
-			$error = array();
-			$project_model = &$this->pcconf->factory_model_project();
-			$project_model->load_project( $this->cmd[1] );
+	// /**
+	//  * 保存ファイル名のリライトルール編集
+	//  */
+	// private function start_edit_localfilename_rewriterules(){
+	// 	if( strlen( $this->px->req()->get_param('add:before') ) ){
+	// 		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){;}
+	// 		$this->px->req()->set_param( 'p'.$i.':priority' , $i );
+	// 		$this->px->req()->set_param( 'p'.$i.':before' , $this->px->req()->get_param('add:before') );
+	// 		$this->px->req()->set_param( 'p'.$i.':requiredparam' , $this->px->req()->get_param('add:requiredparam') );
+	// 		$this->px->req()->set_param( 'p'.$i.':after' , $this->px->req()->get_param('add:after') );
+	// 	}
 
-			$this->px->req()->set_param( 'charset' ,$project_model->get_charset_charset() );
-			$this->px->req()->set_param( 'crlf' , $project_model->get_charset_crlf() );
-			$this->px->req()->set_param( 'ext' , $project_model->get_charset_ext() );
+	// 	$error = $this->check_edit_localfilename_rewriterules_check();
+	// 	if( $this->px->req()->get_param('mode') == 'thanks' ){
+	// 		return	$this->page_edit_localfilename_rewriterules_thanks();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
+	// 		return	$this->page_edit_localfilename_rewriterules_confirm();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
+	// 		return	$this->execute_edit_localfilename_rewriterules_execute();
+	// 	}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
+	// 		$error = array();
+	// 		$project_model = &$this->pcconf->factory_model_project();
+	// 		$project_model->load_project( $this->cmd[1] );
+	// 		$rule_list = $project_model->get_localfilename_rewriterules();
+	// 		if( is_array( $rule_list ) && count( $rule_list ) ){
+	// 			$i = 0;
+	// 			foreach( $rule_list as $Line ){
+	// 				$i ++;
+	// 				$this->px->req()->set_param( 'p'.$i.':priority' , $Line['priority'] );
+	// 				$this->px->req()->set_param( 'p'.$i.':before' , $Line['before'] );
+	// 				$this->px->req()->set_param( 'p'.$i.':requiredparam' , $Line['requiredparam'] );
+	// 				$this->px->req()->set_param( 'p'.$i.':after' , $Line['after'] );
+	// 			}
+	// 		}
+	// 	}
+	// 	return	$this->page_edit_localfilename_rewriterules_input( $error );
+	// }
+	// /**
+	//  * 保存ファイル名のリライトルール編集：入力
+	//  */
+	// private function page_edit_localfilename_rewriterules_input( $error ){
+	// 	$RTN = ''."\n";
 
-		}
-		return	$this->page_edit_charset_input( $error );
-	}
-	/**
-	 * 文字コード・改行コード変換設定編集：入力
-	 */
-	private function page_edit_charset_input( $error ){
-		$charsetList = array( 'UTF-8' , 'Shift_JIS' , 'EUC-JP' , 'JIS' );
-		$crlfList = array( 'CRLF' , 'CR' , 'LF' );
-		$RTN = '';
+	// 	$RTN .= '<script type="text/javascript">'."\n";
+	// 	$RTN .= '	function up_item(num){'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_up.value=num;'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
+	// 	$RTN .= '	}'."\n";
+	// 	$RTN .= '	function down_item(num){'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_down.value=num;'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
+	// 	$RTN .= '	}'."\n";
+	// 	$RTN .= '</script>'."\n";
 
-		$RTN .= '<p>'."\n";
-		$RTN .= '	文字コードの変換設定を編集します。<br />'."\n";
-		$RTN .= '</p>'."\n";
-		$RTN .= '<p>'."\n";
-		$RTN .= '	この設定により、収集したファイルの文字コードと改行コードを一律整形することができます。<br />'."\n";
-		$RTN .= '</p>'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>文字コード</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('charset')=>' selected="selected"' );
-		$RTN .= '				<select name="charset">'."\n";
-		$RTN .= '					<option value=""'.$c[''].'>変換しない</option>'."\n";
-		foreach( $charsetList as $charset ){
-			$RTN .= '					<option value="'.htmlspecialchars( $charset ).'"'.$c[$charset].'>'.htmlspecialchars( $charset ).'</option>'."\n";
-		}
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['charset'] ) ){
-			$RTN .= '			<div class="error">'.$error['charset'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>改行コード</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('crlf')=>' selected="selected"' );
-		$RTN .= '				<select name="crlf">'."\n";
-		$RTN .= '					<option value=""'.$c[''].'>変換しない</option>'."\n";
-		foreach( $crlfList as $crlf ){
-			$RTN .= '					<option value="'.htmlspecialchars( $crlf ).'"'.$c[$crlf].'>'.htmlspecialchars( $crlf ).'</option>'."\n";
-		}
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['crlf'] ) ){
-			$RTN .= '			<div class="error">'.$error['crlf'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="ext" value="'.htmlspecialchars( $this->px->req()->get_param('ext') ).'" /></div>'."\n";
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※セミコロン区切りで複数指定できます。</li>'."\n";
-		$RTN .= '				<li>※例：<code>html;htm;css;js</code></li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		if( strlen( $error['ext'] ) ){
-			$RTN .= '			<div class="error">'.$error['ext'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '</table>'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="確認する" /></p>'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * 文字コード・改行コード変換設定編集：確認
-	 */
-	private function page_edit_charset_confirm(){
-		$RTN = '';
-		$HIDDEN = '';
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post" id="cont_op_document_form">'."\n";
+	// 	$RTN .= '<div class="unit cols">'."\n";
+	// 	$RTN .= '	<div class="cols-col cols-1of2"><div class="cols-pad">'."\n";
+	// 	$RTN .= '		<p>'."\n";
+	// 	$RTN .= '			保存ファイル名の変換ルールを設定してください。<br />'."\n";
+	// 	$RTN .= '		</p>'."\n";
 
-		$RTN .= '<p>'."\n";
-		$RTN .= '	文字コード・改行コード変換設定を確認してください。<br />'."\n";
-		$RTN .= '</p>'."\n";
-		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>文字コード</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('charset') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="charset" value="'.htmlspecialchars( $this->px->req()->get_param('charset') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>改行コード</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('crlf') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="crlf" value="'.htmlspecialchars( $this->px->req()->get_param('crlf') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$extlist = explode( ';' , $this->px->req()->get_param('ext') );
-		$MEMO = '';
-		foreach( $extlist as $ext ){
-			$ext = trim($ext);
-			if( !strlen( $ext ) ){ continue; }
-			$MEMO .= '	<li>'.htmlspecialchars( $ext ).'</li>'."\n";
-		}
-		if( strlen( $MEMO ) ){
-			$RTN .= '			<ul>'."\n";
-			$RTN .= $MEMO;
-			$RTN .= '			</ul>'."\n";
-		}else{
-			$RTN .= '			<div>拡張子は登録されません。</div>'."\n";
-		}
-		$HIDDEN .= '<input type="hidden" name="ext" value="'.htmlspecialchars( $this->px->req()->get_param('ext') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '</table>'."\n";
+	// 	$entry_list = array();
+	// 	for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){
+	// 		$MEMO = array();
+	// 		$MEMO['priority']		= $i;
+	// 		$MEMO['before']			= $this->px->req()->get_param( 'p'.$i.':before' );
+	// 		$MEMO['requiredparam']	= $this->px->req()->get_param( 'p'.$i.':requiredparam' );
+	// 		$MEMO['after']			= $this->px->req()->get_param( 'p'.$i.':after' );
+	// 		array_push( $entry_list , $MEMO );
+	// 	}
 
-		$RTN .= '<div class="unit center">'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="保存する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="訂正する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '</div>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * 文字コード・改行コード変換設定編集：チェック
-	 */
-	private function check_edit_charset_check(){
-		$charsetList = array( 'UTF-8' , 'Shift_JIS' , 'EUC-JP' , 'JIS' );
-		$RTN = array();
-		if( strlen( $this->px->req()->get_param('charset') ) ){
-			$is_hit = false;
-			foreach( $charsetList as $charset ){
-				if( $charset == $this->px->req()->get_param('charset') ){
-					$is_hit = true;
-					break;
-				}
-			}
-			if( !$is_hit ){
-				$RTN['charset'] = '選択できない文字コードが指定されました。';
-			}
-		}
+	// 	if( strlen( $this->px->req()->get_param('operation_up') ) && $this->px->req()->get_param('operation_up') > 1 ){
+	// 		foreach( $entry_list as $key=>$line ){
+	// 			if( $line['priority'] == intval( $this->px->req()->get_param('operation_up') ) ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') )-1;
+	// 				continue;
+	// 			}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_up'))-1 ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') );
+	// 				continue;
+	// 			}
+	// 		}
+	// 	}elseif( strlen( $this->px->req()->get_param('operation_down') ) && $this->px->req()->get_param('operation_down') < count( $entry_list ) ){
+	// 		foreach( $entry_list as $key=>$line ){
+	// 			if( $line['priority'] == intval( $this->px->req()->get_param('operation_down') ) ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') )+1;
+	// 				continue;
+	// 			}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_down'))+1 ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') );
+	// 				continue;
+	// 			}
+	// 		}
+	// 	}
 
-		$crlfList = array( 'CRLF' , 'CR' , 'LF' );
-		$RTN = array();
-		if( strlen( $this->px->req()->get_param('crlf') ) ){
-			$is_hit = false;
-			foreach( $crlfList as $crlf ){
-				if( $crlf == $this->px->req()->get_param('crlf') ){
-					$is_hit = true;
-					break;
-				}
-			}
-			if( !$is_hit ){
-				$RTN['crlf'] = '選択できない改行コードが指定されました。';
-			}
-		}
-		return	$RTN;
-	}
-	/**
-	 * 文字コード・改行コード変換設定編集：実行
-	 */
-	private function execute_edit_charset_execute(){
-		// if( !$this->user->save_t_lastaction() ){
-		// 	#	2重書き込み防止
-		// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
-		// }
+	// 	usort( $entry_list , create_function( '$a,$b' , 'if( $a[\'priority\'] > $b[\'priority\'] ){ return 1; } if( $a[\'priority\'] < $b[\'priority\'] ){ return -1; } return 0;' ) );
 
-		$project_model = &$this->pcconf->factory_model_project();
-		$project_model->load_project( $this->cmd[1] );
+	// 	foreach( $entry_list as $line ){
+	// 		$btn_operation_up = '<a href="javascript:up_item('.t::data2text( $line['priority'] ).');">上へ</a>';
+	// 		$btn_operation_down = '<a href="javascript:down_item('.t::data2text( $line['priority'] ).');">下へ</a>';
 
-		$project_model->set_charset_charset( $this->px->req()->get_param('charset') );
-		$project_model->set_charset_crlf( $this->px->req()->get_param('crlf') );
-		$project_model->set_charset_ext( $this->px->req()->get_param('ext') );
+	// 		$RTN .= '<h2>優先度['.$line['priority'].'] <span style="font-weight:normal;">'.$btn_operation_up.' '.$btn_operation_down.'</span></h2>'."\n";
+	// 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>元のパス</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':before" value="'.htmlspecialchars( $line['before'] ).'" /></div>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':before'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':before'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>変換後の保存先パス</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':after" value="'.htmlspecialchars( $line['after'] ).'" /></div>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':after'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':after'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>必須URLパラメータ</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':requiredparam" value="'.htmlspecialchars( $line['requiredparam'] ).'" /></div>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':requiredparam'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':requiredparam'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '</table>'."\n";
+	// 	}
 
-		$result = $project_model->save_project();
-		if( !$result ){
-			return	'<p class="error">プロジェクト情報の保存に失敗しました。</p>';
-		}
+	// 	$RTN .= '<hr />'."\n";
 
-		return	$this->px->redirect( $this->href().'&mode=thanks' );
-	}
-	/**
-	 * 文字コード・改行コード変換設定編集：完了
-	 */
-	private function page_edit_charset_thanks(){
-		$RTN = '';
-		$RTN .= '<p>文字コード・改行コード変換設定を保存しました。</p>';
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<input type="submit" value="戻る" />'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
+	// 	$RTN .= ''.$this->mk_hx( '条件を追加' ).''."\n";
+	// 	$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>元のパス</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:before" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	if( strlen( $error['add:before'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['add:before'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>変換後の保存先パス</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:after" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	if( strlen( $error{'add:after'} ) ){
+	// 		$RTN .= '			<div class="error">'.$error{'add:after'}.'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>必須URLパラメータ</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:requiredparam" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	if( strlen( $error{'add:requiredparam'} ) ){
+	// 		$RTN .= '			<div class="error">'.$error{'add:requiredparam'}.'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '</table>'."\n";
+
+	// 	$RTN .= '	</div></div>'."\n";
+	// 	$RTN .= '	<div class="cols-col cols-1of2 cols-last"><div class="cols-pad">'."\n";
+	// 	$RTN .= '		<ul>'."\n";
+	// 	$RTN .= '			<li>'."\n";
+	// 	$RTN .= '				元のパス、変換後の保存先パスは、スラッシュから始まる絶対パスで指定してください。先頭のスラッシュは、常にドメイン名の直後の階層に当たります。<br />'."\n";
+	// 	$RTN .= '			</li>'."\n";
+	// 	$RTN .= '			<li>'."\n";
+	// 	$RTN .= '				元のパスでは、アスタリスク(*)記号でワイルドカードを表現できます。<br />'."\n";
+	// 	$RTN .= '			</li>'."\n";
+	// 	$RTN .= '			<li>'."\n";
+	// 	$RTN .= '				<p>'."\n";
+	// 	$RTN .= '					変換後の保存先パスでは、次の特殊変数を利用できます。<br />'."\n";
+	// 	$RTN .= '				</p>'."\n";
+	// 	$RTN .= '				<dl>'."\n";
+	// 	$RTN .= '					<dt>{$param.XXXXX}</dt>'."\n";
+	// 	$RTN .= '						<dd>URLパラメータ($_POST/$_GET)から、キー「XXXXX」で得られた値。</dd>'."\n";
+	// 	$RTN .= '					<dt>{$dirname}</dt>'."\n";
+	// 	$RTN .= '						<dd>本来のパスから、ファイル名を取り除いた値。</dd>'."\n";
+	// 	$RTN .= '					<dt>{$basename}</dt>'."\n";
+	// 	$RTN .= '						<dd>本来のパスから、ファイル名だけを取り出した値。</dd>'."\n";
+	// 	$RTN .= '					<dt>{$extension}</dt>'."\n";
+	// 	$RTN .= '						<dd>本来のパスから、拡張子部分だけを取り出した値。</dd>'."\n";
+	// 	$RTN .= '					<dt>{$basename_body}</dt>'."\n";
+	// 	$RTN .= '						<dd>{$basename}から、拡張子部分を取り除いた値。</dd>'."\n";
+	// 	$RTN .= '					<dt>{$wildcard.XXXXX}</dt>'."\n";
+	// 	$RTN .= '						<dd>ワイルドカード「*(アスタリスク)」を指定したうち、キー「XXXXX」番目(1から数える)にマッチした値。</dd>'."\n";
+	// 	$RTN .= '				</dl>'."\n";
+	// 	$RTN .= '			</li>'."\n";
+	// 	$RTN .= '		</ul>'."\n";
+	// 	$RTN .= '	</div></div>'."\n";
+	// 	$RTN .= '</div><!-- /.cols -->'."\n";
+
+	// 	$RTN .= '	<p>これでいい場合は「確認する」を、さらに追加する場合は「画面を更新」をクリックしてください。</p>'."\n";
+	// 	$RTN .= '	<div class="center">'."\n";
+	// 	$RTN .= '		<input type="submit" value="確認する" />'."\n";
+	// 	$RTN .= '		<input type="submit" value="画面を更新" onclick="document.getElementById(\'cont_op_document_form\').mode.value=\'input\';return true;" />'."\n";
+	// 	$RTN .= '	</div>'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
+	// 	$RTN .= '	<input type="hidden" name="operation_up" value="" />'."\n";
+	// 	$RTN .= '	<input type="hidden" name="operation_down" value="" />'."\n";
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 保存ファイル名のリライトルール編集：確認
+	//  */
+	// private function page_edit_localfilename_rewriterules_confirm(){
+	// 	$RTN = ''."\n";
+	// 	$HIDDEN = ''."\n";
+
+	// 	for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){
+	// 		$RTN .= ''.$this->mk_hx('優先度['.$i.']').''."\n";
+	// 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>元のパス</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':before') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':before" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':before') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>変換後の保存先パス</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':after') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':after" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':after') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>必須URLパラメータ</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':requiredparam') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':requiredparam" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':requiredparam') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '</table>'."\n";
+	// 	}
+
+	// 	$RTN .= '<div class="unit center">'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="保存する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="訂正する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '</div>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '	<p class="center"><input type="submit" value="キャンセル" /></p>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 保存ファイル名のリライトルール編集：チェック
+	//  */
+	// private function check_edit_localfilename_rewriterules_check(){
+	// 	$RTN = array();
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 保存ファイル名のリライトルール編集：実行
+	//  */
+	// private function execute_edit_localfilename_rewriterules_execute(){
+	// 	// if( !$this->user->save_t_lastaction() ){
+	// 	// 	#	2重書き込み防止
+	// 	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// 	// }
+
+	// 	$project_model = &$this->pcconf->factory_model_project();
+	// 	$project_model->load_project( $this->cmd[1] );
+	// 	$project_model->clear_localfilename_rewriterules();
+
+	// 	$rules = array();
+	// 	for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':after') ); $i ++ ){
+	// 		$MEMO = array();
+	// 		$MEMO['priority'] = $i;
+	// 		$MEMO['before'] = $this->px->req()->get_param('p'.$i.':before');
+	// 		$MEMO['requiredparam'] = $this->px->req()->get_param('p'.$i.':requiredparam');
+	// 		$MEMO['after'] = $this->px->req()->get_param('p'.$i.':after');
+	// 		array_push( $rules , $MEMO );
+	// 		unset( $MEMO );
+	// 	}
+	// 	$project_model->set_localfilename_rewriterules( $rules );
+
+	// 	$result = $project_model->save_project();
+	// 	if( !$result ){
+	// 		return	'<p class="error">プロジェクト情報の保存に失敗しました。</p>';
+	// 	}
+
+	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// }
+	// /**
+	//  * 保存ファイル名のリライトルール編集：完了
+	//  */
+	// private function page_edit_localfilename_rewriterules_thanks(){
+	// 	$RTN = ''."\n";
+	// 	$RTN .= '<p>保存ファイル名のリライトルール編集処理を完了しました。</p>';
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="submit" value="戻る" />'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+
+
+	###################################################################################################################
+
+
+	// /**
+	//  * 文字コード・改行コード変換設定編集
+	//  */
+	// private function start_edit_charset(){
+	// 	$error = $this->check_edit_charset_check();
+	// 	if( $this->px->req()->get_param('mode') == 'thanks' ){
+	// 		return	$this->page_edit_charset_thanks();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
+	// 		return	$this->page_edit_charset_confirm();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
+	// 		return	$this->execute_edit_charset_execute();
+	// 	}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
+	// 		$error = array();
+	// 		$project_model = &$this->pcconf->factory_model_project();
+	// 		$project_model->load_project( $this->cmd[1] );
+
+	// 		$this->px->req()->set_param( 'charset' ,$project_model->get_charset_charset() );
+	// 		$this->px->req()->set_param( 'crlf' , $project_model->get_charset_crlf() );
+	// 		$this->px->req()->set_param( 'ext' , $project_model->get_charset_ext() );
+
+	// 	}
+	// 	return	$this->page_edit_charset_input( $error );
+	// }
+	// /**
+	//  * 文字コード・改行コード変換設定編集：入力
+	//  */
+	// private function page_edit_charset_input( $error ){
+	// 	$charsetList = array( 'UTF-8' , 'Shift_JIS' , 'EUC-JP' , 'JIS' );
+	// 	$crlfList = array( 'CRLF' , 'CR' , 'LF' );
+	// 	$RTN = '';
+
+	// 	$RTN .= '<p>'."\n";
+	// 	$RTN .= '	文字コードの変換設定を編集します。<br />'."\n";
+	// 	$RTN .= '</p>'."\n";
+	// 	$RTN .= '<p>'."\n";
+	// 	$RTN .= '	この設定により、収集したファイルの文字コードと改行コードを一律整形することができます。<br />'."\n";
+	// 	$RTN .= '</p>'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>文字コード</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div>'."\n";
+	// 	$c = array( $this->px->req()->get_param('charset')=>' selected="selected"' );
+	// 	$RTN .= '				<select name="charset">'."\n";
+	// 	$RTN .= '					<option value=""'.$c[''].'>変換しない</option>'."\n";
+	// 	foreach( $charsetList as $charset ){
+	// 		$RTN .= '					<option value="'.htmlspecialchars( $charset ).'"'.$c[$charset].'>'.htmlspecialchars( $charset ).'</option>'."\n";
+	// 	}
+	// 	$RTN .= '				</select>'."\n";
+	// 	$RTN .= '			</div>'."\n";
+	// 	if( strlen( $error['charset'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['charset'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>改行コード</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div>'."\n";
+	// 	$c = array( $this->px->req()->get_param('crlf')=>' selected="selected"' );
+	// 	$RTN .= '				<select name="crlf">'."\n";
+	// 	$RTN .= '					<option value=""'.$c[''].'>変換しない</option>'."\n";
+	// 	foreach( $crlfList as $crlf ){
+	// 		$RTN .= '					<option value="'.htmlspecialchars( $crlf ).'"'.$c[$crlf].'>'.htmlspecialchars( $crlf ).'</option>'."\n";
+	// 	}
+	// 	$RTN .= '				</select>'."\n";
+	// 	$RTN .= '			</div>'."\n";
+	// 	if( strlen( $error['crlf'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['crlf'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="ext" value="'.htmlspecialchars( $this->px->req()->get_param('ext') ).'" /></div>'."\n";
+	// 	$RTN .= '			<ul class="form_elements-notes">'."\n";
+	// 	$RTN .= '				<li>※セミコロン区切りで複数指定できます。</li>'."\n";
+	// 	$RTN .= '				<li>※例：<code>html;htm;css;js</code></li>'."\n";
+	// 	$RTN .= '			</ul>'."\n";
+	// 	if( strlen( $error['ext'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['ext'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '</table>'."\n";
+	// 	$RTN .= '	<p class="center"><input type="submit" value="確認する" /></p>'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 文字コード・改行コード変換設定編集：確認
+	//  */
+	// private function page_edit_charset_confirm(){
+	// 	$RTN = '';
+	// 	$HIDDEN = '';
+
+	// 	$RTN .= '<p>'."\n";
+	// 	$RTN .= '	文字コード・改行コード変換設定を確認してください。<br />'."\n";
+	// 	$RTN .= '</p>'."\n";
+	// 	$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>文字コード</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('charset') ).'</div>'."\n";
+	// 	$HIDDEN .= '<input type="hidden" name="charset" value="'.htmlspecialchars( $this->px->req()->get_param('charset') ).'" />';
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>改行コード</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('crlf') ).'</div>'."\n";
+	// 	$HIDDEN .= '<input type="hidden" name="crlf" value="'.htmlspecialchars( $this->px->req()->get_param('crlf') ).'" />';
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$extlist = explode( ';' , $this->px->req()->get_param('ext') );
+	// 	$MEMO = '';
+	// 	foreach( $extlist as $ext ){
+	// 		$ext = trim($ext);
+	// 		if( !strlen( $ext ) ){ continue; }
+	// 		$MEMO .= '	<li>'.htmlspecialchars( $ext ).'</li>'."\n";
+	// 	}
+	// 	if( strlen( $MEMO ) ){
+	// 		$RTN .= '			<ul>'."\n";
+	// 		$RTN .= $MEMO;
+	// 		$RTN .= '			</ul>'."\n";
+	// 	}else{
+	// 		$RTN .= '			<div>拡張子は登録されません。</div>'."\n";
+	// 	}
+	// 	$HIDDEN .= '<input type="hidden" name="ext" value="'.htmlspecialchars( $this->px->req()->get_param('ext') ).'" />';
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '</table>'."\n";
+
+	// 	$RTN .= '<div class="unit center">'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="保存する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="訂正する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '</div>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 文字コード・改行コード変換設定編集：チェック
+	//  */
+	// private function check_edit_charset_check(){
+	// 	$charsetList = array( 'UTF-8' , 'Shift_JIS' , 'EUC-JP' , 'JIS' );
+	// 	$RTN = array();
+	// 	if( strlen( $this->px->req()->get_param('charset') ) ){
+	// 		$is_hit = false;
+	// 		foreach( $charsetList as $charset ){
+	// 			if( $charset == $this->px->req()->get_param('charset') ){
+	// 				$is_hit = true;
+	// 				break;
+	// 			}
+	// 		}
+	// 		if( !$is_hit ){
+	// 			$RTN['charset'] = '選択できない文字コードが指定されました。';
+	// 		}
+	// 	}
+
+	// 	$crlfList = array( 'CRLF' , 'CR' , 'LF' );
+	// 	$RTN = array();
+	// 	if( strlen( $this->px->req()->get_param('crlf') ) ){
+	// 		$is_hit = false;
+	// 		foreach( $crlfList as $crlf ){
+	// 			if( $crlf == $this->px->req()->get_param('crlf') ){
+	// 				$is_hit = true;
+	// 				break;
+	// 			}
+	// 		}
+	// 		if( !$is_hit ){
+	// 			$RTN['crlf'] = '選択できない改行コードが指定されました。';
+	// 		}
+	// 	}
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 文字コード・改行コード変換設定編集：実行
+	//  */
+	// private function execute_edit_charset_execute(){
+	// 	// if( !$this->user->save_t_lastaction() ){
+	// 	// 	#	2重書き込み防止
+	// 	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// 	// }
+
+	// 	$project_model = &$this->pcconf->factory_model_project();
+	// 	$project_model->load_project( $this->cmd[1] );
+
+	// 	$project_model->set_charset_charset( $this->px->req()->get_param('charset') );
+	// 	$project_model->set_charset_crlf( $this->px->req()->get_param('crlf') );
+	// 	$project_model->set_charset_ext( $this->px->req()->get_param('ext') );
+
+	// 	$result = $project_model->save_project();
+	// 	if( !$result ){
+	// 		return	'<p class="error">プロジェクト情報の保存に失敗しました。</p>';
+	// 	}
+
+	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// }
+	// /**
+	//  * 文字コード・改行コード変換設定編集：完了
+	//  */
+	// private function page_edit_charset_thanks(){
+	// 	$RTN = '';
+	// 	$RTN .= '<p>文字コード・改行コード変換設定を保存しました。</p>';
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="submit" value="戻る" />'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
 
 
 	###################################################################################################################
@@ -2950,15 +2964,6 @@ class pxplugin_asazuke_admin{
 	 */
 	private function check_edit_preg_replace_check(){
 		$RTN = array();
-/*
-		if( !strlen( $this->px->req()->get_param('field_id') ) ){
-			$RTN['field_id'] = 'フィールド名は必ず入力してください。';
-		}elseif( strlen( $this->px->req()->get_param('field_id') ) < 10 ){
-			$RTN['field_id'] = 'フィールド名は10バイト以上入力してください。';
-		}elseif( strlen( $this->px->req()->get_param('field_id') ) > 100 ){
-			$RTN['field_id'] = 'フィールド名は100バイト以内で入力してください。';
-		}
-*/
 		return	$RTN;
 	}
 	/**
