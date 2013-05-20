@@ -14,7 +14,7 @@ class pxplugin_asazuke_crawlctrl{
 	private $project_model;
 	private $program_model;
 
-	private $target_url_list = array();	//実行待ちURLの一覧
+	private $target_path_list = array();	//実行待ちURLの一覧
 	private $done_url_count = 0;		//実行済みURLの数
 
 	private $crawl_starttime = 0;//クロール開始時刻
@@ -136,12 +136,13 @@ class pxplugin_asazuke_crawlctrl{
 		$project_model = &$this->project_model;
 		$program_model = &$this->program_model;
 
-		$this->msg( '---------- Pickles Crawler ----------' );
+		$this->msg( '---------- asazuke ----------' );
 		$this->msg( 'Copyright (C)Tomoya Koyanagi, All rights reserved.' );
 		$this->msg( '-------------------------------------' );
 		$this->msg( 'Executing Project ['.$project_model->get_project_name().'] Program ['.$program_model->get_program_name().']....' );
 		$this->msg( 'Process ID ['.getmypid().']' );
-		$this->msg( 'Start page URL => '.$project_model->get_path_startpage() );
+		$this->msg( 'Document root path => '.$project_model->get_path_docroot() );
+		$this->msg( 'Start page path => '.$project_model->get_path_startpage() );
 		$this->msg( 'Program Type => '.$program_model->get_program_type() );
 		$this->msg( 'crawl_max_url_number => '.$this->pcconf->get_value( 'crawl_max_url_number' ) );
 		if( !is_int( $this->pcconf->get_value( 'crawl_max_url_number' ) ) ){
@@ -189,18 +190,16 @@ class pxplugin_asazuke_crawlctrl{
 		#	スタートページを登録
 		$startpage = $project_model->get_path_startpage();
 		$this->msg( 'set ['.$startpage.'] as the Startpage.' );
-		$this->add_target_url( $startpage );
+
+		$this->add_target_path( $startpage );
 		unset( $startpage );
-		foreach( $this->project_model->get_urllist_startpages() as $additional_startpage ){
-			if( $this->add_target_url( $additional_startpage ) ){
-				$this->msg( 'add ['.$additional_startpage.'] as the Startpage.' );
-			}else{
-				$this->msg( 'FAILD to add ['.$additional_startpage.'] as the Startpage.' );
-			}
-		}
-		unset( $additional_startpage );
+
+		// 対象のファイルをスキャンして、スクレイピング対象に追加
+		$this->scan_starting_files($project_model);
+
 
 		#	CSVの定義行を保存
+		#	UTODO: 要項目見直し
 		$this->save_executed_url_row(
 			array(
 				'url'=>'URL' ,
@@ -226,9 +225,9 @@ class pxplugin_asazuke_crawlctrl{
 		#	クロールの設定をログに残す
 		$this->save_crawl_settings( $project_model , $program_model );
 
-		#######################################
-		#	HTTPリクエストオブジェクトを生成
-		$httpaccess = &$this->factory_httpaccess();
+		// #######################################
+		// #	HTTPリクエストオブジェクトを生成
+		// $httpaccess = &$this->factory_httpaccess();
 
 		$this->start_sitemap();
 			#	サイトマップを作成し始める
@@ -236,7 +235,7 @@ class pxplugin_asazuke_crawlctrl{
 		while( 1 ){
 			set_time_limit(0);
 
-			#	注釈：	このwhileループは、URLの一覧($this->target_url_list)を処理する途中で、
+			#	注釈：	このwhileループは、URLの一覧($this->target_path_list)を処理する途中で、
 			#			新しいURLがリストに追加される可能性があるため、
 			#			これがゼロ件になるまで処理を継続する必要があるために、用意されたものです。
 
@@ -254,7 +253,7 @@ class pxplugin_asazuke_crawlctrl{
 				break;
 			}
 
-			foreach( $this->target_url_list as $url=>$url_property ){
+			foreach( $this->target_path_list as $url=>$url_property ){
 				if( $this->is_request_cancel() ){
 					//キャンセル要求を検知したらば、中断して抜ける。
 					$cancel_message = 'This operation has been canceled.';
@@ -290,6 +289,14 @@ class pxplugin_asazuke_crawlctrl{
 				$fullpath_savetmpfile_to = $path_dir_download_to.'/tmp_downloadcontent.tmp';
 
 				clearstatcache();
+
+var_dump($path_dir_download_to);
+var_dump($url);
+var_dump($path_save_to);
+var_dump($fullpath_save_to);
+var_dump($fullpath_savetmpfile_to);
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
 
 				#--------------------------------------
 				#	HTTPアクセス実行
@@ -333,6 +340,10 @@ class pxplugin_asazuke_crawlctrl{
 				#--------------------------------------
 
 				clearstatcache();
+
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
+
 
 				#--------------------------------------
 				#	実際のあるべき場所へファイルを移動
@@ -382,6 +393,9 @@ class pxplugin_asazuke_crawlctrl{
 				#	/ 実際のあるべき場所へファイルを移動
 				#--------------------------------------
 
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
+
 				$html_meta_info = array();
 				switch( strtolower( $httpaccess->get_content_type() ) ){
 					case 'text/html':
@@ -428,6 +442,9 @@ class pxplugin_asazuke_crawlctrl{
 				#	/ 画面にメッセージを出力
 				#--------------------------------------
 
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
+
 				#--------------------------------------
 				#	完了のメモを残す
 				$tmp_crawlerror = '';
@@ -466,13 +483,16 @@ class pxplugin_asazuke_crawlctrl{
 				#	/ 完了のメモを残す
 				#--------------------------------------
 
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
+
 				clearstatcache();
 				if( !is_file( $fullpath_save_to ) ){
 					#	この時点でダウンロードファイルがあるべきパスに保存されていなければ、
 					#	これ以降の処理は不要。次へ進む。
 					$this->msg( '処理済件数 '.intval( $this->get_count_done_url() ).' 件.' );
-					$this->msg( '残件数 '.count( $this->target_url_list ).' 件.' );
-					$this->progress_report( 'progress' , intval( $this->get_count_done_url() ).'/'.count( $this->target_url_list ) );
+					$this->msg( '残件数 '.count( $this->target_path_list ).' 件.' );
+					$this->progress_report( 'progress' , intval( $this->get_count_done_url() ).'/'.count( $this->target_path_list ) );
 
 					$this->msg( '' );
 					continue;
@@ -487,23 +507,26 @@ class pxplugin_asazuke_crawlctrl{
 					}
 				}
 
-				#--------------------------------------
-				#	オペレータをロードして実行
-				$operator = &$this->factory_program_operator( $program_model->get_program_type() );
-				if( !$operator->execute( $httpaccess , $url , realpath( $fullpath_save_to ) , $url_property ) ){
-					$this->error_log( 'FAILD to Executing in operator object.' , __FILE__ , __LINE__ );
-					return	$this->exit_process();
-				}
+				// #--------------------------------------
+				// #	オペレータをロードして実行
+				// $operator = &$this->factory_program_operator( $program_model->get_program_type() );
+				// if( !$operator->execute( $httpaccess , $url , realpath( $fullpath_save_to ) , $url_property ) ){
+				// 	$this->error_log( 'FAILD to Executing in operator object.' , __FILE__ , __LINE__ );
+				// 	return	$this->exit_process();
+				// }
 
-				#--------------------------------------
-				#	文字コード・改行コード変換
-				#	PicklesCrawler 0.3.0 追加
-				$this->execute_charset( $path_save_to );
+				// #--------------------------------------
+				// #	文字コード・改行コード変換
+				// #	PicklesCrawler 0.3.0 追加
+				// $this->execute_charset( $path_save_to );
 
 				#--------------------------------------
 				#	一括置換処理
 				#	PicklesCrawler 0.3.0 追加
 				$this->execute_preg_replace( $path_save_to , $url );
+
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
 
 				#--------------------------------------
 				#	実行結果を取得
@@ -539,8 +562,8 @@ class pxplugin_asazuke_crawlctrl{
 						#	100番台
 						if( $status_cd == 100 ){
 							#	URL(parameter) を、実行待ちリストに追加
-							#	追加してもよいURLか否かは、add_target_url()が勝手に判断する。
-							if( $this->add_target_url( $result_line['parameter'] , $result_line['option'] ) ){
+							#	追加してもよいURLか否かは、add_target_path()が勝手に判断する。
+							if( $this->add_target_path( $result_line['parameter'] , $result_line['option'] ) ){
 								$this->msg( '['.$status_cd.'] Add Param: ['.$result_line['parameter'].'] '.$result_line['usermessage'] );
 							}
 
@@ -553,9 +576,12 @@ class pxplugin_asazuke_crawlctrl{
 					}
 				}
 
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
+
 				$this->msg( '処理済件数 '.intval( $this->get_count_done_url() ).' 件.' );
-				$this->msg( '残件数 '.count( $this->target_url_list ).' 件.' );
-				$this->progress_report( 'progress' , intval( $this->get_count_done_url() ).'/'.count( $this->target_url_list ) );
+				$this->msg( '残件数 '.count( $this->target_path_list ).' 件.' );
+				$this->progress_report( 'progress' , intval( $this->get_count_done_url() ).'/'.count( $this->target_path_list ) );
 
 				if( $this->get_count_done_url() >= $this->pcconf->get_value( 'crawl_max_url_number' ) ){
 					#	処理可能な最大URL数を超えたらおしまい。
@@ -578,6 +604,9 @@ class pxplugin_asazuke_crawlctrl{
 		unset( $httpaccess );
 		#	/ HTTPリクエストオブジェクトを破壊
 		#######################################
+
+var_dump(__LINE__);
+return	$this->exit_process();//開発中
 
 
 		#######################################
@@ -643,6 +672,41 @@ class pxplugin_asazuke_crawlctrl{
 	}
 
 
+	/**
+	 * 対象ページをスキャンしてスタートページに登録する
+	 */
+	private function scan_starting_files( $project_model, $path = null ){
+		if(!strlen($path)){
+			$path = '';
+		}
+		$path_base = $project_model->get_path_docroot();
+		if( !strlen($path_base) ){ return false; }
+		if( !is_dir($path_base.$path) ){
+			return false;
+		}
+
+		// スキャン開始
+		$ls = $this->px->dbh()->ls( $path_base.$path );
+		foreach( $ls as $base_name ){
+			if( is_dir( $path_base.$path.$base_name ) ){
+				// 再帰処理
+				$this->scan_starting_files($project_model, $path.$base_name.'/');
+			}elseif( is_file( $path_base.$path.$base_name ) ){
+				$ext = $this->px->dbh()->get_extension( $path_base.$path.$base_name );
+				switch( strtolower($ext) ){
+					case 'html':
+						$target_path = '/'.$path.$base_name;
+						$target_path = preg_replace( '/\/index\.html$/s', '/', $target_path );
+						if( $this->add_target_path( $target_path ) ){
+							$this->msg( 'set ['.$target_path.'] as the Startpage.' );
+						}else{
+							$this->msg( 'FAILD to add ['.$target_path.'] as the Startpage.' );
+						}
+						break;
+				}
+			}
+		}
+	}//scan_starting_files()
 
 	#########################################################################################################################################################
 
@@ -875,81 +939,31 @@ class pxplugin_asazuke_crawlctrl{
 	#	その他
 
 	/**
-	 * URLを処理待ちリストに追加
+	 * pathを処理待ちリストに追加
 	 */
-	private function add_target_url( $url , $option = array() ){
-		#	アンカーを考慮
-		if( strpos( $url , '#' ) ){
-			list($url,$anchor) = explode('#',$url,2);
-		}
-
-		$url = $this->project_model->optimize_url( $url );
+	private function add_target_path( $path , $option = array() ){
+		$path = preg_replace( '/\/$/', '/index.html' , $path );
 
 		#--------------------------------------
 		#	要求を評価
 
-		if( !preg_match( '/^https?\:\/\//' , $url ) ){ return false; }
+		if( !preg_match( '/^\/.+\.html$/' , $path ) ){ return false; }
 			// 定形外のURLは省く
-		if( is_array( $this->target_url_list[$url] ) ){ return false; }
+			// ここで扱うのは、*.html のみ
+		if( is_array( $this->target_path_list[$path] ) ){ return false; }
 			// すでに予約済みだったら省く
 
-		$path_saveto = $this->project_model->url2localpath( $url , $option['post'] );
 		$path_dir_download_to = $this->get_path_download_to();
-		if( is_dir( $path_dir_download_to.$path_saveto ) ){ return false; }
+		if( is_dir( $path_dir_download_to.$path ) ){ return false; }
 			// 既に保存済みだったら省く
-		if( is_file( $path_dir_download_to.$path_saveto ) ){ return false; }
+		if( is_file( $path_dir_download_to.$path ) ){ return false; }
 			// 既に保存済みだったら省く
 
-		if( !$this->project_model->get_send_form_flg() ){
-			#	フォームを送信しない設定だったら
-			#	PicklesCrawler 0.1.7 追加
-			if( strlen( $option['type'] ) && strtolower( $option['type'] ) == 'form' ){
-				#	フォームのデータなら追加しない
-				return	false;
-			}
-		}
-
-		#	対象外URLリストを評価
-		if( $this->project_model->is_outofsite( $url ) ){
-			return	false;
-		}
-
-		#	対象範囲とするURLリストを評価
-		if( !$this->program_model->is_scope( $url ) ){
-			#	対象範囲外だったらやめる
-			return	false;
-		}
-
-		#	ダウンロードしないURLリストを評価
-		if( $this->program_model->is_nodownload( $url ) ){
-			#	ダウンロードしない指定があったらやめる
-			return	false;
-		}
 
 		#--------------------------------------
 		#	問題がなければ追加。
-		$this->target_url_list[$url] = array();
-		$this->target_url_list[$url]['url'] = $url;
-		if( strlen( $option['referer'] ) ){
-			$this->target_url_list[$url]['referer'] = $option['referer'];
-		}
-
-		if( !strlen( $option['method'] ) ){
-			$option['method'] = 'GET';
-		}
-		#	13:44 2008/04/16 追加
-		$this->target_url_list[$url]['method'] = $option['method'];
-
-		if( strlen( $option['post'] ) ){
-			#	13:44 2008/04/16 追加
-			#	post が指定された場合にも、メソッド POST とは限らない。
-			$this->target_url_list[$url]['post'] = $option['post'];
-		}
-		if( strlen( $option['type'] ) ){
-			#	13:44 2008/04/16 追加
-			#	<a>とか<form>とか<img>とか<style>とか<script>とかの区別をしたい。
-			$this->target_url_list[$url]['type'] = $option['type'];
-		}
+		$this->target_path_list[$path] = array();
+		$this->target_path_list[$path]['path'] = $path;
 
 		return	true;
 	}
@@ -958,13 +972,13 @@ class pxplugin_asazuke_crawlctrl{
 	 * 現在処理待ちのURL数を取得
 	 */
 	public function get_count_target_url(){
-		return	count( $this->target_url_list );
+		return	count( $this->target_path_list );
 	}
 	/**
 	 * URLが処理済であることを宣言
 	 */
 	private function target_url_done( $url ){
-		unset( $this->target_url_list[$url] );
+		unset( $this->target_path_list[$url] );
 		$this->done_url_count ++;
 		return	true;
 	}
@@ -1060,28 +1074,28 @@ class pxplugin_asazuke_crawlctrl{
 		$FIN .= 'Auth type: '.$project_model->get_authentication_type()."\n";
 		$FIN .= 'Auth user: '.$project_model->get_basic_authentication_id()."\n";
 		$FIN .= 'Auth Password: ********'."\n";
-		$FIN .= '------'."\n";
-		$FIN .= '[param define]'."\n";
-		if( count($project_model->get_param_define_list()) ){
-			foreach( $project_model->get_param_define_list() as $paramname ){
-				$FIN .= $paramname.': '.($project_model->is_param_allowed($paramname)?'true':'false')."\n";
-			}
-		}else{
-			$FIN .= '(no entry)'."\n";
-		}
-		$FIN .= '------'."\n";
-		$FIN .= '[rewriterules]'."\n";
-		if( count($project_model->get_localfilename_rewriterules()) ){
-			foreach( $project_model->get_localfilename_rewriterules() as $key=>$rule ){
-				$FIN .= '**** '.$key.' ****'."\n";
-				$FIN .= 'priority =>      '.$rule['priority']."\n";
-				$FIN .= 'before =>        '.$rule['before']."\n";
-				$FIN .= 'requiredparam => '.$rule['requiredparam']."\n";
-				$FIN .= 'after =>         '.$rule['after']."\n";
-			}
-		}else{
-			$FIN .= '(no entry)'."\n";
-		}
+		// $FIN .= '------'."\n";
+		// $FIN .= '[param define]'."\n";
+		// if( count($project_model->get_param_define_list()) ){
+		// 	foreach( $project_model->get_param_define_list() as $paramname ){
+		// 		$FIN .= $paramname.': '.($project_model->is_param_allowed($paramname)?'true':'false')."\n";
+		// 	}
+		// }else{
+		// 	$FIN .= '(no entry)'."\n";
+		// }
+		// $FIN .= '------'."\n";
+		// $FIN .= '[rewriterules]'."\n";
+		// if( count($project_model->get_localfilename_rewriterules()) ){
+		// 	foreach( $project_model->get_localfilename_rewriterules() as $key=>$rule ){
+		// 		$FIN .= '**** '.$key.' ****'."\n";
+		// 		$FIN .= 'priority =>      '.$rule['priority']."\n";
+		// 		$FIN .= 'before =>        '.$rule['before']."\n";
+		// 		$FIN .= 'requiredparam => '.$rule['requiredparam']."\n";
+		// 		$FIN .= 'after =>         '.$rule['after']."\n";
+		// 	}
+		// }else{
+		// 	$FIN .= '(no entry)'."\n";
+		// }
 		$FIN .= '------'."\n";
 		$FIN .= '[preg_replace rules]'."\n";
 		if( count($project_model->get_preg_replace_rules()) ){
@@ -1379,14 +1393,7 @@ class pxplugin_asazuke_crawlctrl{
 
 }
 
-?>h->rmdir( $lockfilepath );
-	}
-
-	#--------------------------------------
-	#	ロックファイルのパスを返す
-	function get_path_lockfile(){
-		return	realpath( $this->get_path_download_to() ).'/crawl.lock';
-	}
+?>	}
 
 }
 
