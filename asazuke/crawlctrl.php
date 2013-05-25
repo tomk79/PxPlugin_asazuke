@@ -208,14 +208,6 @@ class pxplugin_asazuke_crawlctrl{
 				'keywords'=>'メタタグ(keywords)' ,
 				'save_to'=>'保存先のパス' ,
 				'time'=>'アクセス日時' ,
-				'content-type'=>'Content-type(HTTP response header)' ,
-				'charset'=>'charset(HTTP response header)' ,
-				'http_status'=>'HTTP status code' ,
-				'body_length'=>'ファイルサイズ' ,
-				'last-modified'=>'最終更新日' ,//PxCrawler 0.3.7 追加
-				'method'=>'メソッド' ,
-				'http_referer'=>'Referer として送信した文字列' ,
-				'response_time'=>'要求送信からダウンロード完了までに要した時間(秒)' ,
 				'object_error'=>'通信エラー' ,
 				'crawl_error'=>'クロールエラー' ,
 			)
@@ -278,7 +270,8 @@ class pxplugin_asazuke_crawlctrl{
 					return	$this->exit_process();
 				}
 
-				$path_save_to = $project_model->url2localpath( $url , $url_property['post'] );
+				// $path_save_to = $project_model->url2localpath( $url , $url_property['post'] );
+				$path_save_to = '/htdocs'.$url;
 				$this->msg( 'save to ['.$path_save_to.']' );
 
 				$this->progress_report( 'url' , $url );
@@ -288,73 +281,26 @@ class pxplugin_asazuke_crawlctrl{
 				$fullpath_save_to = str_replace( '\\' , '/' , $fullpath_save_to );
 				$fullpath_savetmpfile_to = $path_dir_download_to.'/tmp_downloadcontent.tmp';
 
-				clearstatcache();
-
-var_dump($path_dir_download_to);
-var_dump($url);
-var_dump($path_save_to);
-var_dump($fullpath_save_to);
-var_dump($fullpath_savetmpfile_to);
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
-
-				#--------------------------------------
-				#	HTTPアクセス実行
-				$program_model->clear_crawl_error();//前ファイルのクロールエラーを消去
-				$httpaccess->clear_request_header();
-				$httpaccess->set_user_agent( $program_model->get_program_useragent() );
-				$httpaccess->set_http_referer( $url_property['referer'] );
-				$httpaccess->set_auth_type( $this->project_model->get_authentication_type() );
-				$httpaccess->set_auth_user( $this->project_model->get_basic_authentication_id() );
-				$httpaccess->set_auth_pw( $this->project_model->get_basic_authentication_pw() );
-				$httpaccess->set_max_redirect_number( 10 );
-				$httpaccess->set_auto_redirect_flg( true );
-				if( !strlen( $url_property['method'] ) ){
-					#	methodのデフォルトはGETとする。
-					$url_property['method'] = 'GET';
-				}
-				$httpaccess->set_method( $url_property['method'] );
-
-				#	★「常に送信するパラメータ」をマージする ( PicklesCrawler 0.3.0 追加 )
-				#		「常に送信するパラメータ」は、
-				#		「リクエストに含める」がOFFに設定されたパラメータよりも優先する。
-				#		よってここでは、「常に送信するパラメータ」を無条件に送信してしまってよい。
-				$tmp_url = $url;
-				if( strtoupper( $url_property['method'] ) == 'POST' ){
-					#	POST
-					$url_property['post'] = $program_model->merge_param( $url_property['post'] );
-				}else{
-					#	GET
-					$tmp_url = $program_model->merge_param( $tmp_url );
-				}
-
-				if( strtoupper( $url_property['method'] ) == 'POST' && strlen( $url_property['post'] ) ){
-					#	method="post" で、postデータがあれば、放り込む。
-					$httpaccess->set_post_data( $url_property['post'] );
-				}
-				$httpaccess->set_url( $tmp_url );
-				$httpaccess->save_http_contents( $fullpath_savetmpfile_to );
-
-				$this->px->dbh()->fclose( $fullpath_savetmpfile_to );//ファイルを閉じておかないと、programに追記されちゃう。
-				#	/ HTTPアクセス実行
-				#--------------------------------------
+				$fullpath_from = $this->px->dbh()->get_realpath($project_model->get_path_docroot().$url);
 
 				clearstatcache();
 
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
+
+				// オリジナルを、一時ファイルにコピー
+				if( !$this->px->dbh()->copy( $fullpath_from, $fullpath_savetmpfile_to ) ){
+					$this->error_log( 'クロール対象のファイル ['.$url.'] を一時ファイルに保存できませんでした。' , __FILE__ , __LINE__ );
+					$program_model->crawl_error( 'FAILD to copy file to; ['.$fullpath_save_to.']' , $url , $fullpath_save_to );
+				}
+
+
+				clearstatcache();
 
 
 				#--------------------------------------
 				#	実際のあるべき場所へファイルを移動
 				$is_savefile = true;
-				if( !intval( $httpaccess->get_status_cd() ) || ( intval( $httpaccess->get_status_cd() ) >= 400 && intval( $httpaccess->get_status_cd() ) < 600 ) ){
-					#	HTTPステータスコードが 400番台から500番台の間だった場合、
-					#	またはHTTPステータスコードを取得できなかった場合、
-					#	save404_flg を参照し、true じゃなかったら保存しない。
-					if( !$project_model->get_save404_flg() ){
-						$is_savefile = false;
-					}
+				if( !is_file( $fullpath_savetmpfile_to ) ){
+					$is_savefile = false;
 				}
 				if( $is_savefile ){
 					clearstatcache();
@@ -393,57 +339,22 @@ return	$this->exit_process();//開発中
 				#	/ 実際のあるべき場所へファイルを移動
 				#--------------------------------------
 
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
 
+				#	サイトマップに情報を追記
+				$this->add_sitemap_url( $url );
+
+				#	HTMLのメタ情報を抽出する
 				$html_meta_info = array();
-				switch( strtolower( $httpaccess->get_content_type() ) ){
-					case 'text/html':
-					case 'text/xhtml':
-					case 'application/xml+xhtml':
-						#	サイトマップに情報を追記
-						$this->add_sitemap_url( $url );
-
-						#	HTMLのメタ情報を抽出する
-						$obj_parsehtmlmetainfo = &$this->factory_parsehtmlmetainfo();
-						$obj_parsehtmlmetainfo->execute( $fullpath_save_to );
-						$html_meta_info = $obj_parsehtmlmetainfo->get_metadata();
-						unset( $obj_parsehtmlmetainfo );
-						break;
-
-					default:
-						break;
-				}
+				$obj_parsehtmlmetainfo = &$this->factory_parsehtmlmetainfo();
+				$obj_parsehtmlmetainfo->execute( $fullpath_save_to );
+				$html_meta_info = $obj_parsehtmlmetainfo->get_metadata();
+				unset( $obj_parsehtmlmetainfo );
 
 				#--------------------------------------
 				#	画面にメッセージを出力
-				$this->msg( 'Content-type='.$httpaccess->get_content_type() );
-				if( !is_null( $httpaccess->get_content_charset() ) ){
-					$this->msg( 'Charset='.$httpaccess->get_content_charset() );
-				}
-				$this->msg( 'HTTP Method='.$httpaccess->get_method() );
-				$this->msg( 'HTTP Status='.$httpaccess->get_status_cd().' - '.$httpaccess->get_status_msg() );
-				if( intval( $httpaccess->get_status_cd() ) >= 400 && intval( $httpaccess->get_status_cd() ) < 600 ){
-					#	HTTPステータスコードが 400番台から500番台の間だった場合、
-					#	クロールエラーログを残す。
-					$program_model->crawl_error( 'HTTP Status alert; ['.$httpaccess->get_status_cd().']' , $url , $fullpath_save_to );
-				}
-				if( !is_null( $httpaccess->get_content_length() ) ){
-					$this->msg( 'Body Length='.$httpaccess->get_content_length() );
-				}
-				if( !is_null( $httpaccess->get_transfer_encoding() ) ){
-					$this->msg( 'Transfer Encoding='.$httpaccess->get_transfer_encoding() );
-				}
-				if( !is_null( $httpaccess->http_response_connection ) ){
-					$this->msg( 'Connection='.$httpaccess->http_response_connection );
-				}
-
-				$this->msg( 'Response Time='.$httpaccess->get_response_time() );
+				$this->msg( 'Content-type=text/html' );
 				#	/ 画面にメッセージを出力
 				#--------------------------------------
-
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
 
 				#--------------------------------------
 				#	完了のメモを残す
@@ -453,10 +364,6 @@ return	$this->exit_process();//開発中
 					$tmp_crawlerror .= $tmp_crawlerror_line['errormsg']."\n";
 				}
 				$this->target_url_done( $url );
-				$last_modified = $httpaccess->get_last_modified_timestamp();//リモートコンテンツの更新日時
-				if( !is_null( $last_modified ) ){
-					$last_modified = date( 'Y-m-d H:i:s' , $last_modified );
-				}
 				$this->save_executed_url_row(
 					array(
 						'url'=>$url ,
@@ -465,15 +372,6 @@ return	$this->exit_process();//開発中
 						'keywords'=>$html_meta_info['keywords'] ,
 						'save_to'=>$path_save_to ,
 						'time'=>date('Y/m/d H:i:s') ,
-						'content-type'=>$httpaccess->get_content_type() ,
-						'charset'=>$httpaccess->get_content_charset() ,
-						'http_status'=>$httpaccess->get_status_cd() ,
-						'body_length'=>$httpaccess->get_content_length() ,
-						'last-modified'=>$last_modified ,
-						'method'=>$httpaccess->get_method() ,
-						'http_referer'=>$url_property['referer'] ,
-						'response_time'=>$httpaccess->get_response_time() ,
-						'object_error'=>$httpaccess->get_socket_open_error() ,
 						'crawl_error'=>$tmp_crawlerror ,
 					)
 				);
@@ -482,9 +380,6 @@ return	$this->exit_process();//開発中
 				unset( $tmp_crawlerror_line );
 				#	/ 完了のメモを残す
 				#--------------------------------------
-
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
 
 				clearstatcache();
 				if( !is_file( $fullpath_save_to ) ){
@@ -507,9 +402,9 @@ return	$this->exit_process();//開発中
 					}
 				}
 
-				// #--------------------------------------
-				// #	オペレータをロードして実行
-				// $operator = &$this->factory_program_operator( $program_model->get_program_type() );
+				#--------------------------------------
+				#	オペレータをロードして実行
+				$operator = &$this->factory_program_operator( $program_model->get_program_type() );
 				// if( !$operator->execute( $httpaccess , $url , realpath( $fullpath_save_to ) , $url_property ) ){
 				// 	$this->error_log( 'FAILD to Executing in operator object.' , __FILE__ , __LINE__ );
 				// 	return	$this->exit_process();
@@ -524,9 +419,6 @@ return	$this->exit_process();//開発中
 				#	一括置換処理
 				#	PicklesCrawler 0.3.0 追加
 				$this->execute_preg_replace( $path_save_to , $url );
-
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
 
 				#--------------------------------------
 				#	実行結果を取得
@@ -576,8 +468,6 @@ return	$this->exit_process();//開発中
 					}
 				}
 
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
 
 				$this->msg( '処理済件数 '.intval( $this->get_count_done_url() ).' 件.' );
 				$this->msg( '残件数 '.count( $this->target_path_list ).' 件.' );
@@ -604,9 +494,6 @@ return	$this->exit_process();//開発中
 		unset( $httpaccess );
 		#	/ HTTPリクエストオブジェクトを破壊
 		#######################################
-
-var_dump(__LINE__);
-return	$this->exit_process();//開発中
 
 
 		#######################################
@@ -1032,7 +919,7 @@ return	$this->exit_process();//開発中
 		#	/ 行の文字コードを調整
 		#--------------------------------------
 
-		$csv_line = $this->px->dbh()->mk_csv( array( $array_csv_line ) , $csv_charset );
+		$csv_line = $this->px->dbh()->mk_csv( array( $array_csv_line ) , array('charset'=>$csv_charset) );
 
 		error_log( $csv_line , 3 , $path_dir_download_to.'/__LOGS__/download_list.csv' );
 		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/download_list.csv' );
@@ -1210,6 +1097,190 @@ return	$this->exit_process();//開発中
 #		$LINE .= '		<changefreq></changefreq>'."\n";
 #		$LINE .= '		<priority></priority>'."\n";
 		$LINE .= '	</url>'."\n";
+
+		error_log( $LINE , 3 , $path_dir_download_to.'/__LOGS__/sitemap.xml' );
+
+		return	true;
+	}
+	/**
+	 * サイトマップXMLを保存する系: 閉じる
+	 */
+	private function close_sitemap(){
+		$path_dir_download_to = realpath( $this->get_path_download_to() );
+		if( !is_dir( $path_dir_download_to ) ){ return false; }
+		if( !is_dir( $path_dir_download_to.'/__LOGS__' ) ){
+			if( !$this->px->dbh()->mkdir( $path_dir_download_to.'/__LOGS__' ) ){
+				return	false;
+			}
+		}
+
+		$LINE = '';
+		$LINE .= '</urlset>';
+
+		error_log( $LINE , 3 , $path_dir_download_to.'/__LOGS__/sitemap.xml' );
+		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/sitemap.xml' );
+
+		return	true;
+	}
+
+
+
+	/**
+	 * 開始と終了の時刻を保存する
+	 */
+	private function save_start_and_end_datetime( $start_time , $end_time ){
+		$path_dir_download_to = realpath( $this->get_path_download_to() );
+		$CONTENT = '';
+		$CONTENT .= $this->px->dbh()->int2datetime( $start_time );
+		$CONTENT .= ' --- ';
+		$CONTENT .= $this->px->dbh()->int2datetime( $end_time );
+		$result = $this->px->dbh()->save_file( $path_dir_download_to.'/__LOGS__/datetime.txt' , $CONTENT );
+		$this->px->dbh()->fclose( $path_dir_download_to.'/__LOGS__/datetime.txt' );
+		return	$result;
+	}
+
+	/**
+	 * エラーログを残す
+	 */
+	private function error_log( $msg , $file = null , $line = null ){
+		$this->px->error()->error_log( $msg , $file , $line );
+		$this->msg( '[--ERROR!!--] '.$msg );
+		return	true;
+	}
+	/**
+	 * メッセージを出力する
+	 */
+	private function msg( $msg ){
+		$msg = t::convert_encoding( $msg , $this->output_encoding , mb_internal_encoding() );
+		if( $this->px->req()->is_cmd() ){
+			print	$msg."\n";
+		}else{
+			print	$msg."\n";
+		}
+		flush();
+		return	true;
+	}
+
+	/**
+	 * プロセスを終了する
+	 */
+	private function exit_process( $is_unlock = true ){
+		if( $is_unlock ){
+			if( !$this->unlock() ){
+				$this->error_log( 'FAILD to unlock!' , __FILE__ , __LINE__ );
+			}
+		}
+		$this->crawl_endtime = time();
+		$this->msg( '*** Exit --- '.$this->px->dbh()->int2datetime( $this->crawl_endtime ) );
+		$this->save_start_and_end_datetime( $this->crawl_starttime , $this->crawl_endtime );//←開始、終了時刻の記録
+		exit;
+		//return	$this->px->theme()->print_and_exit( '' );
+	}
+
+
+	###################################################################################################################
+
+	/**
+	 * キャンセルリクエスト
+	 */
+	public function request_cancel(){
+		$path = realpath( $this->get_path_download_to() ).'/__LOGS__/cancel.request';
+		if( !is_dir( dirname( $path ) ) ){
+			return	false;
+		}
+		if( is_file( $path ) && !is_writable( $path ) ){
+			return	false;
+		}elseif( !is_writable( dirname( $path ) ) ){
+			return	false;
+		}
+		$this->px->dbh()->save_file( $path , 'Cancel request: '.date('Y-m-d H:i:s')."\n" );
+		$this->px->dbh()->fclose( $path );
+		return	true;
+	}
+	private function is_request_cancel(){
+		$path = realpath( $this->get_path_download_to() ).'/__LOGS__/cancel.request';
+		if( is_file( $path ) ){
+			return	true;
+		}
+		return	false;
+	}
+	public function delete_request_cancel(){
+		$path = realpath( $this->get_path_download_to() ).'/__LOGS__/cancel.request';
+		if( !is_file( $path ) ){
+			return	true;
+		}elseif( !is_writable( $path ) ){
+			return	false;
+		}
+		return	$this->px->dbh()->rmdir_all( $path );
+	}
+
+
+	###################################################################################################################
+	#	アプリケーションロック
+
+	/**
+	 * アプリケーションをロックする
+	 */
+	private function lock(){
+		$lockfilepath = $this->get_path_lockfile();
+
+		if( !@is_dir( dirname( $lockfilepath ) ) ){
+			$this->px->dbh()->mkdir_all( dirname( $lockfilepath ) );
+		}
+
+		#	PHPのFileStatusCacheをクリア
+		clearstatcache();
+
+		if( @is_file( $lockfilepath ) ){
+			#	ロックファイルが存在したら、
+			#	ファイルの更新日時を調べる。
+			if( @filemtime( $lockfilepath ) > time() - (60*60) ){
+				#	最終更新日時が 60分前 よりも未来ならば、
+				#	このロックファイルは有効とみなす。
+				return	false;
+			}
+		}
+
+		$result = $this->px->dbh()->save_file( $lockfilepath , 'This lockfile created at: '.date( 'Y-m-d H:i:s' , time() ).'; Process ID: ['.getmypid().'];'."\n" );
+		$this->px->dbh()->fclose( $lockfilepath );
+		return	$result;
+	}
+
+	/**
+	 * ロックファイルの更新日時を更新する。
+	 */
+	private function touch_lockfile(){
+		$lockfilepath = $this->get_path_lockfile();
+
+		#	PHPのFileStatusCacheをクリア
+		clearstatcache();
+
+		touch( $lockfilepath );
+		return	true;
+	}
+
+	/**
+	 * アプリケーションロックを解除する
+	 */
+	private function unlock(){
+		$lockfilepath = $this->get_path_lockfile();
+
+		#	PHPのFileStatusCacheをクリア
+		clearstatcache();
+
+		return	$this->px->dbh()->rmdir_all( $lockfilepath );
+	}
+
+	/**
+	 * ロックファイルのパスを返す
+	 */
+	private function get_path_lockfile(){
+		return	realpath( $this->get_path_download_to() ).'/crawl.lock';
+	}
+
+}
+
+?></url>'."\n";
 
 		error_log( $LINE , 3 , $path_dir_download_to.'/__LOGS__/sitemap.xml' );
 
