@@ -28,7 +28,7 @@ class pxplugin_asazuke_model_project{
 	// private $info_charset_crlf = null;//23:28 2009/03/30 追加
 	// private $info_charset_ext = null;//23:28 2009/03/30 追加
 	// private $info_localfilename_rewriterules = array();
-	private $info_preg_replace_rules = array();//23:28 2009/03/30 追加
+	// private $info_preg_replace_rules = array();//23:28 2009/03/30 追加
 	private $info_path_conv_method = 'relative';
 	private $info_outofsite2url_flg = false;//PxCrawler 0.4.2 追加
 
@@ -179,24 +179,24 @@ class pxplugin_asazuke_model_project{
 		// }
 		// uasort( $this->info_localfilename_rewriterules , create_function( '$a,$b' , 'if($a[\'priority\']>$b[\'priority\']){return 1;}elseif($a[\'priority\']<$b[\'priority\']){return -1;}return 0;' ) );
 
-		#	一括置換設定情報
-		$this->clear_preg_replace_rules();//一旦リセット
-		$preg_replace_ini = $this->load_ini( $path_project_dir.'/preg_replace.ini' );
-		if( is_array( $preg_replace_ini['sec'] ) ){
-			foreach( $preg_replace_ini['sec'] as $rules_key=>$rules_value ){
-				$MEMO = array();
-				$priorityNum = intval( preg_replace( '/[^0-9]/' , '' , $rules_key ) );
-				$MEMO['priority'] = $priorityNum;
-				$MEMO['pregpattern'] = $rules_value['pregpattern'];
-				$MEMO['replaceto'] = $rules_value['replaceto'];
-				$MEMO['path'] = $rules_value['path'];
-				$MEMO['dirflg'] = $rules_value['dirflg'];
-				$MEMO['ext'] = $rules_value['ext'];
-				$this->info_preg_replace_rules[$priorityNum] = $MEMO;
-				unset($MEMO);
-			}
-		}
-		uasort( $this->info_localfilename_rewriterules , create_function( '$a,$b' , 'if($a[\'priority\']>$b[\'priority\']){return 1;}elseif($a[\'priority\']<$b[\'priority\']){return -1;}return 0;' ) );
+		// #	一括置換設定情報
+		// $this->clear_preg_replace_rules();//一旦リセット
+		// $preg_replace_ini = $this->load_ini( $path_project_dir.'/preg_replace.ini' );
+		// if( is_array( $preg_replace_ini['sec'] ) ){
+		// 	foreach( $preg_replace_ini['sec'] as $rules_key=>$rules_value ){
+		// 		$MEMO = array();
+		// 		$priorityNum = intval( preg_replace( '/[^0-9]/' , '' , $rules_key ) );
+		// 		$MEMO['priority'] = $priorityNum;
+		// 		$MEMO['pregpattern'] = $rules_value['pregpattern'];
+		// 		$MEMO['replaceto'] = $rules_value['replaceto'];
+		// 		$MEMO['path'] = $rules_value['path'];
+		// 		$MEMO['dirflg'] = $rules_value['dirflg'];
+		// 		$MEMO['ext'] = $rules_value['ext'];
+		// 		$this->info_preg_replace_rules[$priorityNum] = $MEMO;
+		// 		unset($MEMO);
+		// 	}
+		// }
+		// uasort( $this->info_localfilename_rewriterules , create_function( '$a,$b' , 'if($a[\'priority\']>$b[\'priority\']){return 1;}elseif($a[\'priority\']<$b[\'priority\']){return -1;}return 0;' ) );
 
 		$this->px->dbh()->fclose( $path_project_dir.'/project.ini' );
 		$this->px->dbh()->fclose( $path_project_dir.'/param_define.ini' );
@@ -376,26 +376,26 @@ class pxplugin_asazuke_model_project{
 		#======================================
 		#	preg_replace.ini
 
-		#	一括置換設定情報
-		$preg_replace_rules = $this->get_preg_replace_rules();
-		$preg_replace_rules_src = '';
-		$i = 0;
-		if( is_array( $preg_replace_rules ) ){
-			foreach( $preg_replace_rules as $Line ){
-				$i ++;
-				$preg_replace_rules_src .= '[priority'.$i.']'."\n";
-				$preg_replace_rules_src .= 'pregpattern='.$Line['pregpattern'].''."\n";
-				$preg_replace_rules_src .= 'replaceto='.$Line['replaceto'].''."\n";
-				$preg_replace_rules_src .= 'path='.$Line['path'].''."\n";
-				$preg_replace_rules_src .= 'dirflg='.$Line['dirflg'].''."\n";
-				$preg_replace_rules_src .= 'ext='.$Line['ext'].''."\n";
-				$preg_replace_rules_src .= "\n";
-			}
-		}
-		if( !$this->px->dbh()->save_file( $path_project_dir.'/preg_replace.ini' , $preg_replace_rules_src ) ){
-			return	false;
-		}
-		$this->px->dbh()->fclose($path_project_dir.'/preg_replace.ini');
+		// #	一括置換設定情報
+		// $preg_replace_rules = $this->get_preg_replace_rules();
+		// $preg_replace_rules_src = '';
+		// $i = 0;
+		// if( is_array( $preg_replace_rules ) ){
+		// 	foreach( $preg_replace_rules as $Line ){
+		// 		$i ++;
+		// 		$preg_replace_rules_src .= '[priority'.$i.']'."\n";
+		// 		$preg_replace_rules_src .= 'pregpattern='.$Line['pregpattern'].''."\n";
+		// 		$preg_replace_rules_src .= 'replaceto='.$Line['replaceto'].''."\n";
+		// 		$preg_replace_rules_src .= 'path='.$Line['path'].''."\n";
+		// 		$preg_replace_rules_src .= 'dirflg='.$Line['dirflg'].''."\n";
+		// 		$preg_replace_rules_src .= 'ext='.$Line['ext'].''."\n";
+		// 		$preg_replace_rules_src .= "\n";
+		// 	}
+		// }
+		// if( !$this->px->dbh()->save_file( $path_project_dir.'/preg_replace.ini' , $preg_replace_rules_src ) ){
+		// 	return	false;
+		// }
+		// $this->px->dbh()->fclose($path_project_dir.'/preg_replace.ini');
 
 		return	true;
 	}//save_project()
@@ -698,22 +698,22 @@ class pxplugin_asazuke_model_project{
 	// 	return	true;
 	// }
 
-	#--------------------------------------
-	#	一括置換設定情報の入出力
-	public function get_preg_replace_rules(){
-		return	$this->info_preg_replace_rules;
-	}
-	public function set_preg_replace_rules( $rules ){
-		if( !is_array( $rules ) ){
-			return	false;
-		}
-		$this->info_preg_replace_rules = $rules;
-		return	true;
-	}
-	public function clear_preg_replace_rules(){
-		$this->info_preg_replace_rules = array();
-		return	true;
-	}
+	// #--------------------------------------
+	// #	一括置換設定情報の入出力
+	// public function get_preg_replace_rules(){
+	// 	return	$this->info_preg_replace_rules;
+	// }
+	// public function set_preg_replace_rules( $rules ){
+	// 	if( !is_array( $rules ) ){
+	// 		return	false;
+	// 	}
+	// 	$this->info_preg_replace_rules = $rules;
+	// 	return	true;
+	// }
+	// public function clear_preg_replace_rules(){
+	// 	$this->info_preg_replace_rules = array();
+	// 	return	true;
+	// }
 
 	#--------------------------------------
 	#	対象外URLリストの入出力

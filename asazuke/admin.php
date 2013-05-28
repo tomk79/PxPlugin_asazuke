@@ -80,9 +80,9 @@ class pxplugin_asazuke_admin{
 		// }elseif( $this->cmd[0] == 'edit_charset' ){
 		// 	#	文字コード・改行コード変換設定編集
 		// 	return	$this->start_edit_charset();
-		}elseif( $this->cmd[0] == 'edit_preg_replace' ){
-			#	一括置換設定編集
-			return	$this->start_edit_preg_replace();
+		// }elseif( $this->cmd[0] == 'edit_preg_replace' ){
+		// 	#	一括置換設定編集
+		// 	return	$this->start_edit_preg_replace();
 		}elseif( $this->cmd[0] == 'create_program' || $this->cmd[0] == 'edit_program' ){
 			#	プログラム作成/編集
 			return	$this->start_edit_program();
@@ -486,38 +486,38 @@ class pxplugin_asazuke_admin{
 		// $RTN .= '	<p class="center"><input type="submit" value="文字コード・改行コード変換設定を編集" /></p>'."\n";
 		// $RTN .= '</form>'."\n";
 
-		#======================================
-		$RTN .= ''.$this->mk_hx( '一括置換設定' ).''."\n";
-		$rule_list = $project_model->get_preg_replace_rules();
-		if( is_array( $rule_list ) && count( $rule_list ) ){
-			$RTN .= '	<table class="def" style="width:100%;">'."\n";
-			$RTN .= '		<thead>'."\n";
-			$RTN .= '			<tr>'."\n";
-			$RTN .= '				<th></th>'."\n";
-			$RTN .= '				<th>pregパターン</th>'."\n";
-			$RTN .= '				<th>置換後の文字列</th>'."\n";
-			$RTN .= '				<th>対象のパス</th>'."\n";
-			$RTN .= '				<th>ディレクトリを再帰的に置換</th>'."\n";
-			$RTN .= '				<th>対象とする拡張子</th>'."\n";
-			$RTN .= '			</tr>'."\n";
-			$RTN .= '		</thead>'."\n";
-			foreach( $rule_list as $line ){
-				$RTN .= '		<tr>'."\n";
-				$RTN .= '			<th>'.htmlspecialchars( $line['priority'] ).'</th>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['pregpattern'] ).'</td>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['replaceto'] ).'</td>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['path'] ).'</td>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['dirflg'] ).'</td>'."\n";
-				$RTN .= '			<td>'.htmlspecialchars( $line['ext'] ).'</td>'."\n";
-				$RTN .= '		</tr>'."\n";
-			}
-			$RTN .= '	</table>'."\n";
-		}else{
-			$RTN .= '<p>条件は設定されていません。</p>'."\n";
-		}
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_preg_replace.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="一括置換設定を編集" /></p>'."\n";
-		$RTN .= '</form>'."\n";
+		// #======================================
+		// $RTN .= ''.$this->mk_hx( '一括置換設定' ).''."\n";
+		// $rule_list = $project_model->get_preg_replace_rules();
+		// if( is_array( $rule_list ) && count( $rule_list ) ){
+		// 	$RTN .= '	<table class="def" style="width:100%;">'."\n";
+		// 	$RTN .= '		<thead>'."\n";
+		// 	$RTN .= '			<tr>'."\n";
+		// 	$RTN .= '				<th></th>'."\n";
+		// 	$RTN .= '				<th>pregパターン</th>'."\n";
+		// 	$RTN .= '				<th>置換後の文字列</th>'."\n";
+		// 	$RTN .= '				<th>対象のパス</th>'."\n";
+		// 	$RTN .= '				<th>ディレクトリを再帰的に置換</th>'."\n";
+		// 	$RTN .= '				<th>対象とする拡張子</th>'."\n";
+		// 	$RTN .= '			</tr>'."\n";
+		// 	$RTN .= '		</thead>'."\n";
+		// 	foreach( $rule_list as $line ){
+		// 		$RTN .= '		<tr>'."\n";
+		// 		$RTN .= '			<th>'.htmlspecialchars( $line['priority'] ).'</th>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['pregpattern'] ).'</td>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['replaceto'] ).'</td>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['path'] ).'</td>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['dirflg'] ).'</td>'."\n";
+		// 		$RTN .= '			<td>'.htmlspecialchars( $line['ext'] ).'</td>'."\n";
+		// 		$RTN .= '		</tr>'."\n";
+		// 	}
+		// 	$RTN .= '	</table>'."\n";
+		// }else{
+		// 	$RTN .= '<p>条件は設定されていません。</p>'."\n";
+		// }
+		// $RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_preg_replace.'.$this->cmd[1] ) ).'" method="post">'."\n";
+		// $RTN .= '	<p class="center"><input type="submit" value="一括置換設定を編集" /></p>'."\n";
+		// $RTN .= '</form>'."\n";
 
 
 		$RTN .= '<div class="more_links">'."\n";
@@ -2651,367 +2651,367 @@ class pxplugin_asazuke_admin{
 	###################################################################################################################
 
 
-	/**
-	 * 一括置換設定編集
-	 */
-	private function start_edit_preg_replace(){
-		if( strlen( $this->px->req()->get_param('add:pregpattern') ) ){
-			for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){;}
-			$this->px->req()->set_param( 'p'.$i.':priority' , $i );
-			$this->px->req()->set_param( 'p'.$i.':pregpattern' , $this->px->req()->get_param('add:pregpattern') );
-			$this->px->req()->set_param( 'p'.$i.':replaceto' , $this->px->req()->get_param('add:replaceto') );
-			$this->px->req()->set_param( 'p'.$i.':path' , $this->px->req()->get_param('add:path') );
-			$this->px->req()->set_param( 'p'.$i.':dirflg' , $this->px->req()->get_param('add:dirflg') );
-			$this->px->req()->set_param( 'p'.$i.':ext' , $this->px->req()->get_param('add:ext') );
-		}
+	// /**
+	//  * 一括置換設定編集
+	//  */
+	// private function start_edit_preg_replace(){
+	// 	if( strlen( $this->px->req()->get_param('add:pregpattern') ) ){
+	// 		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){;}
+	// 		$this->px->req()->set_param( 'p'.$i.':priority' , $i );
+	// 		$this->px->req()->set_param( 'p'.$i.':pregpattern' , $this->px->req()->get_param('add:pregpattern') );
+	// 		$this->px->req()->set_param( 'p'.$i.':replaceto' , $this->px->req()->get_param('add:replaceto') );
+	// 		$this->px->req()->set_param( 'p'.$i.':path' , $this->px->req()->get_param('add:path') );
+	// 		$this->px->req()->set_param( 'p'.$i.':dirflg' , $this->px->req()->get_param('add:dirflg') );
+	// 		$this->px->req()->set_param( 'p'.$i.':ext' , $this->px->req()->get_param('add:ext') );
+	// 	}
 
-		$error = $this->check_edit_preg_replace_check();
-		if( $this->px->req()->get_param('mode') == 'thanks' ){
-			return	$this->page_edit_preg_replace_thanks();
-		}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
-			return	$this->page_edit_preg_replace_confirm();
-		}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
-			return	$this->execute_edit_preg_replace_execute();
-		}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
-			$error = array();
-			$project_model = &$this->pcconf->factory_model_project();
-			$project_model->load_project( $this->cmd[1] );
-			$rule_list = $project_model->get_preg_replace_rules();
-			if( is_array( $rule_list ) && count( $rule_list ) ){
-				$i = 0;
-				foreach( $rule_list as $Line ){
-					$i ++;
-					$this->px->req()->set_param( 'p'.$i.':priority' , $Line['priority'] );
-					$this->px->req()->set_param( 'p'.$i.':pregpattern' , $Line['pregpattern'] );//検索パターン
-					$this->px->req()->set_param( 'p'.$i.':replaceto' , $Line['replaceto'] );//置換文字列
-					$this->px->req()->set_param( 'p'.$i.':path' , $Line['path'] );//対象ファイル/ディレクトリのパス
-					$this->px->req()->set_param( 'p'.$i.':dirflg' , $Line['dirflg'] );//ディレクトリを再帰的に処理するフラグ
-					$this->px->req()->set_param( 'p'.$i.':ext' , $Line['ext'] );//対象拡張子
-				}
-			}
-		}
-		return	$this->page_edit_preg_replace_input( $error );
-	}
-	/**
-	 * 一括置換設定編集：入力
-	 */
-	private function page_edit_preg_replace_input( $error ){
-		$RTN = '';
+	// 	$error = $this->check_edit_preg_replace_check();
+	// 	if( $this->px->req()->get_param('mode') == 'thanks' ){
+	// 		return	$this->page_edit_preg_replace_thanks();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'confirm' && !count( $error ) ){
+	// 		return	$this->page_edit_preg_replace_confirm();
+	// 	}elseif( $this->px->req()->get_param('mode') == 'execute' && !count( $error ) ){
+	// 		return	$this->execute_edit_preg_replace_execute();
+	// 	}elseif( !strlen( $this->px->req()->get_param('mode') ) ){
+	// 		$error = array();
+	// 		$project_model = &$this->pcconf->factory_model_project();
+	// 		$project_model->load_project( $this->cmd[1] );
+	// 		$rule_list = $project_model->get_preg_replace_rules();
+	// 		if( is_array( $rule_list ) && count( $rule_list ) ){
+	// 			$i = 0;
+	// 			foreach( $rule_list as $Line ){
+	// 				$i ++;
+	// 				$this->px->req()->set_param( 'p'.$i.':priority' , $Line['priority'] );
+	// 				$this->px->req()->set_param( 'p'.$i.':pregpattern' , $Line['pregpattern'] );//検索パターン
+	// 				$this->px->req()->set_param( 'p'.$i.':replaceto' , $Line['replaceto'] );//置換文字列
+	// 				$this->px->req()->set_param( 'p'.$i.':path' , $Line['path'] );//対象ファイル/ディレクトリのパス
+	// 				$this->px->req()->set_param( 'p'.$i.':dirflg' , $Line['dirflg'] );//ディレクトリを再帰的に処理するフラグ
+	// 				$this->px->req()->set_param( 'p'.$i.':ext' , $Line['ext'] );//対象拡張子
+	// 			}
+	// 		}
+	// 	}
+	// 	return	$this->page_edit_preg_replace_input( $error );
+	// }
+	// /**
+	//  * 一括置換設定編集：入力
+	//  */
+	// private function page_edit_preg_replace_input( $error ){
+	// 	$RTN = '';
 
-		$RTN .= '<script type="text/javascript">'."\n";
-		$RTN .= '	function up_item(num){'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_up.value=num;'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
-		$RTN .= '	}'."\n";
-		$RTN .= '	function down_item(num){'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_down.value=num;'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
-		$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
-		$RTN .= '	}'."\n";
-		$RTN .= '</script>'."\n";
+	// 	$RTN .= '<script type="text/javascript">'."\n";
+	// 	$RTN .= '	function up_item(num){'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_up.value=num;'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
+	// 	$RTN .= '	}'."\n";
+	// 	$RTN .= '	function down_item(num){'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').operation_down.value=num;'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').mode.value=\'input\';'."\n";
+	// 	$RTN .= '		document.getElementById(\'cont_op_document_form\').submit();'."\n";
+	// 	$RTN .= '	}'."\n";
+	// 	$RTN .= '</script>'."\n";
 
-		$RTN .= '<p>'."\n";
-		$RTN .= '	一括置換設定を編集してください。<br />'."\n";
-		$RTN .= '</p>'."\n";
+	// 	$RTN .= '<p>'."\n";
+	// 	$RTN .= '	一括置換設定を編集してください。<br />'."\n";
+	// 	$RTN .= '</p>'."\n";
 
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post" id="cont_op_document_form">'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post" id="cont_op_document_form">'."\n";
 
-		$entry_list = array();
-		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){
-			$MEMO = array();
-			$MEMO['priority']		= $i;
-			$MEMO['pregpattern']	= $this->px->req()->get_param( 'p'.$i.':pregpattern' );
-			$MEMO['replaceto']		= $this->px->req()->get_param( 'p'.$i.':replaceto' );
-			$MEMO['path']			= $this->px->req()->get_param( 'p'.$i.':path' );
-			$MEMO['dirflg']			= $this->px->req()->get_param( 'p'.$i.':dirflg' );
-			$MEMO['ext']			= $this->px->req()->get_param( 'p'.$i.':ext' );
-			array_push( $entry_list , $MEMO );
-		}
+	// 	$entry_list = array();
+	// 	for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){
+	// 		$MEMO = array();
+	// 		$MEMO['priority']		= $i;
+	// 		$MEMO['pregpattern']	= $this->px->req()->get_param( 'p'.$i.':pregpattern' );
+	// 		$MEMO['replaceto']		= $this->px->req()->get_param( 'p'.$i.':replaceto' );
+	// 		$MEMO['path']			= $this->px->req()->get_param( 'p'.$i.':path' );
+	// 		$MEMO['dirflg']			= $this->px->req()->get_param( 'p'.$i.':dirflg' );
+	// 		$MEMO['ext']			= $this->px->req()->get_param( 'p'.$i.':ext' );
+	// 		array_push( $entry_list , $MEMO );
+	// 	}
 
-		if( strlen( $this->px->req()->get_param('operation_up') ) && $this->px->req()->get_param('operation_up') > 1 ){
-			foreach( $entry_list as $key=>$line ){
-				if( $line['priority'] == intval( $this->px->req()->get_param('operation_up') ) ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') )-1;
-					continue;
-				}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_up'))-1 ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') );
-					continue;
-				}
-			}
-		}elseif( strlen( $this->px->req()->get_param('operation_down') ) && $this->px->req()->get_param('operation_down') < count( $entry_list ) ){
-			foreach( $entry_list as $key=>$line ){
-				if( $line['priority'] == intval( $this->px->req()->get_param('operation_down') ) ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') )+1;
-					continue;
-				}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_down'))+1 ){
-					$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') );
-					continue;
-				}
-			}
-		}
+	// 	if( strlen( $this->px->req()->get_param('operation_up') ) && $this->px->req()->get_param('operation_up') > 1 ){
+	// 		foreach( $entry_list as $key=>$line ){
+	// 			if( $line['priority'] == intval( $this->px->req()->get_param('operation_up') ) ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') )-1;
+	// 				continue;
+	// 			}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_up'))-1 ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_up') );
+	// 				continue;
+	// 			}
+	// 		}
+	// 	}elseif( strlen( $this->px->req()->get_param('operation_down') ) && $this->px->req()->get_param('operation_down') < count( $entry_list ) ){
+	// 		foreach( $entry_list as $key=>$line ){
+	// 			if( $line['priority'] == intval( $this->px->req()->get_param('operation_down') ) ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') )+1;
+	// 				continue;
+	// 			}elseif( $line['priority'] == intval($this->px->req()->get_param('operation_down'))+1 ){
+	// 				$entry_list[$key]['priority'] = intval( $this->px->req()->get_param('operation_down') );
+	// 				continue;
+	// 			}
+	// 		}
+	// 	}
 
-		usort( $entry_list , create_function( '$a,$b' , 'if( $a[\'priority\'] > $b[\'priority\'] ){ return 1; } if( $a[\'priority\'] < $b[\'priority\'] ){ return -1; } return 0;' ) );
+	// 	usort( $entry_list , create_function( '$a,$b' , 'if( $a[\'priority\'] > $b[\'priority\'] ){ return 1; } if( $a[\'priority\'] < $b[\'priority\'] ){ return -1; } return 0;' ) );
 
-		foreach( $entry_list as $line ){
-			$btn_operation_up = '<a href="javascript:up_item('.t::data2text( $line['priority'] ).');">上へ</a>';
-			$btn_operation_down = '<a href="javascript:down_item('.t::data2text( $line['priority'] ).');">下へ</a>';
+	// 	foreach( $entry_list as $line ){
+	// 		$btn_operation_up = '<a href="javascript:up_item('.t::data2text( $line['priority'] ).');">上へ</a>';
+	// 		$btn_operation_down = '<a href="javascript:down_item('.t::data2text( $line['priority'] ).');">下へ</a>';
 
-			$RTN .= '<h2>実行順序['.$line['priority'].'] <span style="font-weight:normal;">'.$btn_operation_up.' '.$btn_operation_down.'</span></h2>'."\n";
-			$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>pregパターン</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':pregpattern" value="'.htmlspecialchars( $line['pregpattern'] ).'" /></div>'."\n";
-			if( strlen( $error['p'.$line['priority'].':pregpattern'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':pregpattern'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>置換後の文字列</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':replaceto" value="'.htmlspecialchars( $line['replaceto'] ).'" /></div>'."\n";
-			if( strlen( $error['p'.$line['priority'].':replaceto'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':replaceto'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>対象のパス</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':path" value="'.htmlspecialchars( $line['path'] ).'" /></div>'."\n";
-			$RTN .= '			<ul class="form_elements-notes">'."\n";
-			$RTN .= '				<li>※リライトルール適用後のパスで指定してください。</li>'."\n";
-			$RTN .= '			</ul>'."\n";
-			if( strlen( $error['p'.$line['priority'].':path'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':path'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>ディレクトリを再帰的に置換</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$c = array( '1'=>' checked="checked"' );
-			$RTN .= '			<div><label><input type="checkbox" name="p'.$line['priority'].':dirflg" value="1"'.$c[$line['dirflg']].' />再帰的に置換する</label></div>'."\n";
-			if( strlen( $error['p'.$line['priority'].':dirflg'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':dirflg'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div><input type="text" name="p'.$line['priority'].':ext" value="'.htmlspecialchars( $line['ext'] ).'" /></div>'."\n";
-			$RTN .= '			<ul class="form_elements-notes">'."\n";
-			$RTN .= '				<li>※セミコロン区切りで複数指定できます。</li>'."\n";
-			$RTN .= '				<li>※例：<code>html;htm;css;js</code></li>'."\n";
-			$RTN .= '			</ul>'."\n";
-			if( strlen( $error['p'.$line['priority'].':ext'] ) ){
-				$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':ext'].'</div>'."\n";
-			}
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '</table>'."\n";
-		}
+	// 		$RTN .= '<h2>実行順序['.$line['priority'].'] <span style="font-weight:normal;">'.$btn_operation_up.' '.$btn_operation_down.'</span></h2>'."\n";
+	// 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>pregパターン</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':pregpattern" value="'.htmlspecialchars( $line['pregpattern'] ).'" /></div>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':pregpattern'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':pregpattern'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>置換後の文字列</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':replaceto" value="'.htmlspecialchars( $line['replaceto'] ).'" /></div>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':replaceto'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':replaceto'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>対象のパス</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':path" value="'.htmlspecialchars( $line['path'] ).'" /></div>'."\n";
+	// 		$RTN .= '			<ul class="form_elements-notes">'."\n";
+	// 		$RTN .= '				<li>※リライトルール適用後のパスで指定してください。</li>'."\n";
+	// 		$RTN .= '			</ul>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':path'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':path'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>ディレクトリを再帰的に置換</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$c = array( '1'=>' checked="checked"' );
+	// 		$RTN .= '			<div><label><input type="checkbox" name="p'.$line['priority'].':dirflg" value="1"'.$c[$line['dirflg']].' />再帰的に置換する</label></div>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':dirflg'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':dirflg'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div><input type="text" name="p'.$line['priority'].':ext" value="'.htmlspecialchars( $line['ext'] ).'" /></div>'."\n";
+	// 		$RTN .= '			<ul class="form_elements-notes">'."\n";
+	// 		$RTN .= '				<li>※セミコロン区切りで複数指定できます。</li>'."\n";
+	// 		$RTN .= '				<li>※例：<code>html;htm;css;js</code></li>'."\n";
+	// 		$RTN .= '			</ul>'."\n";
+	// 		if( strlen( $error['p'.$line['priority'].':ext'] ) ){
+	// 			$RTN .= '			<div class="error">'.$error['p'.$line['priority'].':ext'].'</div>'."\n";
+	// 		}
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '</table>'."\n";
+	// 	}
 
-		$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<hr />'."\n";
 
-		$RTN .= ''.$this->mk_hx( '一括置換設定を追加' ).''."\n";
-		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>pregパターン</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:pregpattern" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		if( strlen( $error['add:pregpattern'] ) ){
-			$RTN .= '			<div class="error">'.$error['add:pregpattern'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>置換後の文字列</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:replaceto" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		if( strlen( $error['add:replaceto'] ) ){
-			$RTN .= '			<div class="error">'.$error['add:replaceto'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象のパス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:path" value="/" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※リライトルール適用後のパスで指定してください。</li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		if( strlen( $error['add:path'] ) ){
-			$RTN .= '			<div class="error">'.$error['add:path'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>ディレクトリを再帰的に置換</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><label><input type="checkbox" name="add:dirflg" value="1" checked="checked" />再帰的に置換する</label></div>'."\n";
-		if( strlen( $error['add:dirflg'] ) ){
-			$RTN .= '			<div class="error">'.$error['add:dirflg'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="add:ext" value="html;htm;css;js" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※セミコロン区切りで複数指定できます。</li>'."\n";
-		$RTN .= '				<li>※例：<code>html;htm;css;js</code></li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		if( strlen( $error['add:ext'] ) ){
-			$RTN .= '			<div class="error">'.$error['add:ext'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '</table>'."\n";
+	// 	$RTN .= ''.$this->mk_hx( '一括置換設定を追加' ).''."\n";
+	// 	$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>pregパターン</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:pregpattern" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	if( strlen( $error['add:pregpattern'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['add:pregpattern'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>置換後の文字列</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:replaceto" value="" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	if( strlen( $error['add:replaceto'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['add:replaceto'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>対象のパス</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:path" value="/" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	$RTN .= '			<ul class="form_elements-notes">'."\n";
+	// 	$RTN .= '				<li>※リライトルール適用後のパスで指定してください。</li>'."\n";
+	// 	$RTN .= '			</ul>'."\n";
+	// 	if( strlen( $error['add:path'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['add:path'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>ディレクトリを再帰的に置換</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><label><input type="checkbox" name="add:dirflg" value="1" checked="checked" />再帰的に置換する</label></div>'."\n";
+	// 	if( strlen( $error['add:dirflg'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['add:dirflg'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;">'."\n";
+	// 	$RTN .= '			<div><input type="text" name="add:ext" value="html;htm;css;js" style="font-family:\'ＭＳ ゴシック\';" /></div>'."\n";
+	// 	$RTN .= '			<ul class="form_elements-notes">'."\n";
+	// 	$RTN .= '				<li>※セミコロン区切りで複数指定できます。</li>'."\n";
+	// 	$RTN .= '				<li>※例：<code>html;htm;css;js</code></li>'."\n";
+	// 	$RTN .= '			</ul>'."\n";
+	// 	if( strlen( $error['add:ext'] ) ){
+	// 		$RTN .= '			<div class="error">'.$error['add:ext'].'</div>'."\n";
+	// 	}
+	// 	$RTN .= '		</td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '</table>'."\n";
 
-		$RTN .= '	<p>これでいい場合は「確認する」を、さらに追加する場合は「画面を更新」をクリックしてください。</p>'."\n";
-		$RTN .= '	<div class="center">'."\n";
-		$RTN .= '		<input type="submit" value="確認する" />'."\n";
-		$RTN .= '		<input type="submit" value="画面を更新" onclick="document.getElementById(\'cont_op_document_form\').mode.value=\'input\';return true;" />'."\n";
-		$RTN .= '	</div>'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
-		$RTN .= '	<input type="hidden" name="operation_up" value="" />'."\n";
-		$RTN .= '	<input type="hidden" name="operation_down" value="" />'."\n";
-		$RTN .= '	'.''."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * 一括置換設定編集：確認
-	 */
-	private function page_edit_preg_replace_confirm(){
-		$RTN = '';
-		$HIDDEN = '';
+	// 	$RTN .= '	<p>これでいい場合は「確認する」を、さらに追加する場合は「画面を更新」をクリックしてください。</p>'."\n";
+	// 	$RTN .= '	<div class="center">'."\n";
+	// 	$RTN .= '		<input type="submit" value="確認する" />'."\n";
+	// 	$RTN .= '		<input type="submit" value="画面を更新" onclick="document.getElementById(\'cont_op_document_form\').mode.value=\'input\';return true;" />'."\n";
+	// 	$RTN .= '	</div>'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
+	// 	$RTN .= '	<input type="hidden" name="operation_up" value="" />'."\n";
+	// 	$RTN .= '	<input type="hidden" name="operation_down" value="" />'."\n";
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 一括置換設定編集：確認
+	//  */
+	// private function page_edit_preg_replace_confirm(){
+	// 	$RTN = '';
+	// 	$HIDDEN = '';
 
-		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){
-			$RTN .= ''.$this->mk_hx('実行順序['.$i.']').''."\n";
-			$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>pregパターン</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':pregpattern') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':pregpattern" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':pregpattern') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>置換後の文字列</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':replaceto') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':replaceto" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':replaceto') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>対象のパス</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':path') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':path" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':path') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>ディレクトリを再帰的に置換</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':dirflg') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':dirflg" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':dirflg') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':ext') ).'</div>'."\n";
-			$HIDDEN .= '<input type="hidden" name="p'.$i.':ext" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':ext') ).'" />';
-			$RTN .= '		</td>'."\n";
-			$RTN .= '	</tr>'."\n";
-			$RTN .= '</table>'."\n";
-		}
+	// 	for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){
+	// 		$RTN .= ''.$this->mk_hx('実行順序['.$i.']').''."\n";
+	// 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>pregパターン</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':pregpattern') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':pregpattern" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':pregpattern') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>置換後の文字列</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':replaceto') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':replaceto" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':replaceto') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>対象のパス</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':path') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':path" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':path') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>ディレクトリを再帰的に置換</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':dirflg') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':dirflg" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':dirflg') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '	<tr>'."\n";
+	// 		$RTN .= '		<th style="width:30%;"><div>対象とする拡張子</div></th>'."\n";
+	// 		$RTN .= '		<td style="width:70%;">'."\n";
+	// 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':ext') ).'</div>'."\n";
+	// 		$HIDDEN .= '<input type="hidden" name="p'.$i.':ext" value="'.htmlspecialchars( $this->px->req()->get_param('p'.$i.':ext') ).'" />';
+	// 		$RTN .= '		</td>'."\n";
+	// 		$RTN .= '	</tr>'."\n";
+	// 		$RTN .= '</table>'."\n";
+	// 	}
 
-		$RTN .= '<div class="center">'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="保存する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
-		$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
-		$RTN .= $HIDDEN;
-		$RTN .= '	'.''."\n";
-		$RTN .= '	<input type="submit" value="訂正する" />'."\n";
-		$RTN .= '</form>'."\n";
-		$RTN .= '</div>'."\n";
-		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
-	/**
-	 * 一括置換設定編集：チェック
-	 */
-	private function check_edit_preg_replace_check(){
-		$RTN = array();
-		return	$RTN;
-	}
-	/**
-	 * 一括置換設定編集：実行
-	 */
-	private function execute_edit_preg_replace_execute(){
-		// if( !$this->user->save_t_lastaction() ){
-		// 	#	2重書き込み防止
-		// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
-		// }
+	// 	$RTN .= '<div class="center">'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="execute" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="保存する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="hidden" name="mode" value="input" />'."\n";
+	// 	$RTN .= $HIDDEN;
+	// 	$RTN .= '	'.''."\n";
+	// 	$RTN .= '	<input type="submit" value="訂正する" />'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	$RTN .= '</div>'."\n";
+	// 	$RTN .= '<hr />'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '	<div class="center"><input type="submit" value="キャンセル" /></div>'."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 一括置換設定編集：チェック
+	//  */
+	// private function check_edit_preg_replace_check(){
+	// 	$RTN = array();
+	// 	return	$RTN;
+	// }
+	// /**
+	//  * 一括置換設定編集：実行
+	//  */
+	// private function execute_edit_preg_replace_execute(){
+	// 	// if( !$this->user->save_t_lastaction() ){
+	// 	// 	#	2重書き込み防止
+	// 	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// 	// }
 
-		$project_model = &$this->pcconf->factory_model_project();
-		$project_model->load_project( $this->cmd[1] );
-		$project_model->clear_preg_replace_rules();
+	// 	$project_model = &$this->pcconf->factory_model_project();
+	// 	$project_model->load_project( $this->cmd[1] );
+	// 	$project_model->clear_preg_replace_rules();
 
-		$rules = array();
-		for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){
-			$MEMO = array();
-			$MEMO['priority'] = $i;
-			$MEMO['pregpattern'] = $this->px->req()->get_param('p'.$i.':pregpattern');
-			$MEMO['replaceto'] = $this->px->req()->get_param('p'.$i.':replaceto');
-			$MEMO['path'] = $this->px->req()->get_param('p'.$i.':path');
-			$MEMO['dirflg'] = $this->px->req()->get_param('p'.$i.':dirflg');
-			$MEMO['ext'] = $this->px->req()->get_param('p'.$i.':ext');
-			array_push( $rules , $MEMO );
-			unset( $MEMO );
-		}
-		$project_model->set_preg_replace_rules( $rules );
+	// 	$rules = array();
+	// 	for( $i = 1; strlen( $this->px->req()->get_param('p'.$i.':pregpattern') ); $i ++ ){
+	// 		$MEMO = array();
+	// 		$MEMO['priority'] = $i;
+	// 		$MEMO['pregpattern'] = $this->px->req()->get_param('p'.$i.':pregpattern');
+	// 		$MEMO['replaceto'] = $this->px->req()->get_param('p'.$i.':replaceto');
+	// 		$MEMO['path'] = $this->px->req()->get_param('p'.$i.':path');
+	// 		$MEMO['dirflg'] = $this->px->req()->get_param('p'.$i.':dirflg');
+	// 		$MEMO['ext'] = $this->px->req()->get_param('p'.$i.':ext');
+	// 		array_push( $rules , $MEMO );
+	// 		unset( $MEMO );
+	// 	}
+	// 	$project_model->set_preg_replace_rules( $rules );
 
-		$result = $project_model->save_project();
-		if( !$result ){
-			return	'<p class="error">プロジェクト情報の保存に失敗しました。</p>';
-		}
+	// 	$result = $project_model->save_project();
+	// 	if( !$result ){
+	// 		return	'<p class="error">プロジェクト情報の保存に失敗しました。</p>';
+	// 	}
 
-		return	$this->px->redirect( $this->href().'&mode=thanks' );
-	}
-	/**
-	 * 一括置換設定編集：完了
-	 */
-	private function page_edit_preg_replace_thanks(){
-		$RTN = '';
-		$RTN .= '<p>一括置換設定編集処理を完了しました。</p>';
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
-		$RTN .= '	<input type="submit" value="戻る" />'."\n";
-		// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
-		$RTN .= '</form>'."\n";
-		return	$RTN;
-	}
+	// 	return	$this->px->redirect( $this->href().'&mode=thanks' );
+	// }
+	// /**
+	//  * 一括置換設定編集：完了
+	//  */
+	// private function page_edit_preg_replace_thanks(){
+	// 	$RTN = '';
+	// 	$RTN .= '<p>一括置換設定編集処理を完了しました。</p>';
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':detail.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<input type="submit" value="戻る" />'."\n";
+	// 	// $RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
+	// 	$RTN .= '</form>'."\n";
+	// 	return	$RTN;
+	// }
 
 
 	###################################################################################################################
