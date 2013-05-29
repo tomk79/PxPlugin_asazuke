@@ -64,7 +64,7 @@ class pxplugin_asazuke_crawlctrl{
 			$this->error_log( 'サイトマップオペレータのロードに失敗しました。' , __FILE__ , __LINE__ );
 			return	$this->exit_process();
 		}
-		$path_sitemap_csv = realpath( $this->get_path_download_to() ).'/__LOGS__/sitemap.csv';
+		$path_sitemap_csv = realpath( $this->get_path_download_to() ).'/sitemaps/sitemap.csv';
 		$obj = new $className( $this->px, $path_sitemap_csv );
 		return	$obj;
 	}
@@ -96,27 +96,6 @@ class pxplugin_asazuke_crawlctrl{
 		$obj = new $className();
 		return	$obj;
 	}
-
-	// /**
-	//  * ファクトリ：プログラムオペレータ
-	//  */
-	// private function &factory_program_operator( $type , $kind = 'execute' ){
-	// 	$className = $this->px->load_px_plugin_class( '/asazuke/program/'.$type.'/'.$kind.'.php' );
-	// 	if( !$className ){
-	// 		$this->error_log( 'プログラムオペレータオブジェクト('.$type.'/'.$kind.')のロードに失敗しました。' , __FILE__ , __LINE__ );
-	// 		return	$this->exit_process();
-	// 	}
-	// 	if( $kind == 'execute' ){
-	// 		$obj = new $className( $this->px , $this->pcconf , $this->project_model , $this->program_model );
-	// 	}elseif( $kind == 'info' ){
-	// 		$obj = new $className();
-	// 	}else{
-	// 		$this->error_log( 'プログラムオペレータオブジェクト('.$type.'/'.$kind.')のインスタンス化に失敗しました。' , __FILE__ , __LINE__ );
-	// 		return	$this->exit_process();
-	// 	}
-	// 	return	$obj;
-	// }
-
 
 
 
@@ -246,12 +225,9 @@ class pxplugin_asazuke_crawlctrl{
 		#	クロールの設定をログに残す
 		$this->save_crawl_settings( $project_model , $program_model );
 
-		// #######################################
-		// #	HTTPリクエストオブジェクトを生成
-		// $httpaccess = &$this->factory_httpaccess();
 
+		#	サイトマップを作成し始める
 		$this->start_sitemap();
-			#	サイトマップを作成し始める
 
 		while( 1 ){
 			set_time_limit(0);
@@ -324,7 +300,7 @@ class pxplugin_asazuke_crawlctrl{
 				clearstatcache();
 
 				// スクレイピングしてサイトマップを追記
-				$this->factory_sitemap_operator()->scrape($fullpath_savetmpfile_to);
+				$this->factory_sitemap_operator()->scrape($url, $fullpath_savetmpfile_to);
 
 				#--------------------------------------
 				#	実際のあるべき場所へファイルを移動
@@ -441,72 +417,6 @@ class pxplugin_asazuke_crawlctrl{
 					}
 				}
 
-				#--------------------------------------
-				#	オペレータをロードして実行
-				// $operator = &$this->factory_program_operator( $program_model->get_program_type() );
-				// if( !$operator->execute( $httpaccess , $url , realpath( $fullpath_save_to ) , $url_property ) ){
-				// 	$this->error_log( 'FAILD to Executing in operator object.' , __FILE__ , __LINE__ );
-				// 	return	$this->exit_process();
-				// }
-
-				// #--------------------------------------
-				// #	文字コード・改行コード変換
-				// #	PicklesCrawler 0.3.0 追加
-				// $this->execute_charset( $path_save_to );
-
-				// #--------------------------------------
-				// #	一括置換処理
-				// #	PicklesCrawler 0.3.0 追加
-				// $this->execute_preg_replace( $path_save_to , $url );
-
-				// #--------------------------------------
-				// #	実行結果を取得
-				// $result = $operator->get_result();
-				// if( !is_array( $result ) ){
-				// 	$this->error_log( '[FATAL ERROR] Operator\'s result is not a Array.' , __FILE__ , __LINE__ );
-				// 	return	$this->exit_process();
-				// }
-
-				// foreach( $result as $result_line ){
-				// 	$status_cd = intval( $result_line['status'] );
-				// 		#↑	※注意：このステータスコードは、HTTPステータスコードではありません。オペレータのステータスです。
-
-				// 	if( $status_cd >= 500 ){
-				// 		#	500番台以上
-				// 		$this->error_log( '['.$status_cd.'] '.$result_line['usermessage'] , __FILE__ , __LINE__ );
-				// 		return	$this->exit_process();
-				// 	}elseif( $status_cd >= 400 ){
-				// 		#	400番台
-				// 		if( $status_cd == 450 ){
-				// 			$this->error_log( '['.$status_cd.'] '.$result_line['usermessage'] , __FILE__ , __LINE__ );
-				// 			return	$this->exit_process();
-				// 		}else{
-				// 			$this->msg( '['.$status_cd.'] '.$result_line['usermessage'] );
-				// 		}
-				// 	}elseif( $status_cd >= 300 ){
-				// 		#	300番台
-				// 		$this->msg( '['.$status_cd.'] '.$result_line['usermessage'] );
-				// 	}elseif( $status_cd >= 200 ){
-				// 		#	200番台
-				// 		$this->msg( '['.$status_cd.'] '.$result_line['usermessage'] );
-				// 	}elseif( $status_cd >= 100 ){
-				// 		#	100番台
-				// 		if( $status_cd == 100 ){
-				// 			#	URL(parameter) を、実行待ちリストに追加
-				// 			#	追加してもよいURLか否かは、add_target_path()が勝手に判断する。
-				// 			if( $this->add_target_path( $result_line['parameter'] , $result_line['option'] ) ){
-				// 				$this->msg( '['.$status_cd.'] Add Param: ['.$result_line['parameter'].'] '.$result_line['usermessage'] );
-				// 			}
-
-				// 		}else{
-				// 			$this->msg( '['.$status_cd.'] '.$result_line['usermessage'] );
-				// 		}
-				// 	}else{
-				// 		#	100番未満
-				// 		$this->msg( '['.$status_cd.'] '.$result_line['usermessage'] );
-				// 	}
-				// }
-
 
 				$this->msg( '処理済件数 '.intval( $this->get_count_done_url() ).' 件.' );
 				$this->msg( '残件数 '.count( $this->target_path_list ).' 件.' );
@@ -526,13 +436,6 @@ class pxplugin_asazuke_crawlctrl{
 			}
 
 		}
-
-		// $this->close_sitemap_csv();
-		// 	#	サイトマップを閉じる
-
-		// unset( $httpaccess );
-		#	/ HTTPリクエストオブジェクトを破壊
-		#######################################
 
 
 		#######################################
@@ -634,231 +537,6 @@ class pxplugin_asazuke_crawlctrl{
 		}
 	}//scan_starting_files()
 
-	#########################################################################################################################################################
-
-
-	/**
-	 * 文字コード・改行コード変換
-	 */
-	private function execute_charset( $path_save_to ){
-		#	PicklesCrawler 0.3.0 追加
-		#	このメソッドは、指定されたファイルを開いて、
-		#	変換して、そして勝手に保存して閉じます。
-
-		$path_targetfile = realpath( $this->get_path_download_to().$path_save_to );
-
-		$project_model = &$this->project_model;
-		$charset = $project_model->get_charset_charset();
-		$crlf = $project_model->get_charset_crlf();
-		$ext = $project_model->get_charset_ext();
-
-		if( !strlen( $charset ) && !strlen( $crlf ) ){
-			#	文字コードも改行コードも指定なしなら、変換処理はない。
-			return	true;
-		}
-
-		#--------------------------------------
-		#	拡張子判定
-		if( !strlen( $ext ) ){
-			return true;
-		}
-		$extList = explode(';',$ext);
-		$pathinfo = pathinfo( $path_targetfile );
-		$is_hit = false;
-		foreach( $extList as $extLine ){
-			$extLine = trim( $extLine );
-			if( !strlen( $extLine ) ){ continue; }
-			if( strtolower( $extLine ) == strtolower( $pathinfo['extension'] ) ){
-				$is_hit = true;
-				break;
-			}
-		}
-		if( !$is_hit ){
-			#	ヒットしない拡張子なら、ここでお終い。
-			return	true;
-		}
-		#	/ 拡張子判定
-		#--------------------------------------
-
-		clearstatcache();
-		$SRC = $this->px->dbh()->file_get_contents( $path_targetfile );
-
-		#--------------------------------------
-		#	文字コードを変換
-		if( strlen( $charset ) ){
-			$charset_to = $charset;
-			switch( strtolower( $charset ) ){
-				case 'shift_jis':
-				case 'sjis':
-					$charset_to = 'SJIS-win';
-					break;
-				case 'euc-jp':
-					$charset_to = 'eucJP-win';
-					break;
-			}
-			$SRC = t::convert_encoding( $SRC , $charset_to );
-			switch( strtolower( $pathinfo['extension'] ) ){
-				case 'html':
-				case 'htm':
-				case 'shtml':
-				case 'shtm':
-					$SRC = preg_replace( '/^(<'.'\?xml .*?encoding\=")[A-Za-z0-9\_\-]+(".*?\?'.'>)/i' , '\1'.htmlspecialchars( $charset ).'\2' , $SRC );
-					$SRC = preg_replace( '/(content\="\s*(?:[a-zA-Z0-9\-\_]+)\/(?:[a-zA-Z0-9\-\_\+]+)\s*\;\s*charset\=)[A-Za-z0-9\_\-]+(\s*")/is' , '\1'.htmlspecialchars( $charset ).'\2' , $SRC );
-						//↑PxCrawler 0.3.2 修正。text/html; と charset= の間に空白文字が入る場合を想定した。
-					$SRC = preg_replace( '/(charset\="\s*)[A-Za-z0-9\_\-]+(\s*")/is' , '\1'.htmlspecialchars( $charset ).'\2' , $SRC );
-						//↑PxCrawler 0.4.1 追加。HTML5の簡易書式に対応。
-					break;
-				case 'css':
-					$SRC = preg_replace( '/(\@charset[ \t]+")[A-Za-z0-9\_\-]+(")/i' , '\1'.htmlspecialchars( $charset ).'\2' , $SRC );
-					break;
-			}
-		}
-		#	/ 文字コードを変換
-		#--------------------------------------
-
-		#--------------------------------------
-		#	改行コードを変換
-		if( strlen( $crlf ) ){
-			$src_crlfto = null;
-			switch( strtolower( $crlf ) ){
-				case 'crlf'://Windows
-					$src_crlfto = "\r\n";
-					break;
-				case 'cr'://Macintosh
-					$src_crlfto = "\r";
-					break;
-				case 'lf'://UNIX/Linux
-					$src_crlfto = "\n";
-					break;
-				default:
-					break;
-			}
-			if( !is_null( $src_crlfto ) ){
-				$SRC = preg_replace( '/\r\n|\r|\n/' , $src_crlfto , $SRC );
-			}
-		}
-		#	/ 改行コードを変換
-		#--------------------------------------
-
-		$result = $this->px->dbh()->save_file( $path_targetfile , $SRC );
-		$this->px->dbh()->fclose( $path_targetfile );
-		clearstatcache();
-		if( !$result ){
-			return	false;
-		}
-		return	true;
-	}
-
-
-	#########################################################################################################################################################
-
-
-	// /**
-	//  * 一括置換処理
-	//  */
-	// private function execute_preg_replace( $path_save_to , $url ){
-	// 	#	PicklesCrawler 0.3.0 追加
-	// 	#	このメソッドは、指定されたファイルを開いて、変換して、そして勝手に保存して閉じます。
-
-	// 	$path_targetfile = realpath( $this->get_path_download_to().$path_save_to );
-	// 	$parsed_url = parse_url( trim( $url ) );
-
-	// 	$project_model = &$this->project_model;
-	// 	$preg_replace_rules = $project_model->get_preg_replace_rules();
-	// 	if( !is_array( $preg_replace_rules ) ){
-	// 		$preg_replace_rules = array();
-	// 	}
-	// 	if( !count( $preg_replace_rules ) ){
-	// 		#	設定されていなければお終い。
-	// 		return true;
-	// 	}
-
-	// 	$pathinfo = pathinfo( $path_targetfile );
-
-	// 	$path_dir_download_to = realpath( $this->get_path_download_to() );
-	// 	$localpath_targetfile = preg_replace( '/^'.preg_quote( $path_dir_download_to , '/' ).'/' , '' , realpath( $path_targetfile ) );
-	// 	if( $path_dir_download_to.$localpath_targetfile != $path_targetfile ){
-	// 		#	何か計算が間違っているはず。
-	// 		return false;
-	// 	}
-	// 	$localpath_targetfile = preg_replace( '/\\\\|\//' , '/' , $localpath_targetfile );//ディレクトリの区切り文字をスラッシュに変換
-	// 	$path_dir_download_to = $this->px->dbh()->get_realpath( $path_dir_download_to );
-
-	// 	clearstatcache();
-	// 	$SRC = $this->px->dbh()->file_get_contents( $path_targetfile );
-
-	// 	#--------------------------------------
-	// 	#	置換ルールを一つずつ処理
-	// 	foreach( $preg_replace_rules as $rule ){
-	// 		#--------------------
-	// 		#	対象ファイルか否か判定
-	// 		if( !strlen( $rule['ext'] ) ){
-	// 			continue;
-	// 		}
-	// 		$extList = explode( ';' , $rule['ext'] );
-	// 		$is_hit = false;
-	// 		foreach( $extList as $extLine ){
-	// 			$extLine = trim( $extLine );
-	// 			if( !strlen( $extLine ) ){ continue; }
-	// 			if( strtolower( $extLine ) == strtolower( $pathinfo['extension'] ) ){
-	// 				$is_hit = true;
-	// 				break;
-	// 			}
-	// 		}
-	// 		if( !$is_hit ){
-	// 			#	ヒットしない拡張子なら、ここでお終い。
-	// 			continue;
-	// 		}
-
-	// 		#	対象パスを検証
-	// 		$is_hit = false;
-	// 		if( $rule['path'] == '/' ){
-	// 			$rule['path'] = '';
-	// 		}
-	// 		$rule_path = '/'.$parsed_url['scheme'].'/'.$parsed_url['host'];
-	// 		if( strlen( $parsed_url['port'] ) ){
-	// 			$rule_path .= '_'.$parsed_url['port'];
-	// 		}
-	// 		$rule_path .= $rule['path'];
-	// 		if( $rule_path == $localpath_targetfile ){
-	// 			#	ファイル単体で指名だったら無条件にtrue。
-	// 			$is_hit = true;
-	// 		}elseif( is_dir( $path_dir_download_to.$rule_path ) ){
-	// 			#	パス指定がディレクトリだったら
-	// 			if( !preg_match( '/^'.preg_quote( $rule_path.'/' , '/' ).'(.*)$/' , $localpath_targetfile , $tmp_preg_matched ) ){
-	// 				#	パス指定に含まれるファイルじゃなかったらここでお終い。
-	// 				continue;
-	// 			}
-	// 			if( $rule['dirflg'] ){
-	// 				#	ディレクトリ以下再帰的に有効な指定ならこの時点でOK。
-	// 				$is_hit = true;
-	// 			}elseif( !preg_match( '/\\\\|\//' , $tmp_preg_matched[1] ) ){
-	// 				#	ディレクトリ直下のみ有効な指定なら、
-	// 				#	$tmp_preg_matched[1] にディレクトリ区切り文字(スラッシュ)が含まれていない場合のみOK。
-	// 				$is_hit = true;
-	// 			}
-	// 		}
-	// 		if( !$is_hit ){
-	// 			#	ヒットしない拡張子なら、ここでお終い。
-	// 			continue;
-	// 		}
-	// 		unset( $tmp_preg_matched );
-
-	// 		#	/ 対象ファイルか否か判定
-	// 		#--------------------
-
-	// 		#	↓置換実行！
-	// 		$SRC = @preg_replace( $rule['pregpattern'] , $rule['replaceto'] , $SRC );
-	// 	}
-
-	// 	$result = $this->px->dbh()->save_file( $path_targetfile , $SRC );
-	// 	$this->px->dbh()->fclose( $path_targetfile );
-	// 	clearstatcache();
-	// 	if( !$result ){
-	// 		return	false;
-	// 	}
-	// 	return	true;
-	// }
 
 
 	#########################################################################################################################################################
@@ -880,6 +558,369 @@ class pxplugin_asazuke_crawlctrl{
 			// すでに予約済みだったら省く
 
 		$path_dir_download_to = $this->get_path_download_to();
+		if( is_dir( $path_dir_download_to.$path ) ){ return false; }
+			// 既に保存済みだったら省く
+		if( is_file( $path_dir_download_to.$path ) ){ return false; }
+			// 既に保存済みだったら省く
+
+
+		#--------------------------------------
+		#	問題がなければ追加。
+		$this->target_path_list[$path] = array();
+		$this->target_path_list[$path]['path'] = $path;
+
+		return	true;
+	}
+
+	/**
+	 * 現在処理待ちのURL数を取得
+	 */
+	public function get_count_target_url(){
+		return	count( $this->target_path_list );
+	}
+	/**
+	 * URLが処理済であることを宣言
+	 */
+	private function target_url_done( $url ){
+		unset( $this->target_path_list[$url] );
+		$this->done_url_count ++;
+		return	true;
+	}
+	/**
+	 * 処理済URL数を取得
+	 */
+	public function get_count_done_url(){
+		return	intval( $this->done_url_count );
+	}
+
+	/**
+	 * ダウンロード先のディレクトリパスを得る
+	 */
+	private function get_path_download_to(){
+		$path = $this->pcconf->get_program_home_dir( $this->cmd[1] , $this->cmd[2] );
+		if( !is_dir( $path ) ){ return false; }
+
+		$RTN = realpath( $path ).'/dl';
+		if( !is_dir( $RTN ) ){
+			if( !$this->px->dbh()->mkdir( $RTN ) ){
+				return	false;
+			}
+		}
+		return	$RTN;
+	}
+
+	/**
+	 * ダウンロードしたURLの一覧に履歴を残す
+	 */
+	private function save_executed_url_row( $array_csv_line = array() ){
+		$path_dir_download_to = realpath( $this->get_path_download_to() );
+		if( !is_dir( $path_dir_download_to ) ){ return false; }
+		if( !is_dir( $path_dir_download_to.'/__LOGS__' ) ){
+			if( !$this->px->dbh()->mkdir( $path_dir_download_to.'/__LOGS__' ) ){
+				return	false;
+			}
+		}
+
+		$csv_charset = mb_internal_encoding();
+		if( strlen( $this->pcconf->get_value( 'download_list_csv_charset' ) ) ){
+			$csv_charset = $this->pcconf->get_value( 'download_list_csv_charset' );
+		}
+
+		#--------------------------------------
+		#	行の文字コードを調整
+		foreach( $array_csv_line as $lineKey=>$lineVal ){
+			if( mb_detect_encoding( $lineVal ) ){
+				$array_csv_line[$lineKey] = mb_convert_encoding( $lineVal , mb_internal_encoding() , mb_detect_encoding( $lineVal ) );
+			}
+		}
+		#	/ 行の文字コードを調整
+		#--------------------------------------
+
+		$csv_line = $this->px->dbh()->mk_csv( array( $array_csv_line ) , array('charset'=>$csv_charset) );
+
+		error_log( $csv_line , 3 , $path_dir_download_to.'/__LOGS__/download_list.csv' );
+		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/download_list.csv' );
+
+		return	true;
+	}//save_executed_url_row();
+
+	/**
+	 * クロールの設定をログに残す
+	 */
+	private function save_crawl_settings( &$project_model , &$program_model ){
+		// PicklesCrawler 0.4.2 追加
+		$path_dir_download_to = realpath( $this->get_path_download_to() );
+		if( !is_dir( $path_dir_download_to ) ){ return false; }
+		if( !is_dir( $path_dir_download_to.'/__LOGS__' ) ){
+			if( !$this->px->dbh()->mkdir( $path_dir_download_to.'/__LOGS__' ) ){
+				return	false;
+			}
+		}
+
+		$FIN = '';
+		$FIN .= '[Project Info]'."\n";
+		$FIN .= 'Project ID: '.$project_model->get_project_id()."\n";
+		$FIN .= 'Project Name: '.$project_model->get_project_name()."\n";
+		$FIN .= 'Start page URL: '.$project_model->get_path_startpage()."\n";
+		$FIN .= 'Document root URL: '.$project_model->get_path_docroot()."\n";
+		$FIN .= 'Default filename: '.$project_model->get_default_filename()."\n";
+		$FIN .= 'Omit filename(s): '.implode( ', ' , $project_model->get_omit_filename() )."\n";
+		$FIN .= 'Path convert method: '.$project_model->get_path_conv_method()."\n";
+		$FIN .= 'outofsite2url flag: '.($project_model->get_outofsite2url_flg()?'true':'false')."\n";
+		$FIN .= 'send unknown params flag: '.($project_model->get_send_unknown_params_flg()?'true':'false')."\n";
+		$FIN .= 'send form flag: '.($project_model->get_send_form_flg()?'true':'false')."\n";
+		$FIN .= 'parse inline JavaScript flag: '.($project_model->get_parse_jsinhtml_flg()?'true':'false')."\n";
+		$FIN .= 'save notfound page flag: '.($project_model->get_save404_flg()?'true':'false')."\n";
+		$FIN .= 'path copyto: '.$project_model->get_path_copyto()."\n";
+		$FIN .= '(conv)charset: '.$project_model->get_charset_charset()."\n";
+		$FIN .= '(conv)crlf: '.$project_model->get_charset_crlf()."\n";
+		$FIN .= '(conv)ext: '.$project_model->get_charset_ext()."\n";
+		$FIN .= 'Auth type: '.$project_model->get_authentication_type()."\n";
+		$FIN .= 'Auth user: '.$project_model->get_basic_authentication_id()."\n";
+		$FIN .= 'Auth Password: ********'."\n";
+
+		$FIN .= '------'."\n";
+		$FIN .= '[URLs as out of site]'."\n";
+		if( count($project_model->get_urllist_outofsite()) ){
+			foreach( $project_model->get_urllist_outofsite() as $outofsite ){
+				$FIN .= $outofsite."\n";
+			}
+		}else{
+			$FIN .= '(no entry)'."\n";
+		}
+		$FIN .= '------'."\n";
+		$FIN .= '[additional start pages]'."\n";
+		if( count($project_model->get_urllist_startpages()) ){
+			foreach( $project_model->get_urllist_startpages() as $additional_startpage ){
+				$FIN .= $additional_startpage."\n";
+			}
+		}else{
+			$FIN .= '(no entry)'."\n";
+		}
+		$FIN .= ''."\n";
+		$FIN .= '--------------------------------------'."\n";
+		$FIN .= '[Program Info]'."\n";
+		$FIN .= 'Program ID: '.$program_model->get_program_id()."\n";
+		$FIN .= 'Program Name: '.$program_model->get_program_name()."\n";
+		$FIN .= 'Program Type: '.$program_model->get_program_type()."\n";
+		$FIN .= 'Params: '.$program_model->get_program_param()."\n";
+		$FIN .= 'HTTP_USER_AGENT: '.$program_model->get_program_useragent()."\n";
+		$FIN .= 'path copyto: '.$program_model->get_path_copyto()."\n";
+		$FIN .= 'path copyto (apply deleted file flag): '.($program_model->get_copyto_apply_deletedfile_flg()?'true':'false')."\n";
+		$FIN .= '------'."\n";
+		$FIN .= '[URLs scope]'."\n";
+		if( count($program_model->get_urllist_scope()) ){
+			foreach( $program_model->get_urllist_scope() as $row ){
+				$FIN .= $row."\n";
+			}
+		}else{
+			$FIN .= '(no entry)'."\n";
+		}
+		$FIN .= '------'."\n";
+		$FIN .= '[URLs out of scope]'."\n";
+		if( count($program_model->get_urllist_nodownload()) ){
+			foreach( $program_model->get_urllist_nodownload() as $row ){
+				$FIN .= $row."\n";
+			}
+		}else{
+			$FIN .= '(no entry)'."\n";
+		}
+		$FIN .= ''."\n";
+		$FIN .= '--------------------------------------'."\n";
+		$FIN .= '[Other Info]'."\n";
+		$FIN .= 'Process ID: '.getmypid()."\n";
+		$FIN .= 'crawl_max_url_number: '.$this->pcconf->get_value( 'crawl_max_url_number' )."\n";
+		$FIN .= ''."\n";
+
+		error_log( $FIN , 3 , $path_dir_download_to.'/__LOGS__/settings.txt' );
+		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/settings.txt' );
+
+		return	true;
+	}//save_crawl_settings();
+
+	/**
+	 * サイトマップCSVを保存する系: 先頭
+	 */
+	private function start_sitemap(){
+		$path_dir_download_to = realpath( $this->get_path_download_to() );
+		if( !is_dir( $path_dir_download_to ) ){ return false; }
+		if( !is_dir( $path_dir_download_to.'/sitemaps' ) ){
+			if( !$this->px->dbh()->mkdir( $path_dir_download_to.'/sitemaps' ) ){
+				return	false;
+			}
+		}
+
+		$sitemap_definition = $this->px->site()->get_sitemap_definition();
+		$sitemap_key_list = array();
+		foreach( $sitemap_definition as $row ){
+			array_push( $sitemap_key_list , '* '.$row['key'] );
+
+		}
+		$LINE = '';
+		$LINE .= $this->px->dbh()->mk_csv(array($sitemap_key_list), array('charset'=>'UTF-8'));
+
+		error_log( $LINE , 3 , $path_dir_download_to.'/sitemaps/sitemap.csv' );
+		$this->px->dbh()->chmod( $path_dir_download_to.'/sitemaps/sitemap.csv' );
+
+		return	true;
+	}
+
+	/**
+	 * 開始と終了の時刻を保存する
+	 */
+	private function save_start_and_end_datetime( $start_time , $end_time ){
+		$path_dir_download_to = realpath( $this->get_path_download_to() );
+		$CONTENT = '';
+		$CONTENT .= $this->px->dbh()->int2datetime( $start_time );
+		$CONTENT .= ' --- ';
+		$CONTENT .= $this->px->dbh()->int2datetime( $end_time );
+		$result = $this->px->dbh()->save_file( $path_dir_download_to.'/__LOGS__/datetime.txt' , $CONTENT );
+		$this->px->dbh()->fclose( $path_dir_download_to.'/__LOGS__/datetime.txt' );
+		return	$result;
+	}
+
+	/**
+	 * エラーログを残す
+	 */
+	private function error_log( $msg , $file = null , $line = null ){
+		$this->px->error()->error_log( $msg , $file , $line );
+		$this->msg( '[--ERROR!!--] '.$msg );
+		return	true;
+	}
+	/**
+	 * メッセージを出力する
+	 */
+	private function msg( $msg ){
+		$msg = t::convert_encoding( $msg , $this->output_encoding , mb_internal_encoding() );
+		if( $this->px->req()->is_cmd() ){
+			print	$msg."\n";
+		}else{
+			print	$msg."\n";
+		}
+		flush();
+		return	true;
+	}
+
+	/**
+	 * プロセスを終了する
+	 */
+	private function exit_process( $is_unlock = true ){
+		if( $is_unlock ){
+			if( !$this->unlock() ){
+				$this->error_log( 'FAILD to unlock!' , __FILE__ , __LINE__ );
+			}
+		}
+		$this->crawl_endtime = time();
+		$this->msg( '*** Exit --- '.$this->px->dbh()->int2datetime( $this->crawl_endtime ) );
+		$this->save_start_and_end_datetime( $this->crawl_starttime , $this->crawl_endtime );//←開始、終了時刻の記録
+		exit;
+		//return	$this->px->theme()->print_and_exit( '' );
+	}
+
+
+	###################################################################################################################
+
+	/**
+	 * キャンセルリクエスト
+	 */
+	public function request_cancel(){
+		$path = realpath( $this->get_path_download_to() ).'/__LOGS__/cancel.request';
+		if( !is_dir( dirname( $path ) ) ){
+			return	false;
+		}
+		if( is_file( $path ) && !is_writable( $path ) ){
+			return	false;
+		}elseif( !is_writable( dirname( $path ) ) ){
+			return	false;
+		}
+		$this->px->dbh()->save_file( $path , 'Cancel request: '.date('Y-m-d H:i:s')."\n" );
+		$this->px->dbh()->fclose( $path );
+		return	true;
+	}
+	private function is_request_cancel(){
+		$path = realpath( $this->get_path_download_to() ).'/__LOGS__/cancel.request';
+		if( is_file( $path ) ){
+			return	true;
+		}
+		return	false;
+	}
+	public function delete_request_cancel(){
+		$path = realpath( $this->get_path_download_to() ).'/__LOGS__/cancel.request';
+		if( !is_file( $path ) ){
+			return	true;
+		}elseif( !is_writable( $path ) ){
+			return	false;
+		}
+		return	$this->px->dbh()->rmdir_all( $path );
+	}
+
+
+	###################################################################################################################
+	#	アプリケーションロック
+
+	/**
+	 * アプリケーションをロックする
+	 */
+	private function lock(){
+		$lockfilepath = $this->get_path_lockfile();
+
+		if( !@is_dir( dirname( $lockfilepath ) ) ){
+			$this->px->dbh()->mkdir_all( dirname( $lockfilepath ) );
+		}
+
+		#	PHPのFileStatusCacheをクリア
+		clearstatcache();
+
+		if( @is_file( $lockfilepath ) ){
+			#	ロックファイルが存在したら、
+			#	ファイルの更新日時を調べる。
+			if( @filemtime( $lockfilepath ) > time() - (60*60) ){
+				#	最終更新日時が 60分前 よりも未来ならば、
+				#	このロックファイルは有効とみなす。
+				return	false;
+			}
+		}
+
+		$result = $this->px->dbh()->save_file( $lockfilepath , 'This lockfile created at: '.date( 'Y-m-d H:i:s' , time() ).'; Process ID: ['.getmypid().'];'."\n" );
+		$this->px->dbh()->fclose( $lockfilepath );
+		return	$result;
+	}
+
+	/**
+	 * ロックファイルの更新日時を更新する。
+	 */
+	private function touch_lockfile(){
+		$lockfilepath = $this->get_path_lockfile();
+
+		#	PHPのFileStatusCacheをクリア
+		clearstatcache();
+
+		touch( $lockfilepath );
+		return	true;
+	}
+
+	/**
+	 * アプリケーションロックを解除する
+	 */
+	private function unlock(){
+		$lockfilepath = $this->get_path_lockfile();
+
+		#	PHPのFileStatusCacheをクリア
+		clearstatcache();
+
+		return	$this->px->dbh()->rmdir_all( $lockfilepath );
+	}
+
+	/**
+	 * ロックファイルのパスを返す
+	 */
+	private function get_path_lockfile(){
+		return	realpath( $this->get_path_download_to() ).'/crawl.lock';
+	}
+
+}
+
+?>d_to();
 		if( is_dir( $path_dir_download_to.$path ) ){ return false; }
 			// 既に保存済みだったら省く
 		if( is_file( $path_dir_download_to.$path ) ){ return false; }
