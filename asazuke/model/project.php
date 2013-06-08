@@ -248,7 +248,7 @@ class pxplugin_asazuke_model_project{
 		if( !is_dir( $path_project_dir ) ){
 			return false;
 		}
-		$result = $this->px->dbh()->rmdir_all( $path_project_dir );
+		$result = $this->px->dbh()->rm( $path_project_dir );
 		if( !$result ){
 			return	false;
 		}

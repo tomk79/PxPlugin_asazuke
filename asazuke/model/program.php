@@ -214,7 +214,7 @@ class pxplugin_asazuke_model_program{
 		}
 
 		set_time_limit(0);
-		$result = $this->px->dbh()->rmdir_all( $path_program_dir );
+		$result = $this->px->dbh()->rm( $path_program_dir );
 		set_time_limit(30);
 		if( $result === false ){
 			return	false;
@@ -235,7 +235,7 @@ class pxplugin_asazuke_model_program{
 			return false;
 		}
 
-		$result = $this->px->dbh()->rmdir_all( $path_program_dir );
+		$result = $this->px->dbh()->rm( $path_program_dir );
 		if( !$result ){
 			return	false;
 		}

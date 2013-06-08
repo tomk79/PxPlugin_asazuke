@@ -89,7 +89,7 @@ class pxplugin_asazuke_resources_io{
 	private function local_export( $options = array() ){
 		$path_export_dir = $this->pcconf->get_home_dir().'/_export/';
 
-		$this->px->dbh()->rmdir_all( $path_export_dir );
+		$this->px->dbh()->rm( $path_export_dir );
 		$this->px->dbh()->mkdir_all( $path_export_dir );
 		$this->px->dbh()->mkdir_all( $path_export_dir.'tmp/' );
 
