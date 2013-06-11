@@ -299,8 +299,10 @@ class pxplugin_asazuke_crawlctrl{
 
 				clearstatcache();
 
+				// ----------
 				// スクレイピングしてサイトマップを追記
 				$this->factory_sitemap_operator()->scrape($url, $fullpath_savetmpfile_to);
+				// ----------
 
 				#--------------------------------------
 				#	実際のあるべき場所へファイルを移動
