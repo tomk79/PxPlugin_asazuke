@@ -440,56 +440,56 @@ class pxplugin_asazuke_crawlctrl{
 		}
 
 
-		#######################################
-		#	複製先指定の処理
-		$path_copyto = $this->project_model->get_path_copyto();
-		if( strlen( $this->program_model->get_path_copyto() ) ){
-			//	プログラムに指定があれば上書き
-			$path_copyto = $this->program_model->get_path_copyto();
-		}
-		$copyto_apply_deletedfile_flg = $this->program_model->get_copyto_apply_deletedfile_flg();
-		if( strlen( $path_copyto ) ){
-			//	1:03 2009/08/27 追加の分岐
-			//	有効なコピー先が指定されていたら、コピーする。
-			$this->msg( '------' );
-			$this->msg( 'コンテンツの複製を開始します。' );
-			clearstatcache();
-			if( !is_dir( $path_copyto ) ){
-				$this->error_log( 'コンテンツの複製先が存在しません。' , __FILE__ , __LINE__ );
-			}else{
-				preg_match( '/^(https?)\:\/\/([a-zA-Z0-9\-\_\.\:]+)/si' , $this->project_model->get_path_startpage() , $matched );
-				$matched[2] = preg_replace( '/\:/' , '_' , $matched[2] );
-				$path_copyfrom = realpath( $this->get_path_download_to().'/'.$matched[1].'/'.$matched[2] );
-				$this->msg( '複製元パス：'.$path_copyfrom );
-				$this->msg( '複製先パス：'.$path_copyto );
-				if( strlen( $path_copyfrom ) && is_dir( $path_copyfrom ) ){
-					set_time_limit(0);
-					if( $this->px->dbh()->copyall( $path_copyfrom , $path_copyto ) ){
-						$this->msg( 'コンテンツの複製を完了しました。' );
-						if( $copyto_apply_deletedfile_flg ){
-							$this->msg( '------' );
-							$this->msg( '削除されたファイル/ディレクトリを反映します。' );
-							set_time_limit(0);
-							if( $this->px->dbh()->compare_and_cleanup( $path_copyto , $path_copyfrom ) ){
-								$this->msg( '削除されたファイル/ディレクトリを反映しました。' );
-							}else{
-								$this->error_log( '削除されたファイル/ディレクトリ反映に失敗しました。' , __FILE__ , __LINE__ );
-							}
-							set_time_limit(30);
-						}
-					}else{
-						$this->error_log( 'コンテンツの複製に失敗しました。' , __FILE__ , __LINE__ );
-					}
-					set_time_limit(30);
-				}else{
-					$this->error_log( '複製元を正しく判断できません。コンテンツのクロールに失敗した可能性があります。' , __FILE__ , __LINE__ );
-				}
+		// #######################################
+		// #	複製先指定の処理
+		// $path_copyto = $this->project_model->get_path_copyto();
+		// if( strlen( $this->program_model->get_path_copyto() ) ){
+		// 	//	プログラムに指定があれば上書き
+		// 	$path_copyto = $this->program_model->get_path_copyto();
+		// }
+		// $copyto_apply_deletedfile_flg = $this->program_model->get_copyto_apply_deletedfile_flg();
+		// if( strlen( $path_copyto ) ){
+		// 	//	1:03 2009/08/27 追加の分岐
+		// 	//	有効なコピー先が指定されていたら、コピーする。
+		// 	$this->msg( '------' );
+		// 	$this->msg( 'コンテンツの複製を開始します。' );
+		// 	clearstatcache();
+		// 	if( !is_dir( $path_copyto ) ){
+		// 		$this->error_log( 'コンテンツの複製先が存在しません。' , __FILE__ , __LINE__ );
+		// 	}else{
+		// 		preg_match( '/^(https?)\:\/\/([a-zA-Z0-9\-\_\.\:]+)/si' , $this->project_model->get_path_startpage() , $matched );
+		// 		$matched[2] = preg_replace( '/\:/' , '_' , $matched[2] );
+		// 		$path_copyfrom = realpath( $this->get_path_download_to().'/'.$matched[1].'/'.$matched[2] );
+		// 		$this->msg( '複製元パス：'.$path_copyfrom );
+		// 		$this->msg( '複製先パス：'.$path_copyto );
+		// 		if( strlen( $path_copyfrom ) && is_dir( $path_copyfrom ) ){
+		// 			set_time_limit(0);
+		// 			if( $this->px->dbh()->copyall( $path_copyfrom , $path_copyto ) ){
+		// 				$this->msg( 'コンテンツの複製を完了しました。' );
+		// 				if( $copyto_apply_deletedfile_flg ){
+		// 					$this->msg( '------' );
+		// 					$this->msg( '削除されたファイル/ディレクトリを反映します。' );
+		// 					set_time_limit(0);
+		// 					if( $this->px->dbh()->compare_and_cleanup( $path_copyto , $path_copyfrom ) ){
+		// 						$this->msg( '削除されたファイル/ディレクトリを反映しました。' );
+		// 					}else{
+		// 						$this->error_log( '削除されたファイル/ディレクトリ反映に失敗しました。' , __FILE__ , __LINE__ );
+		// 					}
+		// 					set_time_limit(30);
+		// 				}
+		// 			}else{
+		// 				$this->error_log( 'コンテンツの複製に失敗しました。' , __FILE__ , __LINE__ );
+		// 			}
+		// 			set_time_limit(30);
+		// 		}else{
+		// 			$this->error_log( '複製元を正しく判断できません。コンテンツのクロールに失敗した可能性があります。' , __FILE__ , __LINE__ );
+		// 		}
 
-			}
-			$this->msg( '------' );
-		}
-		#	/ 複製先指定の処理
-		#######################################
+		// 	}
+		// 	$this->msg( '------' );
+		// }
+		// #	/ 複製先指定の処理
+		// #######################################
 
 		return	$this->exit_process();
 	}
@@ -665,40 +665,40 @@ class pxplugin_asazuke_crawlctrl{
 		$FIN .= 'Project Name: '.$project_model->get_project_name()."\n";
 		$FIN .= 'Start page URL: '.$project_model->get_path_startpage()."\n";
 		$FIN .= 'Document root URL: '.$project_model->get_path_docroot()."\n";
-		$FIN .= 'Default filename: '.$project_model->get_default_filename()."\n";
-		$FIN .= 'Omit filename(s): '.implode( ', ' , $project_model->get_omit_filename() )."\n";
-		$FIN .= 'Path convert method: '.$project_model->get_path_conv_method()."\n";
-		$FIN .= 'outofsite2url flag: '.($project_model->get_outofsite2url_flg()?'true':'false')."\n";
-		$FIN .= 'send unknown params flag: '.($project_model->get_send_unknown_params_flg()?'true':'false')."\n";
-		$FIN .= 'send form flag: '.($project_model->get_send_form_flg()?'true':'false')."\n";
-		$FIN .= 'parse inline JavaScript flag: '.($project_model->get_parse_jsinhtml_flg()?'true':'false')."\n";
-		$FIN .= 'save notfound page flag: '.($project_model->get_save404_flg()?'true':'false')."\n";
-		$FIN .= 'path copyto: '.$project_model->get_path_copyto()."\n";
-		$FIN .= '(conv)charset: '.$project_model->get_charset_charset()."\n";
-		$FIN .= '(conv)crlf: '.$project_model->get_charset_crlf()."\n";
-		$FIN .= '(conv)ext: '.$project_model->get_charset_ext()."\n";
-		$FIN .= 'Auth type: '.$project_model->get_authentication_type()."\n";
-		$FIN .= 'Auth user: '.$project_model->get_basic_authentication_id()."\n";
-		$FIN .= 'Auth Password: ********'."\n";
+		// $FIN .= 'Default filename: '.$project_model->get_default_filename()."\n";
+		// $FIN .= 'Omit filename(s): '.implode( ', ' , $project_model->get_omit_filename() )."\n";
+		// $FIN .= 'Path convert method: '.$project_model->get_path_conv_method()."\n";
+		// $FIN .= 'outofsite2url flag: '.($project_model->get_outofsite2url_flg()?'true':'false')."\n";
+		// $FIN .= 'send unknown params flag: '.($project_model->get_send_unknown_params_flg()?'true':'false')."\n";
+		// $FIN .= 'send form flag: '.($project_model->get_send_form_flg()?'true':'false')."\n";
+		// $FIN .= 'parse inline JavaScript flag: '.($project_model->get_parse_jsinhtml_flg()?'true':'false')."\n";
+		// $FIN .= 'save notfound page flag: '.($project_model->get_save404_flg()?'true':'false')."\n";
+		// $FIN .= 'path copyto: '.$project_model->get_path_copyto()."\n";
+		// $FIN .= '(conv)charset: '.$project_model->get_charset_charset()."\n";
+		// $FIN .= '(conv)crlf: '.$project_model->get_charset_crlf()."\n";
+		// $FIN .= '(conv)ext: '.$project_model->get_charset_ext()."\n";
+		// $FIN .= 'Auth type: '.$project_model->get_authentication_type()."\n";
+		// $FIN .= 'Auth user: '.$project_model->get_basic_authentication_id()."\n";
+		// $FIN .= 'Auth Password: ********'."\n";
 
-		$FIN .= '------'."\n";
-		$FIN .= '[URLs as out of site]'."\n";
-		if( count($project_model->get_urllist_outofsite()) ){
-			foreach( $project_model->get_urllist_outofsite() as $outofsite ){
-				$FIN .= $outofsite."\n";
-			}
-		}else{
-			$FIN .= '(no entry)'."\n";
-		}
-		$FIN .= '------'."\n";
-		$FIN .= '[additional start pages]'."\n";
-		if( count($project_model->get_urllist_startpages()) ){
-			foreach( $project_model->get_urllist_startpages() as $additional_startpage ){
-				$FIN .= $additional_startpage."\n";
-			}
-		}else{
-			$FIN .= '(no entry)'."\n";
-		}
+		// $FIN .= '------'."\n";
+		// $FIN .= '[URLs as out of site]'."\n";
+		// if( count($project_model->get_urllist_outofsite()) ){
+		// 	foreach( $project_model->get_urllist_outofsite() as $outofsite ){
+		// 		$FIN .= $outofsite."\n";
+		// 	}
+		// }else{
+		// 	$FIN .= '(no entry)'."\n";
+		// }
+		// $FIN .= '------'."\n";
+		// $FIN .= '[additional start pages]'."\n";
+		// if( count($project_model->get_urllist_startpages()) ){
+		// 	foreach( $project_model->get_urllist_startpages() as $additional_startpage ){
+		// 		$FIN .= $additional_startpage."\n";
+		// 	}
+		// }else{
+		// 	$FIN .= '(no entry)'."\n";
+		// }
 		$FIN .= ''."\n";
 		$FIN .= '--------------------------------------'."\n";
 		$FIN .= '[Program Info]'."\n";

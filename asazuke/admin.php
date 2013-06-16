@@ -201,11 +201,11 @@ class pxplugin_asazuke_admin{
 				$RTN .= '	<tr>'."\n";
 				$RTN .= '		<th class="left">'.$this->mk_link(':detail.'.$Line['id'],array('label'=>$Line['name'],'style'=>'inside')).'</th>'."\n";
 				$RTN .= '		<td class="left">'.htmlspecialchars( $Line['id'] ).'</td>'."\n";
-				$RTN .= '		<td class="left">'.htmlspecialchars( $Line['path_docroot'] ).'</td>'."\n";
+				$RTN .= '		<td class="left"><div style="overflow:auto; max-width:400px;">'.htmlspecialchars( $Line['path_docroot'] ).'</div></td>'."\n";
 				$RTN .= '		<td class="left">'."\n";
 				$RTN .= '			'.$this->mk_link(':detail.'.$Line['id'],array('label'=>'詳細','style'=>'inside'))."\n";
-//				$RTN .= '			'.$this->mk_link(':edit_proj.'.$Line['id'],array('label'=>'編集','style'=>'inside'))."\n";
-//				$RTN .= '			'.$this->mk_link(':delete_proj.'.$Line['id'],array('label'=>'削除','style'=>'inside')).''."\n";
+				$RTN .= '			'.$this->mk_link(':edit_proj.'.$Line['id'],array('label'=>'編集','style'=>'inside'))."\n";
+				$RTN .= '			'.$this->mk_link(':delete_proj.'.$Line['id'],array('label'=>'削除','style'=>'inside')).''."\n";
 				$RTN .= '		</td>'."\n";
 				$RTN .= '	</tr>'."\n";
 			}
@@ -246,92 +246,92 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_docroot() ).'</div></td>'."\n";
+		$RTN .= '		<td style="width:70%;"><div style="overflow:auto; max-width:450px;">'.htmlspecialchars( $project_model->get_path_docroot() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_default_filename() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( implode( ', ' , $project_model->get_omit_filename() ) ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$urlList = $project_model->get_urllist_outofsite();
-		if( count( $urlList ) ){
-			$RTN .= '			<ul>'."\n";
-			foreach( $urlList as $url ){
-				$RTN .= '				<li>'.htmlspecialchars( $url ).'</li>'."\n";
-			}
-			$RTN .= '			</ul>'."\n";
-		}else{
-			$RTN .= '			<div>指定はありません。</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$urlList = $project_model->get_urllist_startpages();
-		if( count( $urlList ) ){
-			$RTN .= '			<ul>'."\n";
-			foreach( $urlList as $url ){
-				$RTN .= '				<li>'.htmlspecialchars( $url ).'</li>'."\n";
-			}
-			$RTN .= '			</ul>'."\n";
-		}else{
-			$RTN .= '			<div>指定はありません。</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
-		if( !$project_model->isset_basic_authentication_info() ){
-			$RTN .= '		<td style="width:70%;"><div>設定なし(または無効)</div></td>'."\n";
-		}else{
-			$RTN .= '		<td style="width:70%;">'."\n";
-			$label = array( ''=>'自動選択', 'basic'=>'ベーシック認証', 'digest'=>'ダイジェスト認証' );
-			$RTN .= '			<div>認証タイプ: '.htmlspecialchars( $label[$project_model->get_authentication_type()] ).'</div>'."\n";
-			$RTN .= '			<div>ID: '.htmlspecialchars( $project_model->get_basic_authentication_id() ).'</div>'."\n";
-			$RTN .= '			<div>PW: ********</div>'."\n";
-			$RTN .= '		</td>'."\n";
-		}
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
-		$label = array( 'relative'=>'相対パス','absolute'=>'絶対パス','url'=>'URL','none'=>'変換しない' );
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[$project_model->get_path_conv_method()] ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
-		$label = array( '0'=>'パス指定変換設定に従う','1'=>'URLに変換する' );
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_outofsite2url_flg())] ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
-		$label = array( '0'=>'送信しない','1'=>'送信する' );
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_send_unknown_params_flg())] ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
-		$label = array( '0'=>'送信しない','1'=>'送信する' );
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_send_form_flg())] ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
-		$label = array( '0'=>'解析しない','1'=>'解析する' );
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_parse_jsinhtml_flg())] ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_copyto() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_default_filename() ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( implode( ', ' , $project_model->get_omit_filename() ) ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $urlList = $project_model->get_urllist_outofsite();
+		// if( count( $urlList ) ){
+		// 	$RTN .= '			<ul>'."\n";
+		// 	foreach( $urlList as $url ){
+		// 		$RTN .= '				<li>'.htmlspecialchars( $url ).'</li>'."\n";
+		// 	}
+		// 	$RTN .= '			</ul>'."\n";
+		// }else{
+		// 	$RTN .= '			<div>指定はありません。</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $urlList = $project_model->get_urllist_startpages();
+		// if( count( $urlList ) ){
+		// 	$RTN .= '			<ul>'."\n";
+		// 	foreach( $urlList as $url ){
+		// 		$RTN .= '				<li>'.htmlspecialchars( $url ).'</li>'."\n";
+		// 	}
+		// 	$RTN .= '			</ul>'."\n";
+		// }else{
+		// 	$RTN .= '			<div>指定はありません。</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
+		// if( !$project_model->isset_basic_authentication_info() ){
+		// 	$RTN .= '		<td style="width:70%;"><div>設定なし(または無効)</div></td>'."\n";
+		// }else{
+		// 	$RTN .= '		<td style="width:70%;">'."\n";
+		// 	$label = array( ''=>'自動選択', 'basic'=>'ベーシック認証', 'digest'=>'ダイジェスト認証' );
+		// 	$RTN .= '			<div>認証タイプ: '.htmlspecialchars( $label[$project_model->get_authentication_type()] ).'</div>'."\n";
+		// 	$RTN .= '			<div>ID: '.htmlspecialchars( $project_model->get_basic_authentication_id() ).'</div>'."\n";
+		// 	$RTN .= '			<div>PW: ********</div>'."\n";
+		// 	$RTN .= '		</td>'."\n";
+		// }
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
+		// $label = array( 'relative'=>'相対パス','absolute'=>'絶対パス','url'=>'URL','none'=>'変換しない' );
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[$project_model->get_path_conv_method()] ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
+		// $label = array( '0'=>'パス指定変換設定に従う','1'=>'URLに変換する' );
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_outofsite2url_flg())] ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
+		// $label = array( '0'=>'送信しない','1'=>'送信する' );
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_send_unknown_params_flg())] ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
+		// $label = array( '0'=>'送信しない','1'=>'送信する' );
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_send_form_flg())] ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
+		// $label = array( '0'=>'解析しない','1'=>'解析する' );
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_parse_jsinhtml_flg())] ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_copyto() ).'</div></td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_proj.'.$this->cmd[1] ) ).'" method="post">'."\n";
 		$RTN .= '	<p class="center"><input type="submit" value="プロジェクト情報を編集する" /></p>'."\n";
@@ -419,36 +419,32 @@ class pxplugin_asazuke_admin{
 				$this->px->req()->set_param( 'project_name' , $project_model->get_project_name() );
 				$this->px->req()->set_param( 'path_stargpage' , $project_model->get_path_startpage() );
 				$this->px->req()->set_param( 'path_docroot' , $project_model->get_path_docroot() );
-				$this->px->req()->set_param( 'default_filename' , $project_model->get_default_filename() );
-				$this->px->req()->set_param( 'omit_filename' , implode( ',' , $project_model->get_omit_filename() ) );
-				$this->px->req()->set_param( 'outofsite2url_flg' , $project_model->get_outofsite2url_flg() );
-				$this->px->req()->set_param( 'send_unknown_params_flg' , intval( $project_model->get_send_unknown_params_flg() ) );
-				$this->px->req()->set_param( 'send_form_flg' , intval( $project_model->get_send_form_flg() ) );
-				$this->px->req()->set_param( 'parse_jsinhtml_flg' , intval( $project_model->get_parse_jsinhtml_flg() ) );
-				// $this->px->req()->set_param( 'save404_flg' , intval( $project_model->get_save404_flg() ) );
-				$this->px->req()->set_param( 'path_copyto' , $project_model->get_path_copyto() );
-				$urllist_outofsite = $project_model->get_urllist_outofsite();
-				$str_urllist = '';
-				foreach( $urllist_outofsite as $url ){
-					$str_urllist .= $url."\n";
-				}
-				$this->px->req()->set_param( 'urllist_outofsite' , $str_urllist );
+				// $this->px->req()->set_param( 'default_filename' , $project_model->get_default_filename() );
+				// $this->px->req()->set_param( 'omit_filename' , implode( ',' , $project_model->get_omit_filename() ) );
+				// $this->px->req()->set_param( 'outofsite2url_flg' , $project_model->get_outofsite2url_flg() );
+				// $this->px->req()->set_param( 'send_unknown_params_flg' , intval( $project_model->get_send_unknown_params_flg() ) );
+				// $this->px->req()->set_param( 'send_form_flg' , intval( $project_model->get_send_form_flg() ) );
+				// $this->px->req()->set_param( 'parse_jsinhtml_flg' , intval( $project_model->get_parse_jsinhtml_flg() ) );
+				// $this->px->req()->set_param( 'path_copyto' , $project_model->get_path_copyto() );
+				// $urllist_outofsite = $project_model->get_urllist_outofsite();
+				// $str_urllist = '';
+				// foreach( $urllist_outofsite as $url ){
+				// 	$str_urllist .= $url."\n";
+				// }
+				// $this->px->req()->set_param( 'urllist_outofsite' , $str_urllist );
 
-				$urllist_startpages = $project_model->get_urllist_startpages();
-				$str_urllist = '';
-				foreach( $urllist_startpages as $url ){
-					$str_urllist .= $url."\n";
-				}
-				$this->px->req()->set_param( 'urllist_startpages' , $str_urllist );
+				// $urllist_startpages = $project_model->get_urllist_startpages();
+				// $str_urllist = '';
+				// foreach( $urllist_startpages as $url ){
+				// 	$str_urllist .= $url."\n";
+				// }
+				// $this->px->req()->set_param( 'urllist_startpages' , $str_urllist );
 
-				$this->px->req()->set_param( 'authentication_type' , $project_model->get_authentication_type() );
-				$this->px->req()->set_param( 'basic_authentication_id' , $project_model->get_basic_authentication_id() );
-				$this->px->req()->set_param( 'basic_authentication_pw' , $project_model->get_basic_authentication_pw() );
+				// $this->px->req()->set_param( 'authentication_type' , $project_model->get_authentication_type() );
+				// $this->px->req()->set_param( 'basic_authentication_id' , $project_model->get_basic_authentication_id() );
+				// $this->px->req()->set_param( 'basic_authentication_pw' , $project_model->get_basic_authentication_pw() );
 
-				$this->px->req()->set_param( 'path_conv_method' , $project_model->get_path_conv_method() );
-
-#				$this->px->req()->set_param( 'conf_param2filename_type' , '' );
-#				$this->px->req()->set_param( 'conf_param2filename_ptn' , '' );
+				// $this->px->req()->set_param( 'path_conv_method' , $project_model->get_path_conv_method() );
 			}else{
 				#	新規作成のデフォルト値
 				$this->px->req()->set_param('default_filename','index.html');
@@ -514,166 +510,166 @@ class pxplugin_asazuke_admin{
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名 <span class="form_elements-must">必須</span></div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="default_filename" value="'.htmlspecialchars( $this->px->req()->get_param('default_filename') ).'" style="width:80%;" /></div>'."\n";
-		if( strlen( $error['default_filename'] ) ){
-			$RTN .= '			<div class="error">'.$error['default_filename'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="omit_filename" value="'.htmlspecialchars( $this->px->req()->get_param('omit_filename') ).'" style="width:80%;" /></div>'."\n";
-		if( strlen( $error['omit_filename'] ) ){
-			$RTN .= '			<div class="error">'.$error['omit_filename'].'</div>'."\n";
-		}
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※ファイル名は完全一致で評価されます。</li>'."\n";
-		$RTN .= '				<li>※カンマ区切りで複数登録することができます。</li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><textarea name="urllist_outofsite" rows="9">'.htmlspecialchars( $this->px->req()->get_param('urllist_outofsite') ).'</textarea></div>'."\n";
-		if( strlen( $error['urllist_outofsite'] ) ){
-			$RTN .= '			<div class="error">'.$error['urllist_outofsite'].'</div>'."\n";
-		}
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※プロトコル部(http://またはhttps://)から始まる完全なURLで指定してください。</li>'."\n";
-		$RTN .= '				<li>※改行区切りで複数登録することができます。</li>'."\n";
-		$RTN .= '				<li>※アスタリスク(*)記号でワイルドカードを表現できます。</li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><textarea name="urllist_startpages" rows="9">'.htmlspecialchars( $this->px->req()->get_param('urllist_startpages') ).'</textarea></div>'."\n";
-		if( strlen( $error['urllist_startpages'] ) ){
-			$RTN .= '			<div class="error">'.$error['urllist_startpages'].'</div>'."\n";
-		}
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※プロトコル部(http://またはhttps://)から始まる完全なURLで指定してください。</li>'."\n";
-		$RTN .= '				<li>※改行区切りで複数登録することができます。</li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>認証タイプ : '."\n";
-		$c = array( $this->px->req()->get_param('authentication_type')=>' selected="selected"' );
-		$RTN .= '				<select name="authentication_type">'."\n";
-		$RTN .= '					<option value=""'.$c[''].'>自動選択</option>'."\n";
-		$RTN .= '					<option value="basic"'.$c['basic'].'>ベーシック認証</option>'."\n";
-		$RTN .= '					<option value="digest"'.$c['digest'].'>ダイジェスト認証</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		$RTN .= '			<div>ID : <input type="text" name="basic_authentication_id" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_id') ).'" /></div>'."\n";
-		if( strlen( $error['basic_authentication_id'] ) ){
-			$RTN .= '			<div class="error">'.$error['basic_authentication_id'].'</div>'."\n";
-		}
-		$RTN .= '			<div>PW : <input type="text" name="basic_authentication_pw" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_pw') ).'" /></div>'."\n";
-		if( strlen( $error['basic_authentication_pw'] ) ){
-			$RTN .= '			<div class="error">'.$error['basic_authentication_pw'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('path_conv_method')=>' selected="selected"' );
-		$RTN .= '				<select name="path_conv_method">'."\n";
-		$RTN .= '					<option value="relative"'.$c['relative'].'>相対パス</option>'."\n";
-		$RTN .= '					<option value="absolute"'.$c['absolute'].'>絶対パス</option>'."\n";
-		$RTN .= '					<option value="url"'.$c['url'].'>URL</option>'."\n";
-		$RTN .= '					<option value="none"'.$c['none'].'>変換しない</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['path_conv_method'] ) ){
-			$RTN .= '			<div class="error">'.$error['path_conv_method'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('outofsite2url_flg')=>' selected="selected"' );
-		$RTN .= '				<select name="outofsite2url_flg">'."\n";
-		$RTN .= '					<option value="0"'.$c['0'].'>パス指定変換設定に従う</option>'."\n";
-		$RTN .= '					<option value="1"'.$c['1'].'>URLに変換する</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['outofsite2url_flg'] ) ){
-			$RTN .= '			<div class="error">'.$error['outofsite2url_flg'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('send_unknown_params_flg')=>' selected="selected"' );
-		$RTN .= '				<select name="send_unknown_params_flg">'."\n";
-		$RTN .= '					<option value="0"'.$c['0'].'>送信しない</option>'."\n";
-		$RTN .= '					<option value="1"'.$c['1'].'>送信する</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['send_unknown_params_flg'] ) ){
-			$RTN .= '			<div class="error">'.$error['send_unknown_params_flg'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('send_form_flg')=>' selected="selected"' );
-		$RTN .= '				<select name="send_form_flg">'."\n";
-		$RTN .= '					<option value="0"'.$c['0'].'>送信しない</option>'."\n";
-		$RTN .= '					<option value="1"'.$c['1'].'>送信する</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['send_form_flg'] ) ){
-			$RTN .= '			<div class="error">'.$error['send_form_flg'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'."\n";
-		$c = array( $this->px->req()->get_param('parse_jsinhtml_flg')=>' selected="selected"' );
-		$RTN .= '				<select name="parse_jsinhtml_flg">'."\n";
-		$RTN .= '					<option value="0"'.$c['0'].'>解析しない</option>'."\n";
-		$RTN .= '					<option value="1"'.$c['1'].'>解析する</option>'."\n";
-		$RTN .= '				</select>'."\n";
-		$RTN .= '			</div>'."\n";
-		if( strlen( $error['parse_jsinhtml_flg'] ) ){
-			$RTN .= '			<div class="error">'.$error['parse_jsinhtml_flg'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="path_copyto" value="'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'" style="width:80%;" /></div>'."\n";
-		if( strlen( $error['path_copyto'] ) ){
-			$RTN .= '			<div class="error">'.$error['path_copyto'].'</div>'."\n";
-		}
-		$RTN .= '			<ul class="form_elements-notes">'."\n";
-		$RTN .= '				<li>※収集完了後に、収集したコンテンツを複製することができます。複製しない場合は、空白に設定してください。</li>'."\n";
-		$RTN .= '				<li>※複製先パスは、既に存在するパスである必要があります。</li>'."\n";
-		$RTN .= '			</ul>'."\n";
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名 <span class="form_elements-must">必須</span></div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div><input type="text" name="default_filename" value="'.htmlspecialchars( $this->px->req()->get_param('default_filename') ).'" style="width:80%;" /></div>'."\n";
+		// if( strlen( $error['default_filename'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['default_filename'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div><input type="text" name="omit_filename" value="'.htmlspecialchars( $this->px->req()->get_param('omit_filename') ).'" style="width:80%;" /></div>'."\n";
+		// if( strlen( $error['omit_filename'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['omit_filename'].'</div>'."\n";
+		// }
+		// $RTN .= '			<ul class="form_elements-notes">'."\n";
+		// $RTN .= '				<li>※ファイル名は完全一致で評価されます。</li>'."\n";
+		// $RTN .= '				<li>※カンマ区切りで複数登録することができます。</li>'."\n";
+		// $RTN .= '			</ul>'."\n";
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div><textarea name="urllist_outofsite" rows="9">'.htmlspecialchars( $this->px->req()->get_param('urllist_outofsite') ).'</textarea></div>'."\n";
+		// if( strlen( $error['urllist_outofsite'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['urllist_outofsite'].'</div>'."\n";
+		// }
+		// $RTN .= '			<ul class="form_elements-notes">'."\n";
+		// $RTN .= '				<li>※プロトコル部(http://またはhttps://)から始まる完全なURLで指定してください。</li>'."\n";
+		// $RTN .= '				<li>※改行区切りで複数登録することができます。</li>'."\n";
+		// $RTN .= '				<li>※アスタリスク(*)記号でワイルドカードを表現できます。</li>'."\n";
+		// $RTN .= '			</ul>'."\n";
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div><textarea name="urllist_startpages" rows="9">'.htmlspecialchars( $this->px->req()->get_param('urllist_startpages') ).'</textarea></div>'."\n";
+		// if( strlen( $error['urllist_startpages'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['urllist_startpages'].'</div>'."\n";
+		// }
+		// $RTN .= '			<ul class="form_elements-notes">'."\n";
+		// $RTN .= '				<li>※プロトコル部(http://またはhttps://)から始まる完全なURLで指定してください。</li>'."\n";
+		// $RTN .= '				<li>※改行区切りで複数登録することができます。</li>'."\n";
+		// $RTN .= '			</ul>'."\n";
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>認証タイプ : '."\n";
+		// $c = array( $this->px->req()->get_param('authentication_type')=>' selected="selected"' );
+		// $RTN .= '				<select name="authentication_type">'."\n";
+		// $RTN .= '					<option value=""'.$c[''].'>自動選択</option>'."\n";
+		// $RTN .= '					<option value="basic"'.$c['basic'].'>ベーシック認証</option>'."\n";
+		// $RTN .= '					<option value="digest"'.$c['digest'].'>ダイジェスト認証</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// $RTN .= '			<div>ID : <input type="text" name="basic_authentication_id" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_id') ).'" /></div>'."\n";
+		// if( strlen( $error['basic_authentication_id'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['basic_authentication_id'].'</div>'."\n";
+		// }
+		// $RTN .= '			<div>PW : <input type="text" name="basic_authentication_pw" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_pw') ).'" /></div>'."\n";
+		// if( strlen( $error['basic_authentication_pw'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['basic_authentication_pw'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'."\n";
+		// $c = array( $this->px->req()->get_param('path_conv_method')=>' selected="selected"' );
+		// $RTN .= '				<select name="path_conv_method">'."\n";
+		// $RTN .= '					<option value="relative"'.$c['relative'].'>相対パス</option>'."\n";
+		// $RTN .= '					<option value="absolute"'.$c['absolute'].'>絶対パス</option>'."\n";
+		// $RTN .= '					<option value="url"'.$c['url'].'>URL</option>'."\n";
+		// $RTN .= '					<option value="none"'.$c['none'].'>変換しない</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// if( strlen( $error['path_conv_method'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['path_conv_method'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'."\n";
+		// $c = array( $this->px->req()->get_param('outofsite2url_flg')=>' selected="selected"' );
+		// $RTN .= '				<select name="outofsite2url_flg">'."\n";
+		// $RTN .= '					<option value="0"'.$c['0'].'>パス指定変換設定に従う</option>'."\n";
+		// $RTN .= '					<option value="1"'.$c['1'].'>URLに変換する</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// if( strlen( $error['outofsite2url_flg'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['outofsite2url_flg'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'."\n";
+		// $c = array( $this->px->req()->get_param('send_unknown_params_flg')=>' selected="selected"' );
+		// $RTN .= '				<select name="send_unknown_params_flg">'."\n";
+		// $RTN .= '					<option value="0"'.$c['0'].'>送信しない</option>'."\n";
+		// $RTN .= '					<option value="1"'.$c['1'].'>送信する</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// if( strlen( $error['send_unknown_params_flg'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['send_unknown_params_flg'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'."\n";
+		// $c = array( $this->px->req()->get_param('send_form_flg')=>' selected="selected"' );
+		// $RTN .= '				<select name="send_form_flg">'."\n";
+		// $RTN .= '					<option value="0"'.$c['0'].'>送信しない</option>'."\n";
+		// $RTN .= '					<option value="1"'.$c['1'].'>送信する</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// if( strlen( $error['send_form_flg'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['send_form_flg'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'."\n";
+		// $c = array( $this->px->req()->get_param('parse_jsinhtml_flg')=>' selected="selected"' );
+		// $RTN .= '				<select name="parse_jsinhtml_flg">'."\n";
+		// $RTN .= '					<option value="0"'.$c['0'].'>解析しない</option>'."\n";
+		// $RTN .= '					<option value="1"'.$c['1'].'>解析する</option>'."\n";
+		// $RTN .= '				</select>'."\n";
+		// $RTN .= '			</div>'."\n";
+		// if( strlen( $error['parse_jsinhtml_flg'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['parse_jsinhtml_flg'].'</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div><input type="text" name="path_copyto" value="'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'" style="width:80%;" /></div>'."\n";
+		// if( strlen( $error['path_copyto'] ) ){
+		// 	$RTN .= '			<div class="error">'.$error['path_copyto'].'</div>'."\n";
+		// }
+		// $RTN .= '			<ul class="form_elements-notes">'."\n";
+		// $RTN .= '				<li>※収集完了後に、収集したコンテンツを複製することができます。複製しない場合は、空白に設定してください。</li>'."\n";
+		// $RTN .= '				<li>※複製先パスは、既に存在するパスである必要があります。</li>'."\n";
+		// $RTN .= '			</ul>'."\n";
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 		$RTN .= '	<div class="center"><input type="submit" value="確認する" /></div>'."\n";
 		$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
@@ -709,7 +705,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'</div>'."\n";
+		$RTN .= '			<div style="overflow:hidden; max-width:300px;">'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'</div>'."\n";
 		$HIDDEN .= '<input type="hidden" name="path_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
@@ -720,92 +716,92 @@ class pxplugin_asazuke_admin{
 		$HIDDEN .= '<input type="hidden" name="path_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('default_filename') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="default_filename" value="'.htmlspecialchars( $this->px->req()->get_param('default_filename') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('omit_filename') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="omit_filename" value="'.htmlspecialchars( $this->px->req()->get_param('omit_filename') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('urllist_outofsite') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="urllist_outofsite" value="'.htmlspecialchars( $this->px->req()->get_param('urllist_outofsite') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('urllist_startpages') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="urllist_startpages" value="'.htmlspecialchars( $this->px->req()->get_param('urllist_startpages') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( ''=>'自動選択', 'basic'=>'ベーシック認証', 'digest'=>'ダイジェスト認証' );
-		$RTN .= '			<div>認証タイプ： '.htmlspecialchars( $label[$this->px->req()->get_param('authentication_type')] ).'</div>'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_id') ).' : '.htmlspecialchars( $this->px->req()->get_param('basic_authentication_pw') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="authentication_type" value="'.htmlspecialchars( $this->px->req()->get_param('authentication_type') ).'" />';
-		$HIDDEN .= '<input type="hidden" name="basic_authentication_id" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_id') ).'" />';
-		$HIDDEN .= '<input type="hidden" name="basic_authentication_pw" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_pw') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( 'relative'=>'相対パス','absolute'=>'絶対パス','url'=>'URL','none'=>'変換しない' );
-		$RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('path_conv_method')] ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="path_conv_method" value="'.htmlspecialchars( $this->px->req()->get_param('path_conv_method') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( '0'=>'パス指定変換設定に従う','1'=>'URLに変換する' );
-		$RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('outofsite2url_flg')] ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="outofsite2url_flg" value="'.htmlspecialchars( $this->px->req()->get_param('outofsite2url_flg') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( '0'=>'送信しない','1'=>'送信する' );
-		$RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('send_unknown_params_flg')] ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="send_unknown_params_flg" value="'.htmlspecialchars( $this->px->req()->get_param('send_unknown_params_flg') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( '0'=>'送信しない','1'=>'送信する' );
-		$RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('send_form_flg')] ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="send_form_flg" value="'.htmlspecialchars( $this->px->req()->get_param('send_form_flg') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$label = array( '0'=>'解析しない','1'=>'解析する' );
-		$RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('parse_jsinhtml_flg')] ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="parse_jsinhtml_flg" value="'.htmlspecialchars( $this->px->req()->get_param('parse_jsinhtml_flg') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="path_copyto" value="'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('default_filename') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="default_filename" value="'.htmlspecialchars( $this->px->req()->get_param('default_filename') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('omit_filename') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="omit_filename" value="'.htmlspecialchars( $this->px->req()->get_param('omit_filename') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('urllist_outofsite') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="urllist_outofsite" value="'.htmlspecialchars( $this->px->req()->get_param('urllist_outofsite') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'.t::text2html( $this->px->req()->get_param('urllist_startpages') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="urllist_startpages" value="'.htmlspecialchars( $this->px->req()->get_param('urllist_startpages') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( ''=>'自動選択', 'basic'=>'ベーシック認証', 'digest'=>'ダイジェスト認証' );
+		// $RTN .= '			<div>認証タイプ： '.htmlspecialchars( $label[$this->px->req()->get_param('authentication_type')] ).'</div>'."\n";
+		// $RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_id') ).' : '.htmlspecialchars( $this->px->req()->get_param('basic_authentication_pw') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="authentication_type" value="'.htmlspecialchars( $this->px->req()->get_param('authentication_type') ).'" />';
+		// $HIDDEN .= '<input type="hidden" name="basic_authentication_id" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_id') ).'" />';
+		// $HIDDEN .= '<input type="hidden" name="basic_authentication_pw" value="'.htmlspecialchars( $this->px->req()->get_param('basic_authentication_pw') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( 'relative'=>'相対パス','absolute'=>'絶対パス','url'=>'URL','none'=>'変換しない' );
+		// $RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('path_conv_method')] ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="path_conv_method" value="'.htmlspecialchars( $this->px->req()->get_param('path_conv_method') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( '0'=>'パス指定変換設定に従う','1'=>'URLに変換する' );
+		// $RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('outofsite2url_flg')] ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="outofsite2url_flg" value="'.htmlspecialchars( $this->px->req()->get_param('outofsite2url_flg') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( '0'=>'送信しない','1'=>'送信する' );
+		// $RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('send_unknown_params_flg')] ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="send_unknown_params_flg" value="'.htmlspecialchars( $this->px->req()->get_param('send_unknown_params_flg') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( '0'=>'送信しない','1'=>'送信する' );
+		// $RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('send_form_flg')] ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="send_form_flg" value="'.htmlspecialchars( $this->px->req()->get_param('send_form_flg') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $label = array( '0'=>'解析しない','1'=>'解析する' );
+		// $RTN .= '			<div>'.htmlspecialchars( $label[$this->px->req()->get_param('parse_jsinhtml_flg')] ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="parse_jsinhtml_flg" value="'.htmlspecialchars( $this->px->req()->get_param('parse_jsinhtml_flg') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="path_copyto" value="'.htmlspecialchars( $this->px->req()->get_param('path_copyto') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 
 		$RTN .= '<div class="unit">'."\n";
@@ -854,15 +850,15 @@ class pxplugin_asazuke_admin{
 			$RTN['project_name'] = 'プロジェクト名が長すぎます。';
 		}
 
-		if( !strlen( $this->px->req()->get_param('default_filename') ) ){
-			$RTN['default_filename'] = 'デフォルトのファイル名は必須項目です。';
-		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('default_filename') ) ){
-			$RTN['default_filename'] = 'デフォルトのファイル名に改行を含めることはできません。';
-		}
+		// if( !strlen( $this->px->req()->get_param('default_filename') ) ){
+		// 	$RTN['default_filename'] = 'デフォルトのファイル名は必須項目です。';
+		// }elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('default_filename') ) ){
+		// 	$RTN['default_filename'] = 'デフォルトのファイル名に改行を含めることはできません。';
+		// }
 
-		if( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('omit_filename') ) ){
-			$RTN['omit_filename'] = 'URL変換時に省略するファイル名に改行を含めることはできません。';
-		}
+		// if( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('omit_filename') ) ){
+		// 	$RTN['omit_filename'] = 'URL変換時に省略するファイル名に改行を含めることはできません。';
+		// }
 
 		if( strlen($this->px->req()->get_param('path_docroot')) ){
 			$tmp_val = $this->px->req()->get_param('path_docroot');
@@ -892,23 +888,24 @@ class pxplugin_asazuke_admin{
 		}elseif( !$this->px->dbh()->is_file( $this->px->req()->get_param('path_docroot').'/'.$this->px->req()->get_param('path_stargpage') ) && !$this->px->dbh()->is_file( $this->px->req()->get_param('path_docroot').'/'.$this->px->req()->get_param('path_stargpage').'/index.html' ) ){
 			$RTN['path_stargpage'] = 'スタートページのパスのファイルが存在しません。';
 		}
-		switch( $this->px->req()->get_param('path_conv_method') ){
-			case 'relative':
-			case 'absolute':
-			case 'url':
-			case 'none':
-				break;
-			default:
-				$RTN['path_conv_method'] = '選択できない値を選びました。';
-				break;
-		}
-		if( strlen( $this->px->req()->get_param('path_copyto') ) ){
-			if( !is_dir( $this->px->req()->get_param('path_copyto') ) ){
-				$RTN['path_copyto'] = '複製先パスには、ディレクトリが存在している必要があります。';
-			// }elseif( !$this->dbh->check_rootdir( $this->px->req()->get_param('path_copyto') ) ){
-			// 	$RTN['path_copyto'] = '複製先パスが、フレームワークの管理外のパスを指しています。';
-			}
-		}
+		// switch( $this->px->req()->get_param('path_conv_method') ){
+		// 	case 'relative':
+		// 	case 'absolute':
+		// 	case 'url':
+		// 	case 'none':
+		// 		break;
+		// 	default:
+		// 		$RTN['path_conv_method'] = '選択できない値を選びました。';
+		// 		break;
+		// }
+
+		// if( strlen( $this->px->req()->get_param('path_copyto') ) ){
+		// 	if( !is_dir( $this->px->req()->get_param('path_copyto') ) ){
+		// 		$RTN['path_copyto'] = '複製先パスには、ディレクトリが存在している必要があります。';
+		// 	// }elseif( !$this->dbh->check_rootdir( $this->px->req()->get_param('path_copyto') ) ){
+		// 	// 	$RTN['path_copyto'] = '複製先パスが、フレームワークの管理外のパスを指しています。';
+		// 	}
+		// }
 		return	$RTN;
 	}
 	/**
@@ -935,19 +932,19 @@ class pxplugin_asazuke_admin{
 		$project_model->set_project_name( $this->px->req()->get_param('project_name') );
 		$project_model->set_path_startpage( $this->px->req()->get_param('path_stargpage') );
 		$project_model->set_path_docroot( $this->px->req()->get_param('path_docroot') );
-		$project_model->set_default_filename( $this->px->req()->get_param('default_filename') );
-		$project_model->set_omit_filename( $this->px->req()->get_param('omit_filename') );
-		$project_model->set_urllist_outofsite( $this->px->req()->get_param('urllist_outofsite') );
-		$project_model->set_urllist_startpages( $this->px->req()->get_param('urllist_startpages') );
-		$project_model->set_authentication_type( $this->px->req()->get_param('authentication_type') );
-		$project_model->set_basic_authentication_id( $this->px->req()->get_param('basic_authentication_id') );
-		$project_model->set_basic_authentication_pw( $this->px->req()->get_param('basic_authentication_pw') );
-		$project_model->set_path_conv_method( $this->px->req()->get_param('path_conv_method') );
-		$project_model->set_outofsite2url_flg( $this->px->req()->get_param('outofsite2url_flg') );
-		$project_model->set_send_unknown_params_flg( $this->px->req()->get_param('send_unknown_params_flg') );
-		$project_model->set_send_form_flg( $this->px->req()->get_param('send_form_flg') );
-		$project_model->set_parse_jsinhtml_flg( $this->px->req()->get_param('parse_jsinhtml_flg') );
-		$project_model->set_path_copyto( $this->px->req()->get_param('path_copyto') );
+		// $project_model->set_default_filename( $this->px->req()->get_param('default_filename') );
+		// $project_model->set_omit_filename( $this->px->req()->get_param('omit_filename') );
+		// $project_model->set_urllist_outofsite( $this->px->req()->get_param('urllist_outofsite') );
+		// $project_model->set_urllist_startpages( $this->px->req()->get_param('urllist_startpages') );
+		// $project_model->set_authentication_type( $this->px->req()->get_param('authentication_type') );
+		// $project_model->set_basic_authentication_id( $this->px->req()->get_param('basic_authentication_id') );
+		// $project_model->set_basic_authentication_pw( $this->px->req()->get_param('basic_authentication_pw') );
+		// $project_model->set_path_conv_method( $this->px->req()->get_param('path_conv_method') );
+		// $project_model->set_outofsite2url_flg( $this->px->req()->get_param('outofsite2url_flg') );
+		// $project_model->set_send_unknown_params_flg( $this->px->req()->get_param('send_unknown_params_flg') );
+		// $project_model->set_send_form_flg( $this->px->req()->get_param('send_form_flg') );
+		// $project_model->set_parse_jsinhtml_flg( $this->px->req()->get_param('parse_jsinhtml_flg') );
+		// $project_model->set_path_copyto( $this->px->req()->get_param('path_copyto') );
 
 		#	出来上がったプロジェクトを保存
 		if( !$project_model->save_project() ){
@@ -1707,32 +1704,32 @@ class pxplugin_asazuke_admin{
 		$RTN .= '			</div>'."\n";
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th>複製先パス</th>'."\n";
-		$RTN .= '		<td>'."\n";
-		$path_copyto = $project_model->get_path_copyto();
-		if( strlen( $program_model->get_path_copyto() ) ){
-			$path_copyto = $program_model->get_path_copyto();
-		}
-		if( strlen( $path_copyto ) ){
-			$RTN .= '			<div>'.htmlspecialchars( $path_copyto ).'</div>'."\n";
-			if( !is_dir( $path_copyto ) ){
-				$RTN .= '			<div class="error">ディレクトリが存在しません。</div>'."\n";
-			}elseif( !is_writable( $path_copyto ) ){
-				$RTN .= '			<div class="error">ディレクトリに書き込みできません。</div>'."\n";
-			}elseif( !$this->dbh->check_rootdir( $path_copyto ) ){
-				$RTN .= '			<div class="error">ディレクトリが管理外のパスです。</div>'."\n";
-			}
-		}else{
-			$RTN .= '			<div>---</div>'."\n";
-		}
-		if( $program_model->get_copyto_apply_deletedfile_flg() ){
-			$RTN .= '			<div>削除されたファイルを反映する</div>'."\n";
-		}else{
-			$RTN .= '			<div>削除されたファイルを反映しない</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th>複製先パス</th>'."\n";
+		// $RTN .= '		<td>'."\n";
+		// $path_copyto = $project_model->get_path_copyto();
+		// if( strlen( $program_model->get_path_copyto() ) ){
+		// 	$path_copyto = $program_model->get_path_copyto();
+		// }
+		// if( strlen( $path_copyto ) ){
+		// 	$RTN .= '			<div>'.htmlspecialchars( $path_copyto ).'</div>'."\n";
+		// 	if( !is_dir( $path_copyto ) ){
+		// 		$RTN .= '			<div class="error">ディレクトリが存在しません。</div>'."\n";
+		// 	}elseif( !is_writable( $path_copyto ) ){
+		// 		$RTN .= '			<div class="error">ディレクトリに書き込みできません。</div>'."\n";
+		// 	}elseif( !$this->dbh->check_rootdir( $path_copyto ) ){
+		// 		$RTN .= '			<div class="error">ディレクトリが管理外のパスです。</div>'."\n";
+		// 	}
+		// }else{
+		// 	$RTN .= '			<div>---</div>'."\n";
+		// }
+		// if( $program_model->get_copyto_apply_deletedfile_flg() ){
+		// 	$RTN .= '			<div>削除されたファイルを反映する</div>'."\n";
+		// }else{
+		// 	$RTN .= '			<div>削除されたファイルを反映しない</div>'."\n";
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 		$RTN .= '<p>'.$this->mk_link(':edit_program.'.$this->cmd[1].'.'.$this->cmd[2],array('label'=>'このプログラムを編集する','style'=>'inside')).'</p>'."\n";
 
