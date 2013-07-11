@@ -95,9 +95,9 @@ class pxplugin_asazuke_config{
 				return	false;
 			}
 		}
-		if( strlen( $project_id ) ){
-			return	$this->get_home_dir().$this->localpath_proj_dir.'/'.urlencode( $project_id );
-		}
+		// if( strlen( $project_id ) ){
+		// 	return	$this->get_home_dir().$this->localpath_proj_dir.'/'.urlencode( $project_id );
+		// }
 		return	$this->get_home_dir().$this->localpath_proj_dir;
 	}
 
@@ -105,7 +105,7 @@ class pxplugin_asazuke_config{
 	 * プログラムディレクトリの取得
 	 */
 	public function get_program_home_dir( $project_id , $program_id = null ){
-		if( !strlen( $project_id ) ){ return false; }
+		// if( !strlen( $project_id ) ){ return false; }
 		$proj_dir = $this->get_proj_dir( $project_id );
 		if( !is_dir( $proj_dir ) ){
 			return	false;
@@ -130,9 +130,9 @@ class pxplugin_asazuke_config{
 				return	false;
 			}
 		}
-		if( strlen( $project_id ) ){
-			return	$this->get_home_dir().$this->localpath_log_dir.'/'.urlencode( $project_id );
-		}
+		// if( strlen( $project_id ) ){
+		// 	return	$this->get_home_dir().$this->localpath_log_dir.'/'.urlencode( $project_id );
+		// }
 		return	$this->get_home_dir().$this->localpath_log_dir;
 	}
 

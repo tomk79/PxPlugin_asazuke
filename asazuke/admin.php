@@ -65,13 +65,21 @@ class pxplugin_asazuke_admin{
 	 * コントローラ
 	 */
 	private function start_controller(){
-		if( $this->cmd[0] == 'detail' ){
-			#	プロジェクト詳細
-			return	$this->page_project_detail();
-		}elseif( $this->cmd[0] == 'create_proj' || $this->cmd[0] == 'edit_proj' ){
+		// if( $this->cmd[0] == 'detail' ){
+		// 	#	プロジェクト詳細
+		// 	return	$this->page_project_detail();
+		// }else
+		// if( $this->cmd[0] == 'create_proj' ){
+		// 	#	プロジェクト作成/編集
+		// 	return	$this->start_edit_proj();
+		// }else
+		if( $this->cmd[0] == 'edit_proj' ){
 			#	プロジェクト作成/編集
 			return	$this->start_edit_proj();
-		}elseif( $this->cmd[0] == 'create_program' || $this->cmd[0] == 'edit_program' ){
+		// }elseif( $this->cmd[0] == 'create_program' ){
+		// 	#	プログラム作成/編集
+		// 	return	$this->start_edit_program();
+		}elseif( $this->cmd[0] == 'edit_program' ){
 			#	プログラム作成/編集
 			return	$this->start_edit_program();
 		}elseif( $this->cmd[0] == 'execute_program' ){
@@ -156,10 +164,10 @@ class pxplugin_asazuke_admin{
 	private function set_sitemap(){
 
 		$this->local_sitemap[ ':'                                                 ] = array( 'title'=>'ASAZUKE'                            );
-		$this->local_sitemap[ ':create_proj'                                      ] = array( 'title'=>'新規プロジェクト作成'               );
+		// $this->local_sitemap[ ':create_proj'                                      ] = array( 'title'=>'新規プロジェクト作成'               );
 		$this->local_sitemap[ ':configcheck'                                      ] = array( 'title'=>'設定の確認'                         );
 		$this->local_sitemap[ ':export'                                           ] = array( 'title'=>'設定をエクスポート'                 );
-		$this->local_sitemap[ ':detail.'.$this->cmd[1]                            ] = array( 'title'=>'プロジェクト詳細'                   );
+		// $this->local_sitemap[ ':detail.'.$this->cmd[1]                            ] = array( 'title'=>'プロジェクト詳細'                   );
 		$this->local_sitemap[ ':edit_proj.'.$this->cmd[1]                         ] = array( 'title'=>'プロジェクト編集'                   );
 		$this->local_sitemap[ ':create_program.'.$this->cmd[1]                    ] = array( 'title'=>'新規プログラム作成'                 );
 		$this->local_sitemap[ ':edit_program.'.$this->cmd[1].'.'.$this->cmd[2]    ] = array( 'title'=>'プログラム編集'                     );
@@ -177,63 +185,56 @@ class pxplugin_asazuke_admin{
 	 */
 	private function page_start(){
 
-		$RTN = '';
-		$RTN .= '<p>'."\n";
-		$RTN .= '	この機能は、ウェブアクセスにより、ネットワーク上のウェブサイトを巡回し保存します。<br />'."\n";
-		$RTN .= '</p>'."\n";
+		// $RTN = '';
+		// $RTN .= '<p>'."\n";
+		// $RTN .= '	この機能は、ウェブアクセスにより、ネットワーク上のウェブサイトを巡回し保存します。<br />'."\n";
+		// $RTN .= '</p>'."\n";
+
+		// $project_model = &$this->pcconf->factory_model_project();
+		// $project_list = $project_model->get_project_list();
+		// if( !is_array($project_list) || !count($project_list) ){
+		// 	$RTN .= '<p>現在プロジェクトは登録されていません。</p>'."\n";
+		// }else{
+		// 	$RTN .= '<div class="unit">'."\n";
+		// 	$RTN .= '<table class="def" style="width:100%;">'."\n";
+		// 	$RTN .= '	<thead>'."\n";
+		// 	$RTN .= '		<tr>'."\n";
+		// 	$RTN .= '			<th>プロジェクト名</div></th>'."\n";
+		// 	$RTN .= '			<th>プロジェクトID</div></th>'."\n";
+		// 	$RTN .= '			<th>トップページURL</div></th>'."\n";
+		// 	$RTN .= '			<th>&nbsp;</div></th>'."\n";
+		// 	$RTN .= '		</tr>'."\n";
+		// 	$RTN .= '	</thead>'."\n";
+		// 	foreach( $project_list as $Line ){
+		// 		$RTN .= '	<tr>'."\n";
+		// 		$RTN .= '		<th class="left">'.$this->mk_link(':detail.'.$Line['id'],array('label'=>$Line['name'],'style'=>'inside')).'</th>'."\n";
+		// 		$RTN .= '		<td class="left">'.htmlspecialchars( $Line['id'] ).'</td>'."\n";
+		// 		$RTN .= '		<td class="left"><div style="overflow:auto; max-width:400px;">'.htmlspecialchars( $Line['path_docroot'] ).'</div></td>'."\n";
+		// 		$RTN .= '		<td class="left">'."\n";
+		// 		$RTN .= '			'.$this->mk_link(':detail.'.$Line['id'],array('label'=>'詳細','style'=>'inside'))."\n";
+		// 		$RTN .= '			'.$this->mk_link(':edit_proj.'.$Line['id'],array('label'=>'編集','style'=>'inside'))."\n";
+		// 		$RTN .= '			'.$this->mk_link(':delete_proj.'.$Line['id'],array('label'=>'削除','style'=>'inside')).''."\n";
+		// 		$RTN .= '		</td>'."\n";
+		// 		$RTN .= '	</tr>'."\n";
+		// 	}
+		// 	$RTN .= '</table>'."\n";
+		// 	$RTN .= '</div><!-- /.unit -->'."\n";
+		// }
+
+
+		// $RTN .= '<div class="more_links">'."\n";
+		// $RTN .= '<ul>'."\n";
+		// $RTN .= '	<li>'.$this->mk_link(':create_proj',array('style'=>'inside')).'</li>'."\n";
+		// $RTN .= '	<li>'.$this->mk_link(':export',array('style'=>'inside')).'</li>'."\n";
+		// $RTN .= '	<li>'.$this->mk_link(':configcheck',array('style'=>'inside')).'</li>'."\n";
+		// $RTN .= '</ul>'."\n";
+		// $RTN .= '</div><!-- /.more_links -->'."\n";
+
 
 		$project_model = &$this->pcconf->factory_model_project();
-		$project_list = $project_model->get_project_list();
-		if( !is_array($project_list) || !count($project_list) ){
-			$RTN .= '<p>現在プロジェクトは登録されていません。</p>'."\n";
-		}else{
-			$RTN .= '<div class="unit">'."\n";
-			$RTN .= '<table class="def" style="width:100%;">'."\n";
-			$RTN .= '	<thead>'."\n";
-			$RTN .= '		<tr>'."\n";
-			$RTN .= '			<th>プロジェクト名</div></th>'."\n";
-			$RTN .= '			<th>プロジェクトID</div></th>'."\n";
-			$RTN .= '			<th>トップページURL</div></th>'."\n";
-			$RTN .= '			<th>&nbsp;</div></th>'."\n";
-			$RTN .= '		</tr>'."\n";
-			$RTN .= '	</thead>'."\n";
-			foreach( $project_list as $Line ){
-				$RTN .= '	<tr>'."\n";
-				$RTN .= '		<th class="left">'.$this->mk_link(':detail.'.$Line['id'],array('label'=>$Line['name'],'style'=>'inside')).'</th>'."\n";
-				$RTN .= '		<td class="left">'.htmlspecialchars( $Line['id'] ).'</td>'."\n";
-				$RTN .= '		<td class="left"><div style="overflow:auto; max-width:400px;">'.htmlspecialchars( $Line['path_docroot'] ).'</div></td>'."\n";
-				$RTN .= '		<td class="left">'."\n";
-				$RTN .= '			'.$this->mk_link(':detail.'.$Line['id'],array('label'=>'詳細','style'=>'inside'))."\n";
-				$RTN .= '			'.$this->mk_link(':edit_proj.'.$Line['id'],array('label'=>'編集','style'=>'inside'))."\n";
-				$RTN .= '			'.$this->mk_link(':delete_proj.'.$Line['id'],array('label'=>'削除','style'=>'inside')).''."\n";
-				$RTN .= '		</td>'."\n";
-				$RTN .= '	</tr>'."\n";
-			}
-			$RTN .= '</table>'."\n";
-			$RTN .= '</div><!-- /.unit -->'."\n";
-		}
+		$project_model->load_project();
 
-
-		$RTN .= '<div class="more_links">'."\n";
-		$RTN .= '<ul>'."\n";
-		$RTN .= '	<li>'.$this->mk_link(':create_proj',array('style'=>'inside')).'</li>'."\n";
-		$RTN .= '	<li>'.$this->mk_link(':export',array('style'=>'inside')).'</li>'."\n";
-		$RTN .= '	<li>'.$this->mk_link(':configcheck',array('style'=>'inside')).'</li>'."\n";
-		$RTN .= '</ul>'."\n";
-		$RTN .= '</div><!-- /.more_links -->'."\n";
-
-		return	$RTN;
-	}
-
-	/**
-	 * プロジェクトの詳細画面
-	 */
-	private function page_project_detail(){
-
-		$project_model = &$this->pcconf->factory_model_project();
-		$project_model->load_project( $this->cmd[1] );
-
-		$this->local_sitemap[ ':'.implode('.',$this->cmd) ] = array( 'title'=>'プロジェクト『'.htmlspecialchars( $project_model->get_project_name() ).'』の詳細情報' );
+		// $this->local_sitemap[ ':'.implode('.',$this->cmd) ] = array( 'title'=>'プロジェクト『'.htmlspecialchars( $project_model->get_project_name() ).'』の詳細情報' );
 
 		$RTN = '';
 
@@ -241,8 +242,8 @@ class pxplugin_asazuke_admin{
 		$RTN .= ''.$this->mk_hx( '基本情報' ).''."\n";
 		$RTN .= '<table class="def" style="width:100%;">'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>プロジェクト名 (プロジェクトID)</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div><strong>'.htmlspecialchars( $project_model->get_project_name() ).'</strong> ('.htmlspecialchars( $this->cmd[1] ).')</div></td>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>プロジェクト名</div></th>'."\n";
+		$RTN .= '		<td style="width:70%;"><div><strong>'.htmlspecialchars( $project_model->get_project_name() ).'</strong></div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
@@ -252,86 +253,6 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>デフォルトのファイル名</div></th>'."\n";
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_default_filename() ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>URL変換時に省略するファイル名</div></th>'."\n";
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( implode( ', ' , $project_model->get_omit_filename() ) ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>対象外URLリスト</div></th>'."\n";
-		// $RTN .= '		<td style="width:70%;">'."\n";
-		// $urlList = $project_model->get_urllist_outofsite();
-		// if( count( $urlList ) ){
-		// 	$RTN .= '			<ul>'."\n";
-		// 	foreach( $urlList as $url ){
-		// 		$RTN .= '				<li>'.htmlspecialchars( $url ).'</li>'."\n";
-		// 	}
-		// 	$RTN .= '			</ul>'."\n";
-		// }else{
-		// 	$RTN .= '			<div>指定はありません。</div>'."\n";
-		// }
-		// $RTN .= '		</td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>追加スタートページURLリスト</div></th>'."\n";
-		// $RTN .= '		<td style="width:70%;">'."\n";
-		// $urlList = $project_model->get_urllist_startpages();
-		// if( count( $urlList ) ){
-		// 	$RTN .= '			<ul>'."\n";
-		// 	foreach( $urlList as $url ){
-		// 		$RTN .= '				<li>'.htmlspecialchars( $url ).'</li>'."\n";
-		// 	}
-		// 	$RTN .= '			</ul>'."\n";
-		// }else{
-		// 	$RTN .= '			<div>指定はありません。</div>'."\n";
-		// }
-		// $RTN .= '		</td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>認証</div></th>'."\n";
-		// if( !$project_model->isset_basic_authentication_info() ){
-		// 	$RTN .= '		<td style="width:70%;"><div>設定なし(または無効)</div></td>'."\n";
-		// }else{
-		// 	$RTN .= '		<td style="width:70%;">'."\n";
-		// 	$label = array( ''=>'自動選択', 'basic'=>'ベーシック認証', 'digest'=>'ダイジェスト認証' );
-		// 	$RTN .= '			<div>認証タイプ: '.htmlspecialchars( $label[$project_model->get_authentication_type()] ).'</div>'."\n";
-		// 	$RTN .= '			<div>ID: '.htmlspecialchars( $project_model->get_basic_authentication_id() ).'</div>'."\n";
-		// 	$RTN .= '			<div>PW: ********</div>'."\n";
-		// 	$RTN .= '		</td>'."\n";
-		// }
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>パス指定変換</div></th>'."\n";
-		// $label = array( 'relative'=>'相対パス','absolute'=>'絶対パス','url'=>'URL','none'=>'変換しない' );
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[$project_model->get_path_conv_method()] ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>サイト外指定パスの変換</div></th>'."\n";
-		// $label = array( '0'=>'パス指定変換設定に従う','1'=>'URLに変換する' );
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_outofsite2url_flg())] ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>未定義のパラメータ</div></th>'."\n";
-		// $label = array( '0'=>'送信しない','1'=>'送信する' );
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_send_unknown_params_flg())] ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>フォーム送信可否</div></th>'."\n";
-		// $label = array( '0'=>'送信しない','1'=>'送信する' );
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_send_form_flg())] ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>HTML内のJavaScript</div></th>'."\n";
-		// $label = array( '0'=>'解析しない','1'=>'解析する' );
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $label[intval($project_model->get_parse_jsinhtml_flg())] ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
-		// $RTN .= '	<tr>'."\n";
-		// $RTN .= '		<th style="width:30%;"><div>複製先パス</div></th>'."\n";
-		// $RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_copyto() ).'</div></td>'."\n";
-		// $RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_proj.'.$this->cmd[1] ) ).'" method="post">'."\n";
 		$RTN .= '	<p class="center"><input type="submit" value="プロジェクト情報を編集する" /></p>'."\n";
@@ -391,9 +312,98 @@ class pxplugin_asazuke_admin{
 		$RTN .= '</div><!-- /.more_links -->'."\n";
 		$RTN .= ''."\n";
 
-
 		return	$RTN;
 	}
+
+	/**
+	 * プロジェクトの詳細画面
+	 */
+	// private function page_project_detail(){
+
+	// 	$project_model = &$this->pcconf->factory_model_project();
+	// 	$project_model->load_project( $this->cmd[1] );
+
+	// 	$this->local_sitemap[ ':'.implode('.',$this->cmd) ] = array( 'title'=>'プロジェクト『'.htmlspecialchars( $project_model->get_project_name() ).'』の詳細情報' );
+
+	// 	$RTN = '';
+
+	// 	#======================================
+	// 	$RTN .= ''.$this->mk_hx( '基本情報' ).''."\n";
+	// 	$RTN .= '<table class="def" style="width:100%;">'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>プロジェクト名 (プロジェクトID)</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;"><div><strong>'.htmlspecialchars( $project_model->get_project_name() ).'</strong> ('.htmlspecialchars( $this->cmd[1] ).')</div></td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;"><div style="overflow:auto; max-width:450px;">'.htmlspecialchars( $project_model->get_path_docroot() ).'</div></td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '	<tr>'."\n";
+	// 	$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
+	// 	$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
+	// 	$RTN .= '	</tr>'."\n";
+	// 	$RTN .= '</table>'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_proj.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<p class="center"><input type="submit" value="プロジェクト情報を編集する" /></p>'."\n";
+	// 	$RTN .= '</form>'."\n";
+
+	// 	#======================================
+	// 	$RTN .= ''.$this->mk_hx( 'プログラム一覧' ).''."\n";
+
+	// 	$program_list = $project_model->get_program_list();
+
+	// 	$CSS = '';
+	// 	$CSS .= '#content .cont_unit_program{'."\n";
+	// 	$CSS .= '	border:2px solid #ff9999;'."\n";
+	// 	$CSS .= '}'."\n";
+	// 	$RTN .= '<style type="text/css">'.$CSS.'</style>'."\n";
+
+	// 	$RTN .= '<div class="unit cont_unit_program">'."\n";
+	// 	if( !is_array( $program_list ) || !count( $program_list ) ){
+	// 		$RTN .= '<p>現在、プログラムは登録されていません。</p>'."\n";
+	// 	}else{
+	// 		$RTN .= '<table class="def" style="width:100%;">'."\n";
+	// 		$RTN .= '	<thead>'."\n";
+	// 		$RTN .= '		<tr>'."\n";
+	// 		$RTN .= '			<th><div style="overflow:hidden;">プログラム名</div></th>'."\n";
+	// 		$RTN .= '			<th><div style="overflow:hidden;">プログラムID</div></th>'."\n";
+	// 		$RTN .= '			<th><div style="overflow:hidden;">パラメータ</div></th>'."\n";
+	// 		$RTN .= '			<th><div style="overflow:hidden;">HTTP_USER_AGENT</div></th>'."\n";
+	// 		$RTN .= '			<th><div>&nbsp;</div></th>'."\n";
+	// 		$RTN .= '			<th><div>&nbsp;</div></th>'."\n";
+	// 		$RTN .= '			<th><div>&nbsp;</div></th>'."\n";
+	// 		$RTN .= '		</tr>'."\n";
+	// 		$RTN .= '	</thead>'."\n";
+	// 		foreach( $program_list as $program_id ){
+	// 			$program_model = &$project_model->factory_program( $program_id );
+	// 			$RTN .= '	<tr>'."\n";
+	// 			$RTN .= '		<th><div style="overflow:hidden;">'.$this->mk_link(':execute_program.'.$this->cmd[1].'.'.$program_model->get_program_id(),array('label'=>$program_model->get_program_name(),'style'=>'inside')).'</div></th>'."\n";
+	// 			$RTN .= '		<td><div style="overflow:hidden;">'.htmlspecialchars( $program_model->get_program_id() ).'</div></td>'."\n";
+	// 			$RTN .= '		<td><div style="overflow:hidden;">'.htmlspecialchars( $program_model->get_program_param() ).'</div></td>'."\n";
+	// 			$RTN .= '		<td><div style="overflow:hidden;">'.htmlspecialchars( $program_model->get_program_useragent() ).'</div></td>'."\n";
+	// 			$RTN .= '		<td><div class="center">'.$this->mk_link(':edit_program.'.$this->cmd[1].'.'.$program_model->get_program_id(),array('label'=>'編集')).'</div></td>'."\n";
+	// 			$RTN .= '		<td><div class="center">'.$this->mk_link(':execute_program.'.$this->cmd[1].'.'.$program_model->get_program_id(),array('label'=>'実行')).'</div></td>'."\n";
+	// 			$RTN .= '		<td><div class="center">'.$this->mk_link(':delete_program.'.$this->cmd[1].'.'.$program_model->get_program_id(),array('label'=>'削除')).'</div></td>'."\n";
+	// 			$RTN .= '	</tr>'."\n";
+	// 		}
+	// 		$RTN .= '</table>'."\n";
+	// 	}
+	// 	$RTN .= '</div><!-- / .cont_unit_program -->'."\n";
+	// 	$RTN .= '<form action="'.htmlspecialchars( $this->href( ':create_program.'.$this->cmd[1] ) ).'" method="post">'."\n";
+	// 	$RTN .= '	<p class="center"><input type="submit" value="新規プログラムを追加する" /></p>'."\n";
+	// 	$RTN .= '</form>'."\n";
+
+	// 	$RTN .= '<div class="more_links">'."\n";
+	// 	$RTN .= '	<ul>'."\n";
+	// 	$RTN .= '		<li>'.$this->mk_link(':delete_proj.'.$this->cmd[1],array('label'=>'このプロジェクトを削除','style'=>'inside')).'</li>'."\n";
+	// 	$RTN .= '		<li><a href="'.t::h($this->href(':')).'">戻る</a></li>'."\n";
+	// 	$RTN .= '	</ul>'."\n";
+	// 	$RTN .= '</div><!-- /.more_links -->'."\n";
+	// 	$RTN .= ''."\n";
+
+
+	// 	return	$RTN;
+	// }
 
 
 
@@ -415,7 +425,7 @@ class pxplugin_asazuke_admin{
 			if( $this->cmd[0] == 'edit_proj' ){
 				$project_model = &$this->pcconf->factory_model_project();
 				$project_model->load_project( $this->cmd[1] );
-				$this->px->req()->set_param( 'project_id' , $this->cmd[1] );
+				// $this->px->req()->set_param( 'project_id' , $this->cmd[1] );
 				$this->px->req()->set_param( 'project_name' , $project_model->get_project_name() );
 				$this->px->req()->set_param( 'path_stargpage' , $project_model->get_path_startpage() );
 				$this->px->req()->set_param( 'path_docroot' , $project_model->get_path_docroot() );
@@ -468,21 +478,21 @@ class pxplugin_asazuke_admin{
 		}
 		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>プロジェクトID <span class="form_elements-must">必須</span></div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		if( $this->cmd[0] == 'edit_proj' ){
-			#	編集
-			$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'<input type="hidden" name="project_id" value="'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'" /></div>'."\n";
-		}else{
-			#	新規
-			$RTN .= '			<div><input type="text" name="project_id" value="'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'" /></div>'."\n";
-			if( strlen( $error['project_id'] ) ){
-				$RTN .= '			<div class="error">'.$error['project_id'].'</div>'."\n";
-			}
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>プロジェクトID <span class="form_elements-must">必須</span></div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// if( $this->cmd[0] == 'edit_proj' ){
+		// 	#	編集
+		// 	$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'<input type="hidden" name="project_id" value="'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'" /></div>'."\n";
+		// }else{
+		// 	#	新規
+		// 	$RTN .= '			<div><input type="text" name="project_id" value="'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'" /></div>'."\n";
+		// 	if( strlen( $error['project_id'] ) ){
+		// 		$RTN .= '			<div class="error">'.$error['project_id'].'</div>'."\n";
+		// 	}
+		// }
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>プロジェクト名 <span class="form_elements-must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
@@ -688,13 +698,13 @@ class pxplugin_asazuke_admin{
 		$RTN .= '</p>'."\n";
 
 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>プロジェクトID</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="project_id" value="'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
+		// $RTN .= '	<tr>'."\n";
+		// $RTN .= '		<th style="width:30%;"><div>プロジェクトID</div></th>'."\n";
+		// $RTN .= '		<td style="width:70%;">'."\n";
+		// $RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'</div>'."\n";
+		// $HIDDEN .= '<input type="hidden" name="project_id" value="'.htmlspecialchars( $this->px->req()->get_param('project_id') ).'" />';
+		// $RTN .= '		</td>'."\n";
+		// $RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>プロジェクト名</div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
@@ -833,15 +843,15 @@ class pxplugin_asazuke_admin{
 	 */
 	private function check_edit_proj_check(){
 		$RTN = array();
-		if( !strlen( $this->px->req()->get_param('project_id') ) ){
-			$RTN['project_id'] = 'プロジェクトIDは必須項目です。';
-		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('project_id') ) ){
-			$RTN['project_id'] = 'プロジェクトIDに改行を含めることはできません。';
-		}elseif( strlen( $this->px->req()->get_param('project_id') ) > 64 ){
-			$RTN['project_id'] = 'プロジェクトIDが長すぎます。';
-		}elseif( !preg_match( '/^[a-z0-9\_\-\.\@]+$/' , $this->px->req()->get_param('project_id') ) ){
-			$RTN['project_id'] = 'プロジェクトIDに使用できない文字が含まれています。';
-		}
+		// if( !strlen( $this->px->req()->get_param('project_id') ) ){
+		// 	$RTN['project_id'] = 'プロジェクトIDは必須項目です。';
+		// }elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('project_id') ) ){
+		// 	$RTN['project_id'] = 'プロジェクトIDに改行を含めることはできません。';
+		// }elseif( strlen( $this->px->req()->get_param('project_id') ) > 64 ){
+		// 	$RTN['project_id'] = 'プロジェクトIDが長すぎます。';
+		// }elseif( !preg_match( '/^[a-z0-9\_\-\.\@]+$/' , $this->px->req()->get_param('project_id') ) ){
+		// 	$RTN['project_id'] = 'プロジェクトIDに使用できない文字が含まれています。';
+		// }
 		if( !strlen( $this->px->req()->get_param('project_name') ) ){
 			$RTN['project_name'] = 'プロジェクト名は必須項目です。';
 		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('project_name') ) ){
@@ -919,15 +929,18 @@ class pxplugin_asazuke_admin{
 
 		$project_model = &$this->pcconf->factory_model_project();
 
-		if( $this->cmd[0] == 'edit_proj' ){
-			#	既存プロジェクトの編集
-			$project_model->load_project( $this->cmd[1] );
-		}elseif( $this->cmd[0] == 'create_proj' ){
-			#	新規プロジェクト作成
-			if( !$project_model->create_new_project( $this->px->req()->get_param('project_id') ) ){
-				return	'<p class="error">新規プロジェクトの作成に失敗しました。</p>';
-			}
-		}
+		#	既存プロジェクトの編集
+		$project_model->load_project();
+
+		// if( $this->cmd[0] == 'edit_proj' ){
+		// 	#	既存プロジェクトの編集
+		// 	$project_model->load_project();
+		// }elseif( $this->cmd[0] == 'create_proj' ){
+		// 	#	新規プロジェクト作成
+		// 	if( !$project_model->create_new_project( $this->px->req()->get_param('project_id') ) ){
+		// 		return	'<p class="error">新規プロジェクトの作成に失敗しました。</p>';
+		// 	}
+		// }
 
 		$project_model->set_project_name( $this->px->req()->get_param('project_name') );
 		$project_model->set_path_startpage( $this->px->req()->get_param('path_stargpage') );
@@ -958,13 +971,8 @@ class pxplugin_asazuke_admin{
 	 */
 	private function page_edit_proj_thanks(){
 		$RTN = ''."\n";
-		if( $this->cmd[0] == 'edit_proj' ){
-			$RTN .= '<p>プロジェクト編集処理を完了しました。</p>'."\n";
-			$backTo = ':detail.'.$this->cmd[1];
-		}else{
-			$RTN .= '<p>新規プロジェクトを作成しました。</p>'."\n";
-			$backTo = ':';
-		}
+		$RTN .= '<p>プロジェクト編集処理を完了しました。</p>'."\n";
+		$backTo = ':';
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( $backTo ) ).'" method="post">'."\n";
 		// $RTN .= '	'.$this->mk_form_defvalues( $backTo )."\n";
 		$RTN .= '	<p><input type="submit" value="戻る" /></p>'."\n";
