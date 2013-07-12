@@ -3,7 +3,6 @@
 /**
  * モデル：プログラム
  * Copyright (C)Tomoya Koyanagi.
- * Last Update : 2:45 2010/08/03
  */
 class pxplugin_asazuke_model_program{
 
@@ -12,15 +11,15 @@ class pxplugin_asazuke_model_program{
 	private $pcconf;
 	private $proj;
 
-	private $info_program_id = null;
-	private $info_program_name = null;
-	private $info_program_param = null;//PicklesCrawler 0.3.0 追加
-	private $info_program_type = null;
-	private $info_program_useragent = null;
-	private $info_path_copyto = null;//PicklesCrawler 0.3.3 追加
-	private $info_copyto_apply_deletedfile_flg = null;//PicklesCrawler 0.3.3 追加
-	private $info_urllist_nodownload = array();
-	private $info_urllist_scope = array();
+	// private $info_program_id = null;
+	// private $info_program_name = null;
+	// private $info_program_param = null;//PicklesCrawler 0.3.0 追加
+	// private $info_program_type = null;
+	// private $info_program_useragent = null;
+	// private $info_path_copyto = null;//PicklesCrawler 0.3.3 追加
+	// private $info_copyto_apply_deletedfile_flg = null;//PicklesCrawler 0.3.3 追加
+	// private $info_urllist_nodownload = array();
+	// private $info_urllist_scope = array();
 
 	private $crawl_error_list = array();
 
@@ -37,9 +36,9 @@ class pxplugin_asazuke_model_program{
 	/**
 	 * プログラムをロードする
 	 */
-	public function load_program( $program_id ){
+	public function load_program(){
 
-		$path_program_dir = $this->pcconf->get_program_home_dir( $this->proj->get_project_id() , $program_id );
+		$path_program_dir = $this->pcconf->get_program_home_dir();
 		if( !is_dir( $path_program_dir ) ){
 			return	false;
 		}
@@ -49,60 +48,43 @@ class pxplugin_asazuke_model_program{
 		$programInfo = $this->proj->load_ini( $path_program_dir.'/programinfo.ini' );
 		$programInfo['section'] = $programInfo['sec'];
 
-		$this->set_program_name( $programInfo['common']['name'] );
-		$this->set_program_param( $programInfo['common']['param'] );
-		$this->set_program_type( $programInfo['common']['type'] );
-		$this->set_program_useragent( $programInfo['common']['http_user_agent'] );
-		$this->set_path_copyto( $programInfo['common']['path_copyto'] );//PicklesCrawler 0.3.3 追加
-		$this->set_copyto_apply_deletedfile_flg( $programInfo['common']['copyto_apply_deletedfile_flg'] );//PicklesCrawler 0.3.3 追加
+		// $this->set_program_name( $programInfo['common']['name'] );
+		// $this->set_program_param( $programInfo['common']['param'] );
+		// $this->set_program_type( $programInfo['common']['type'] );
+		// $this->set_program_useragent( $programInfo['common']['http_user_agent'] );
+		// $this->set_path_copyto( $programInfo['common']['path_copyto'] );//PicklesCrawler 0.3.3 追加
+		// $this->set_copyto_apply_deletedfile_flg( $programInfo['common']['copyto_apply_deletedfile_flg'] );//PicklesCrawler 0.3.3 追加
 
-		#	スコープとするURLリスト
-		if( !is_array( $programInfo['section']['url_scope'] ) ){ $programInfo['section']['url_scope'] = array(); }
-		foreach( $programInfo['section']['url_scope'] as $url=>$status ){
-			if( !$status ){ continue; }
-			$this->put_urllist_scope( $url );
-		}
-		if( is_file( $path_program_dir.'/url_scope.txt' ) ){
-			#	PxCrawler 0.3.7 追加
-			foreach( $this->px->dbh()->file_get_lines( $path_program_dir.'/url_scope.txt' ) as $url ){
-				$url = trim( $url );
-				if( !strlen( $url ) ){ continue; }
-				$this->put_urllist_scope( $url );
-			}
-		}
+		// #	スコープとするURLリスト
+		// if( !is_array( $programInfo['section']['url_scope'] ) ){ $programInfo['section']['url_scope'] = array(); }
+		// foreach( $programInfo['section']['url_scope'] as $url=>$status ){
+		// 	if( !$status ){ continue; }
+		// 	$this->put_urllist_scope( $url );
+		// }
+		// if( is_file( $path_program_dir.'/url_scope.txt' ) ){
+		// 	#	PxCrawler 0.3.7 追加
+		// 	foreach( $this->px->dbh()->file_get_lines( $path_program_dir.'/url_scope.txt' ) as $url ){
+		// 		$url = trim( $url );
+		// 		if( !strlen( $url ) ){ continue; }
+		// 		$this->put_urllist_scope( $url );
+		// 	}
+		// }
 
-		#	ダウンロードしないURLリスト
-		if( !is_array( $programInfo['section']['url_nodownload'] ) ){ $programInfo['section']['url_nodownload'] = array(); }
-		foreach( $programInfo['section']['url_nodownload'] as $url=>$status ){
-			if( !$status ){ continue; }
-			$this->put_urllist_nodownload( $url );
-		}
-		if( is_file( $path_program_dir.'/url_nodownload.txt' ) ){
-			#	PxCrawler 0.3.7 追加
-			foreach( $this->px->dbh()->file_get_lines( $path_program_dir.'/url_nodownload.txt' ) as $url ){
-				$url = trim( $url );
-				if( !strlen( $url ) ){ continue; }
-				$this->put_urllist_nodownload( $url );
-			}
-		}
+		// #	ダウンロードしないURLリスト
+		// if( !is_array( $programInfo['section']['url_nodownload'] ) ){ $programInfo['section']['url_nodownload'] = array(); }
+		// foreach( $programInfo['section']['url_nodownload'] as $url=>$status ){
+		// 	if( !$status ){ continue; }
+		// 	$this->put_urllist_nodownload( $url );
+		// }
+		// if( is_file( $path_program_dir.'/url_nodownload.txt' ) ){
+		// 	#	PxCrawler 0.3.7 追加
+		// 	foreach( $this->px->dbh()->file_get_lines( $path_program_dir.'/url_nodownload.txt' ) as $url ){
+		// 		$url = trim( $url );
+		// 		if( !strlen( $url ) ){ continue; }
+		// 		$this->put_urllist_nodownload( $url );
+		// 	}
+		// }
 
-		return	true;
-	}
-
-	/**
-	 * 新規プログラムを作成する
-	 */
-	public function create_program(){
-		$program_list = $this->proj->get_program_list();
-		$max_num = 0;
-		foreach( $program_list as $exist_program_id ){
-			$exist_program_num = intval( preg_replace( '/[^0-9]/' , '' , $exist_program_id ) );
-
-			if( $max_num < $exist_program_num ){
-				$max_num = $exist_program_num;
-			}
-		}
-		$this->info_program_id = 'm'.str_pad( ($max_num+1) , 6 , '0' , STR_PAD_LEFT );
 		return	true;
 	}
 
@@ -110,84 +92,6 @@ class pxplugin_asazuke_model_program{
 	 * プログラムの現在の状態を保存する
 	 */
 	public function save_program(){
-		if( !strlen( $this->info_program_id ) ){ return false; }
-
-		$path_program_dir = $this->pcconf->get_program_home_dir( $this->proj->get_project_id() , $this->get_program_id() );
-		if( !is_dir( $path_program_dir ) ){
-			if( !$this->px->dbh()->mkdir( $path_program_dir ) ){
-				return	false;
-			}
-		}
-
-		#======================================
-		#	programinfo.ini
-
-		$src_programinfo_ini = '';
-		$src_programinfo_ini .= 'name='.$this->get_program_name()."\n";
-		$src_programinfo_ini .= 'param='.$this->get_program_param()."\n";
-		$src_programinfo_ini .= 'type='.$this->get_program_type()."\n";
-		$src_programinfo_ini .= 'http_user_agent='.$this->get_program_useragent()."\n";
-		$src_programinfo_ini .= 'path_copyto='.$this->get_path_copyto()."\n";//PicklesCrawler 0.3.3 追加
-		$src_programinfo_ini .= 'copyto_apply_deletedfile_flg='.$this->get_copyto_apply_deletedfile_flg()."\n";//PicklesCrawler 0.3.3 追加
-		$src_programinfo_ini .= ''."\n";
-
-		#	スコープとするURLリスト
-		$src_programinfo_ini .= '[url_scope]'."\n";
-#		#	PxCrawler 0.3.7 別ファイル化
-#		$urllist_scope = $this->get_urllist_scope();
-#		if( is_array( $urllist_scope ) ){
-#			foreach( $urllist_scope as $url ){
-#				if( !strlen( trim( $url ) ) ){ continue; }
-#				$src_programinfo_ini .= trim($url).'=1'."\n";
-#			}
-#		}
-		$src_programinfo_ini .= ''."\n";
-
-		#	ダウンロードしないURLリスト
-		$src_programinfo_ini .= '[url_nodownload]'."\n";
-#		#	PxCrawler 0.3.7 別ファイル化
-#		$urllist_nodownload = $this->get_urllist_nodownload();
-#		if( is_array( $urllist_nodownload ) ){
-#			foreach( $urllist_nodownload as $url ){
-#				if( !strlen( trim( $url ) ) ){ continue; }
-#				$src_programinfo_ini .= trim($url).'=1'."\n";
-#			}
-#		}
-		$src_programinfo_ini .= ''."\n";
-
-		if( !$this->px->dbh()->save_file( $path_program_dir.'/programinfo.ini' , $src_programinfo_ini ) ){
-			return	false;
-		}
-		$this->px->dbh()->fclose($path_program_dir.'/programinfo.ini');
-
-		#	【スコープとするURLリスト】
-		$src_programinfo_ini = '';
-		$urllist_scope = $this->get_urllist_scope();
-		if( is_array( $urllist_scope ) ){
-			foreach( $urllist_scope as $url ){
-				if( !strlen( trim( $url ) ) ){ continue; }
-				$src_programinfo_ini .= trim($url)."\n";
-			}
-		}
-		if( !$this->px->dbh()->save_file( $path_program_dir.'/url_scope.txt' , $src_programinfo_ini ) ){
-			return	false;
-		}
-		$this->px->dbh()->fclose($path_program_dir.'/url_scope.txt');
-
-		#	【ダウンロードしないURLリスト】
-		$src_programinfo_ini = '';
-		$urllist_nodownload = $this->get_urllist_nodownload();
-		if( is_array( $urllist_nodownload ) ){
-			foreach( $urllist_nodownload as $url ){
-				if( !strlen( trim( $url ) ) ){ continue; }
-				$src_programinfo_ini .= trim($url)."\n";
-			}
-		}
-		if( !$this->px->dbh()->save_file( $path_program_dir.'/url_nodownload.txt' , $src_programinfo_ini ) ){
-			return	false;
-		}
-		$this->px->dbh()->fclose($path_program_dir.'/url_nodownload.txt');
-
 		return	true;
 	}
 
@@ -195,16 +99,16 @@ class pxplugin_asazuke_model_program{
 	 * プログラムが保存したコンテンツを削除する
 	 */
 	public function delete_program_content(){
-		if( !strlen( $this->proj->get_project_id() ) ){
-			$this->px->error()->error_log( 'プロジェクトが選択される前に、プログラムコンテンツの削除を要求されました。' , __FILE__ , __LINE__ );
-			return	false;
-		}
-		if( !strlen( $this->info_program_id ) ){
-			$this->px->error()->error_log( 'プログラムが選択される前に、プログラムコンテンツの削除を要求されました。' , __FILE__ , __LINE__ );
-			return	false;
-		}
+		// if( !strlen( $this->proj->get_project_id() ) ){
+		// 	$this->px->error()->error_log( 'プロジェクトが選択される前に、プログラムコンテンツの削除を要求されました。' , __FILE__ , __LINE__ );
+		// 	return	false;
+		// }
+		// if( !strlen( $this->info_program_id ) ){
+		// 	$this->px->error()->error_log( 'プログラムが選択される前に、プログラムコンテンツの削除を要求されました。' , __FILE__ , __LINE__ );
+		// 	return	false;
+		// }
 
-		$path_program_dir = $this->pcconf->get_program_home_dir( $this->proj->get_project_id() , $this->info_program_id );
+		$path_program_dir = $this->pcconf->get_program_home_dir();
 		if( !is_dir( $path_program_dir ) ){
 			return	false;
 		}
@@ -223,25 +127,6 @@ class pxplugin_asazuke_model_program{
 		return	true;
 	}
 
-	/**
-	 * プログラムを削除する
-	 */
-	public function destroy_program(){
-		if( !strlen( $this->proj->get_project_id() ) ){ return false; }
-		if( !strlen( $this->get_program_id() ) ){ return false; }
-
-		$path_program_dir = $this->pcconf->get_program_home_dir( $this->proj->get_project_id() , $this->get_program_id() );
-		if( !is_dir( $path_program_dir ) ){
-			return false;
-		}
-
-		$result = $this->px->dbh()->rm( $path_program_dir );
-		if( !$result ){
-			return	false;
-		}
-
-		return	true;
-	}
 
 
 	/**

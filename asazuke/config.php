@@ -89,24 +89,21 @@ class pxplugin_asazuke_config{
 	/**
 	 * プロジェクトディレクトリの取得
 	 */
-	public function get_proj_dir( $project_id = null ){
+	public function get_proj_dir(){
 		if( !is_dir( $this->get_home_dir().$this->localpath_proj_dir ) ){
 			if( !$this->px->dbh()->mkdir_all( $this->get_home_dir().$this->localpath_proj_dir ) ){
 				return	false;
 			}
 		}
-		// if( strlen( $project_id ) ){
-		// 	return	$this->get_home_dir().$this->localpath_proj_dir.'/'.urlencode( $project_id );
-		// }
 		return	$this->get_home_dir().$this->localpath_proj_dir;
 	}
 
 	/**
 	 * プログラムディレクトリの取得
 	 */
-	public function get_program_home_dir( $project_id , $program_id = null ){
+	public function get_program_home_dir(){
 		// if( !strlen( $project_id ) ){ return false; }
-		$proj_dir = $this->get_proj_dir( $project_id );
+		$proj_dir = $this->get_proj_dir();
 		if( !is_dir( $proj_dir ) ){
 			return	false;
 		}
@@ -116,7 +113,7 @@ class pxplugin_asazuke_config{
 			}
 		}
 		if( strlen( $program_id ) ){
-			return	$proj_dir.'/prg/'.urlencode( $program_id );
+			return	$proj_dir.'/prg/';
 		}
 		return	$proj_dir.'/prg';
 	}
@@ -124,15 +121,12 @@ class pxplugin_asazuke_config{
 	/**
 	 * ログディレクトリの取得
 	 */
-	public function get_log_dir( $project_id = null ){
+	public function get_log_dir(){
 		if( !is_dir( $this->get_home_dir().$this->localpath_log_dir ) ){
 			if( !$this->px->dbh()->mkdir( $this->get_home_dir().$this->localpath_log_dir ) ){
 				return	false;
 			}
 		}
-		// if( strlen( $project_id ) ){
-		// 	return	$this->get_home_dir().$this->localpath_log_dir.'/'.urlencode( $project_id );
-		// }
 		return	$this->get_home_dir().$this->localpath_log_dir;
 	}
 

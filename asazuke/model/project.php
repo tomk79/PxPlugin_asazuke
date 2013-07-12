@@ -3,7 +3,6 @@
 /**
  * モデル：プロジェクト
  * Copyright (C)Tomoya Koyanagi.
- * Last Update : 22:52 2011/08/15
  */
 class pxplugin_asazuke_model_project{
 
@@ -11,7 +10,7 @@ class pxplugin_asazuke_model_project{
 	private $pcconf;
 
 	// private $info_project_id = null;
-	private $info_project_name = null;
+	// private $info_project_name = null;
 	private $info_path_startpage = null;
 	private $info_path_docroot = null;
 
@@ -27,18 +26,15 @@ class pxplugin_asazuke_model_project{
 	/**
 	 * ファクトリ：プログラムオブジェクトを生成
 	 */
-	public function &factory_program( $program_id = null ){
+	public function &factory_program(){
 		$objPath = '/asazuke/model/program.php';
 		$className = $this->px->load_px_plugin_class( $objPath );
 		if( !$className ){
 			$this->px->error()->error_log( 'プログラムオブジェクトのロードに失敗しました。['.$objPath.']' , __FILE__ , __LINE__ );
 		}
 		$obj = new $className( $this->px , $this->pcconf , $this );
-		if( strlen( $program_id ) ){
-			$obj->load_program( $program_id );
-		}else{
-			$obj->create_program();
-		}
+		$obj->load_program();
+
 		return	$obj;
 	}
 
@@ -54,8 +50,8 @@ class pxplugin_asazuke_model_project{
 
 		$project_ini = $this->load_ini( $dir.'/project.ini' );
 		$MEMO = array();
-		$MEMO['id'] = $filename;
-		$MEMO['name'] = $project_ini['common']['name'];
+		// $MEMO['id'] = $filename;
+		// $MEMO['name'] = $project_ini['common']['name'];
 		$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
 		$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
 
@@ -76,7 +72,7 @@ class pxplugin_asazuke_model_project{
 
 		#	基本情報
 		$project_ini = $this->load_ini( $path_project_dir.'/project.ini' );
-		$this->set_project_name( $project_ini['common']['name'] );
+		// $this->set_project_name( $project_ini['common']['name'] );
 		$this->set_path_startpage( $project_ini['common']['path_startpage'] );
 		$this->set_path_docroot( $project_ini['common']['path_docroot'] );
 
@@ -101,7 +97,7 @@ class pxplugin_asazuke_model_project{
 
 		#	基本情報
 		$project_ini_src = '';
-		$project_ini_src .= 'name='.$this->get_project_name()."\n";
+		// $project_ini_src .= 'name='.$this->get_project_name()."\n";
 		$project_ini_src .= 'path_startpage='.$this->get_path_startpage()."\n";
 		$project_ini_src .= 'path_docroot='.$this->get_path_docroot()."\n";
 
@@ -141,15 +137,15 @@ class pxplugin_asazuke_model_project{
 	// 	return	$this->info_project_id;
 	// }
 
-	#--------------------------------------
-	#	プロジェクト名の入出力
-	public function set_project_name( $name ){
-		$this->info_project_name = $name;
-		return	true;
-	}
-	public function get_project_name(){
-		return	$this->info_project_name;
-	}
+	// #--------------------------------------
+	// #	プロジェクト名の入出力
+	// public function set_project_name( $name ){
+	// 	$this->info_project_name = $name;
+	// 	return	true;
+	// }
+	// public function get_project_name(){
+	// 	return	$this->info_project_name;
+	// }
 
 	#--------------------------------------
 	#	スタートページURLの入出力
@@ -172,28 +168,28 @@ class pxplugin_asazuke_model_project{
 	}
 
 
-	#--------------------------------------
-	#	プログラムIDの一覧を得る
-	public function get_program_list(){
-		$program_dir = $this->pcconf->get_program_home_dir();
-		if( !is_dir( $program_dir ) ){ return array(); }
+	// #--------------------------------------
+	// #	プログラムIDの一覧を得る
+	// public function get_program_list(){
+	// 	$program_dir = $this->pcconf->get_program_home_dir();
+	// 	if( !is_dir( $program_dir ) ){ return array(); }
 
-		$itemlist = $this->px->dbh()->ls( $program_dir );
-		if( !is_array( $itemlist ) ){ return array(); }
+	// 	$itemlist = $this->px->dbh()->ls( $program_dir );
+	// 	if( !is_array( $itemlist ) ){ return array(); }
 
-		$RTN = array();
-		if( !is_array( $itemlist ) ){ $itemlist = array(); }
-		foreach( $itemlist as $filename ){
-			if( $filename == '.' || $filename == '..' ){ continue; }
-			if( is_dir( $program_dir.'/'.$filename ) ){
-				array_push( $RTN , $filename );
-			}
-		}
+	// 	$RTN = array();
+	// 	if( !is_array( $itemlist ) ){ $itemlist = array(); }
+	// 	foreach( $itemlist as $filename ){
+	// 		if( $filename == '.' || $filename == '..' ){ continue; }
+	// 		if( is_dir( $program_dir.'/'.$filename ) ){
+	// 			array_push( $RTN , $filename );
+	// 		}
+	// 	}
 
-		sort($RTN);
+	// 	sort($RTN);
 
-		return	$RTN;
-	}
+	// 	return	$RTN;
+	// }
 
 
 

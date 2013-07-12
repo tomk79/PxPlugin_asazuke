@@ -31,8 +31,8 @@ class pxplugin_asazuke_crawlctrl{
 		$this->cmd = &$cmd;
 
 		$this->project_model = &$this->pcconf->factory_model_project();
-		$this->project_model->load_project( $this->cmd[1] );
-		$this->program_model = $this->project_model->factory_program( $this->cmd[2] );
+		$this->project_model->load_project();
+		$this->program_model = $this->project_model->factory_program();
 
 		if( strlen( $this->px->req()->get_param('crawl_max_url_number') ) ){
 			$this->pcconf->set_value( 'crawl_max_url_number' , intval( $this->px->req()->get_param('crawl_max_url_number') ) );
@@ -119,14 +119,14 @@ class pxplugin_asazuke_crawlctrl{
 		while( @ob_end_clean() );//出力バッファをクリア
 		@header( 'Content-type: text/plain; charset='.$this->output_encoding );
 
-		if( !strlen( $this->cmd[1] ) ){
-			$this->msg( '[ERROR!!] プロジェクトIDが指定されていません。' );
-			return	$this->exit_process();
-		}
-		if( !strlen( $this->cmd[2] ) ){
-			$this->msg( '[ERROR!!] プログラムIDが指定されていません。' );
-			return	$this->exit_process();
-		}
+		// if( !strlen( $this->cmd[1] ) ){
+		// 	$this->msg( '[ERROR!!] プロジェクトIDが指定されていません。' );
+		// 	return	$this->exit_process();
+		// }
+		// if( !strlen( $this->cmd[2] ) ){
+		// 	$this->msg( '[ERROR!!] プログラムIDが指定されていません。' );
+		// 	return	$this->exit_process();
+		// }
 
 		return	$this->controll();
 	}
@@ -147,11 +147,9 @@ class pxplugin_asazuke_crawlctrl{
 		$this->msg( '---------- asazuke ----------' );
 		$this->msg( 'Copyright (C)Tomoya Koyanagi, All rights reserved.' );
 		$this->msg( '-------------------------------------' );
-		$this->msg( 'Executing Project ['.$project_model->get_project_name().'] Program ['.$program_model->get_program_name().']....' );
 		$this->msg( 'Process ID ['.getmypid().']' );
 		$this->msg( 'Document root path => '.$project_model->get_path_docroot() );
 		$this->msg( 'Start page path => '.$project_model->get_path_startpage() );
-		$this->msg( 'Program Type => '.$program_model->get_program_type() );
 		$this->msg( 'crawl_max_url_number => '.$this->pcconf->get_value( 'crawl_max_url_number' ) );
 		if( !is_int( $this->pcconf->get_value( 'crawl_max_url_number' ) ) ){
 			$this->error_log( 'Config error: crawl_max_url_number is NOT a number.' , __FILE__ , __LINE__ );
@@ -439,58 +437,6 @@ class pxplugin_asazuke_crawlctrl{
 
 		}
 
-
-		// #######################################
-		// #	複製先指定の処理
-		// $path_copyto = $this->project_model->get_path_copyto();
-		// if( strlen( $this->program_model->get_path_copyto() ) ){
-		// 	//	プログラムに指定があれば上書き
-		// 	$path_copyto = $this->program_model->get_path_copyto();
-		// }
-		// $copyto_apply_deletedfile_flg = $this->program_model->get_copyto_apply_deletedfile_flg();
-		// if( strlen( $path_copyto ) ){
-		// 	//	1:03 2009/08/27 追加の分岐
-		// 	//	有効なコピー先が指定されていたら、コピーする。
-		// 	$this->msg( '------' );
-		// 	$this->msg( 'コンテンツの複製を開始します。' );
-		// 	clearstatcache();
-		// 	if( !is_dir( $path_copyto ) ){
-		// 		$this->error_log( 'コンテンツの複製先が存在しません。' , __FILE__ , __LINE__ );
-		// 	}else{
-		// 		preg_match( '/^(https?)\:\/\/([a-zA-Z0-9\-\_\.\:]+)/si' , $this->project_model->get_path_startpage() , $matched );
-		// 		$matched[2] = preg_replace( '/\:/' , '_' , $matched[2] );
-		// 		$path_copyfrom = realpath( $this->get_path_download_to().'/'.$matched[1].'/'.$matched[2] );
-		// 		$this->msg( '複製元パス：'.$path_copyfrom );
-		// 		$this->msg( '複製先パス：'.$path_copyto );
-		// 		if( strlen( $path_copyfrom ) && is_dir( $path_copyfrom ) ){
-		// 			set_time_limit(0);
-		// 			if( $this->px->dbh()->copyall( $path_copyfrom , $path_copyto ) ){
-		// 				$this->msg( 'コンテンツの複製を完了しました。' );
-		// 				if( $copyto_apply_deletedfile_flg ){
-		// 					$this->msg( '------' );
-		// 					$this->msg( '削除されたファイル/ディレクトリを反映します。' );
-		// 					set_time_limit(0);
-		// 					if( $this->px->dbh()->compare_and_cleanup( $path_copyto , $path_copyfrom ) ){
-		// 						$this->msg( '削除されたファイル/ディレクトリを反映しました。' );
-		// 					}else{
-		// 						$this->error_log( '削除されたファイル/ディレクトリ反映に失敗しました。' , __FILE__ , __LINE__ );
-		// 					}
-		// 					set_time_limit(30);
-		// 				}
-		// 			}else{
-		// 				$this->error_log( 'コンテンツの複製に失敗しました。' , __FILE__ , __LINE__ );
-		// 			}
-		// 			set_time_limit(30);
-		// 		}else{
-		// 			$this->error_log( '複製元を正しく判断できません。コンテンツのクロールに失敗した可能性があります。' , __FILE__ , __LINE__ );
-		// 		}
-
-		// 	}
-		// 	$this->msg( '------' );
-		// }
-		// #	/ 複製先指定の処理
-		// #######################################
-
 		return	$this->exit_process();
 	}
 
@@ -661,8 +607,8 @@ class pxplugin_asazuke_crawlctrl{
 
 		$FIN = '';
 		$FIN .= '[Project Info]'."\n";
-		$FIN .= 'Project ID: '.$project_model->get_project_id()."\n";
-		$FIN .= 'Project Name: '.$project_model->get_project_name()."\n";
+		// $FIN .= 'Project ID: '.$project_model->get_project_id()."\n";
+		// $FIN .= 'Project Name: '.$project_model->get_project_name()."\n";
 		$FIN .= 'Start page URL: '.$project_model->get_path_startpage()."\n";
 		$FIN .= 'Document root URL: '.$project_model->get_path_docroot()."\n";
 		// $FIN .= 'Default filename: '.$project_model->get_default_filename()."\n";
@@ -699,40 +645,40 @@ class pxplugin_asazuke_crawlctrl{
 		// }else{
 		// 	$FIN .= '(no entry)'."\n";
 		// }
-		$FIN .= ''."\n";
-		$FIN .= '--------------------------------------'."\n";
-		$FIN .= '[Program Info]'."\n";
-		$FIN .= 'Program ID: '.$program_model->get_program_id()."\n";
-		$FIN .= 'Program Name: '.$program_model->get_program_name()."\n";
-		$FIN .= 'Program Type: '.$program_model->get_program_type()."\n";
-		$FIN .= 'Params: '.$program_model->get_program_param()."\n";
-		$FIN .= 'HTTP_USER_AGENT: '.$program_model->get_program_useragent()."\n";
-		$FIN .= 'path copyto: '.$program_model->get_path_copyto()."\n";
-		$FIN .= 'path copyto (apply deleted file flag): '.($program_model->get_copyto_apply_deletedfile_flg()?'true':'false')."\n";
-		$FIN .= '------'."\n";
-		$FIN .= '[URLs scope]'."\n";
-		if( count($program_model->get_urllist_scope()) ){
-			foreach( $program_model->get_urllist_scope() as $row ){
-				$FIN .= $row."\n";
-			}
-		}else{
-			$FIN .= '(no entry)'."\n";
-		}
-		$FIN .= '------'."\n";
-		$FIN .= '[URLs out of scope]'."\n";
-		if( count($program_model->get_urllist_nodownload()) ){
-			foreach( $program_model->get_urllist_nodownload() as $row ){
-				$FIN .= $row."\n";
-			}
-		}else{
-			$FIN .= '(no entry)'."\n";
-		}
-		$FIN .= ''."\n";
-		$FIN .= '--------------------------------------'."\n";
-		$FIN .= '[Other Info]'."\n";
-		$FIN .= 'Process ID: '.getmypid()."\n";
-		$FIN .= 'crawl_max_url_number: '.$this->pcconf->get_value( 'crawl_max_url_number' )."\n";
-		$FIN .= ''."\n";
+		// $FIN .= ''."\n";
+		// $FIN .= '--------------------------------------'."\n";
+		// $FIN .= '[Program Info]'."\n";
+		// $FIN .= 'Program ID: '.$program_model->get_program_id()."\n";
+		// $FIN .= 'Program Name: '.$program_model->get_program_name()."\n";
+		// $FIN .= 'Program Type: '.$program_model->get_program_type()."\n";
+		// $FIN .= 'Params: '.$program_model->get_program_param()."\n";
+		// $FIN .= 'HTTP_USER_AGENT: '.$program_model->get_program_useragent()."\n";
+		// $FIN .= 'path copyto: '.$program_model->get_path_copyto()."\n";
+		// $FIN .= 'path copyto (apply deleted file flag): '.($program_model->get_copyto_apply_deletedfile_flg()?'true':'false')."\n";
+		// $FIN .= '------'."\n";
+		// $FIN .= '[URLs scope]'."\n";
+		// if( count($program_model->get_urllist_scope()) ){
+		// 	foreach( $program_model->get_urllist_scope() as $row ){
+		// 		$FIN .= $row."\n";
+		// 	}
+		// }else{
+		// 	$FIN .= '(no entry)'."\n";
+		// }
+		// $FIN .= '------'."\n";
+		// $FIN .= '[URLs out of scope]'."\n";
+		// if( count($program_model->get_urllist_nodownload()) ){
+		// 	foreach( $program_model->get_urllist_nodownload() as $row ){
+		// 		$FIN .= $row."\n";
+		// 	}
+		// }else{
+		// 	$FIN .= '(no entry)'."\n";
+		// }
+		// $FIN .= ''."\n";
+		// $FIN .= '--------------------------------------'."\n";
+		// $FIN .= '[Other Info]'."\n";
+		// $FIN .= 'Process ID: '.getmypid()."\n";
+		// $FIN .= 'crawl_max_url_number: '.$this->pcconf->get_value( 'crawl_max_url_number' )."\n";
+		// $FIN .= ''."\n";
 
 		error_log( $FIN , 3 , $path_dir_download_to.'/__LOGS__/settings.txt' );
 		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/settings.txt' );
