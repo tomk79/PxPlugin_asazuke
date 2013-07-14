@@ -50,7 +50,7 @@ class pxplugin_asazuke_crawlctrl{
 			$this->error_log( 'コンテンツオペレータのロードに失敗しました。' , __FILE__ , __LINE__ );
 			return	$this->exit_process();
 		}
-		$obj = new $className( $this->px );
+		$obj = new $className( $this->px, $this->project_model );
 		return	$obj;
 	}
 
@@ -118,15 +118,6 @@ class pxplugin_asazuke_crawlctrl{
 
 		while( @ob_end_clean() );//出力バッファをクリア
 		@header( 'Content-type: text/plain; charset='.$this->output_encoding );
-
-		// if( !strlen( $this->cmd[1] ) ){
-		// 	$this->msg( '[ERROR!!] プロジェクトIDが指定されていません。' );
-		// 	return	$this->exit_process();
-		// }
-		// if( !strlen( $this->cmd[2] ) ){
-		// 	$this->msg( '[ERROR!!] プログラムIDが指定されていません。' );
-		// 	return	$this->exit_process();
-		// }
 
 		return	$this->controll();
 	}
@@ -221,7 +212,7 @@ class pxplugin_asazuke_crawlctrl{
 
 		#######################################
 		#	クロールの設定をログに残す
-		$this->save_crawl_settings( $project_model , $program_model );
+		$this->save_crawl_settings();
 
 
 		#	サイトマップを作成し始める
@@ -329,7 +320,7 @@ class pxplugin_asazuke_crawlctrl{
 
 					clearstatcache();
 
-					if( !$this->factory_contents_operator()->scrape($fullpath_savetmpfile_to , $fullpath_save_to) ){
+					if( !$this->factory_contents_operator()->scrape( $fullpath_savetmpfile_to, $fullpath_save_to ) ){
 						$this->error_log( 'コンテンツのスクレイピングに失敗しました。' , __FILE__ , __LINE__ );
 						$program_model->crawl_error( 'FAILD to scraping file; ['.$fullpath_save_to.']' , $url , $fullpath_save_to );
 					}
@@ -366,8 +357,8 @@ class pxplugin_asazuke_crawlctrl{
 				#	画面にメッセージを出力
 				$this->msg( 'Content-type=text/html' );
 				$this->msg( 'title: ['.$html_meta_info['title'].']' );
-				$this->msg( 'description: ['.$html_meta_info['description'].']' );
-				$this->msg( 'keywords: ['.$html_meta_info['keywords'].']' );
+				// $this->msg( 'description: ['.$html_meta_info['description'].']' );
+				// $this->msg( 'keywords: ['.$html_meta_info['keywords'].']' );
 				#	/ 画面にメッセージを出力
 				#--------------------------------------
 
@@ -595,7 +586,7 @@ class pxplugin_asazuke_crawlctrl{
 	/**
 	 * クロールの設定をログに残す
 	 */
-	private function save_crawl_settings( &$project_model , &$program_model ){
+	private function save_crawl_settings(){
 		// PicklesCrawler 0.4.2 追加
 		$path_dir_download_to = realpath( $this->get_path_download_to() );
 		if( !is_dir( $path_dir_download_to ) ){ return false; }
@@ -607,78 +598,10 @@ class pxplugin_asazuke_crawlctrl{
 
 		$FIN = '';
 		$FIN .= '[Project Info]'."\n";
-		// $FIN .= 'Project ID: '.$project_model->get_project_id()."\n";
-		// $FIN .= 'Project Name: '.$project_model->get_project_name()."\n";
-		$FIN .= 'Start page URL: '.$project_model->get_path_startpage()."\n";
-		$FIN .= 'Document root URL: '.$project_model->get_path_docroot()."\n";
-		// $FIN .= 'Default filename: '.$project_model->get_default_filename()."\n";
-		// $FIN .= 'Omit filename(s): '.implode( ', ' , $project_model->get_omit_filename() )."\n";
-		// $FIN .= 'Path convert method: '.$project_model->get_path_conv_method()."\n";
-		// $FIN .= 'outofsite2url flag: '.($project_model->get_outofsite2url_flg()?'true':'false')."\n";
-		// $FIN .= 'send unknown params flag: '.($project_model->get_send_unknown_params_flg()?'true':'false')."\n";
-		// $FIN .= 'send form flag: '.($project_model->get_send_form_flg()?'true':'false')."\n";
-		// $FIN .= 'parse inline JavaScript flag: '.($project_model->get_parse_jsinhtml_flg()?'true':'false')."\n";
-		// $FIN .= 'save notfound page flag: '.($project_model->get_save404_flg()?'true':'false')."\n";
-		// $FIN .= 'path copyto: '.$project_model->get_path_copyto()."\n";
-		// $FIN .= '(conv)charset: '.$project_model->get_charset_charset()."\n";
-		// $FIN .= '(conv)crlf: '.$project_model->get_charset_crlf()."\n";
-		// $FIN .= '(conv)ext: '.$project_model->get_charset_ext()."\n";
-		// $FIN .= 'Auth type: '.$project_model->get_authentication_type()."\n";
-		// $FIN .= 'Auth user: '.$project_model->get_basic_authentication_id()."\n";
-		// $FIN .= 'Auth Password: ********'."\n";
+		$FIN .= 'Start page URL: '.$this->project_model->get_path_startpage()."\n";
+		$FIN .= 'Document root URL: '.$this->project_model->get_path_docroot()."\n";
 
-		// $FIN .= '------'."\n";
-		// $FIN .= '[URLs as out of site]'."\n";
-		// if( count($project_model->get_urllist_outofsite()) ){
-		// 	foreach( $project_model->get_urllist_outofsite() as $outofsite ){
-		// 		$FIN .= $outofsite."\n";
-		// 	}
-		// }else{
-		// 	$FIN .= '(no entry)'."\n";
-		// }
-		// $FIN .= '------'."\n";
-		// $FIN .= '[additional start pages]'."\n";
-		// if( count($project_model->get_urllist_startpages()) ){
-		// 	foreach( $project_model->get_urllist_startpages() as $additional_startpage ){
-		// 		$FIN .= $additional_startpage."\n";
-		// 	}
-		// }else{
-		// 	$FIN .= '(no entry)'."\n";
-		// }
-		// $FIN .= ''."\n";
-		// $FIN .= '--------------------------------------'."\n";
-		// $FIN .= '[Program Info]'."\n";
-		// $FIN .= 'Program ID: '.$program_model->get_program_id()."\n";
-		// $FIN .= 'Program Name: '.$program_model->get_program_name()."\n";
-		// $FIN .= 'Program Type: '.$program_model->get_program_type()."\n";
-		// $FIN .= 'Params: '.$program_model->get_program_param()."\n";
-		// $FIN .= 'HTTP_USER_AGENT: '.$program_model->get_program_useragent()."\n";
-		// $FIN .= 'path copyto: '.$program_model->get_path_copyto()."\n";
-		// $FIN .= 'path copyto (apply deleted file flag): '.($program_model->get_copyto_apply_deletedfile_flg()?'true':'false')."\n";
-		// $FIN .= '------'."\n";
-		// $FIN .= '[URLs scope]'."\n";
-		// if( count($program_model->get_urllist_scope()) ){
-		// 	foreach( $program_model->get_urllist_scope() as $row ){
-		// 		$FIN .= $row."\n";
-		// 	}
-		// }else{
-		// 	$FIN .= '(no entry)'."\n";
-		// }
-		// $FIN .= '------'."\n";
-		// $FIN .= '[URLs out of scope]'."\n";
-		// if( count($program_model->get_urllist_nodownload()) ){
-		// 	foreach( $program_model->get_urllist_nodownload() as $row ){
-		// 		$FIN .= $row."\n";
-		// 	}
-		// }else{
-		// 	$FIN .= '(no entry)'."\n";
-		// }
-		// $FIN .= ''."\n";
-		// $FIN .= '--------------------------------------'."\n";
-		// $FIN .= '[Other Info]'."\n";
-		// $FIN .= 'Process ID: '.getmypid()."\n";
-		// $FIN .= 'crawl_max_url_number: '.$this->pcconf->get_value( 'crawl_max_url_number' )."\n";
-		// $FIN .= ''."\n";
+
 
 		error_log( $FIN , 3 , $path_dir_download_to.'/__LOGS__/settings.txt' );
 		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/settings.txt' );

@@ -9,10 +9,9 @@ class pxplugin_asazuke_model_project{
 	private $px;
 	private $pcconf;
 
-	// private $info_project_id = null;
-	// private $info_project_name = null;
 	private $info_path_startpage = null;
 	private $info_path_docroot = null;
+	private $info_selector_contents_main = '#content';
 
 	/**
 	 * コンストラクタ
@@ -50,10 +49,11 @@ class pxplugin_asazuke_model_project{
 
 		$project_ini = $this->load_ini( $dir.'/project.ini' );
 		$MEMO = array();
-		// $MEMO['id'] = $filename;
-		// $MEMO['name'] = $project_ini['common']['name'];
+
 		$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
 		$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
+		$MEMO['selector_contents_main'] = $project_ini['common']['selector_contents_main'];
+
 
 		array_push( $RTN , $MEMO );
 		unset( $MEMO );
@@ -72,9 +72,10 @@ class pxplugin_asazuke_model_project{
 
 		#	基本情報
 		$project_ini = $this->load_ini( $path_project_dir.'/project.ini' );
-		// $this->set_project_name( $project_ini['common']['name'] );
+
 		$this->set_path_startpage( $project_ini['common']['path_startpage'] );
 		$this->set_path_docroot( $project_ini['common']['path_docroot'] );
+		$this->set_selector_contents_main( $project_ini['common']['selector_contents_main'] );
 
 		$this->px->dbh()->fclose( $path_project_dir.'/project.ini' );
 
@@ -97,9 +98,10 @@ class pxplugin_asazuke_model_project{
 
 		#	基本情報
 		$project_ini_src = '';
-		// $project_ini_src .= 'name='.$this->get_project_name()."\n";
+
 		$project_ini_src .= 'path_startpage='.$this->get_path_startpage()."\n";
 		$project_ini_src .= 'path_docroot='.$this->get_path_docroot()."\n";
+		$project_ini_src .= 'selector_contents_main='.$this->get_selector_contents_main()."\n";
 
 		$project_ini_src .= ''."\n";
 
@@ -111,44 +113,10 @@ class pxplugin_asazuke_model_project{
 		return	true;
 	}//save_project()
 
-	/**
-	 * プロジェクトを削除する
-	 */
-	// public function destroy_project(){
-	// 	if( !strlen( $this->get_project_id() ) ){ return false; }
-
-	// 	$path_project_dir = $this->get_project_home_dir();
-	// 	if( !is_dir( $path_project_dir ) ){
-	// 		return false;
-	// 	}
-	// 	$result = $this->px->dbh()->rm( $path_project_dir );
-	// 	if( !$result ){
-	// 		return	false;
-	// 	}
-
-	// 	return	true;
-	// }//destroy_project()
-
 
 	/**
-	 * プロジェクトIDの入出力
+	 * スタートページURLの入出力
 	 */
-	// public function get_project_id(){
-	// 	return	$this->info_project_id;
-	// }
-
-	// #--------------------------------------
-	// #	プロジェクト名の入出力
-	// public function set_project_name( $name ){
-	// 	$this->info_project_name = $name;
-	// 	return	true;
-	// }
-	// public function get_project_name(){
-	// 	return	$this->info_project_name;
-	// }
-
-	#--------------------------------------
-	#	スタートページURLの入出力
 	public function set_path_startpage( $path_startpage ){
 		$this->info_path_startpage = $path_startpage;
 		return	true;
@@ -157,8 +125,9 @@ class pxplugin_asazuke_model_project{
 		return	$this->info_path_startpage;
 	}
 
-	#--------------------------------------
-	#	ドキュメントルートURLの入出力
+	/**
+	 * ドキュメントルートURLの入出力
+	 */
 	public function set_path_docroot( $path_docroot ){
 		$this->info_path_docroot = $path_docroot;
 		return	true;
@@ -167,50 +136,18 @@ class pxplugin_asazuke_model_project{
 		return	$this->info_path_docroot;
 	}
 
-
-	// #--------------------------------------
-	// #	プログラムIDの一覧を得る
-	// public function get_program_list(){
-	// 	$program_dir = $this->pcconf->get_program_home_dir();
-	// 	if( !is_dir( $program_dir ) ){ return array(); }
-
-	// 	$itemlist = $this->px->dbh()->ls( $program_dir );
-	// 	if( !is_array( $itemlist ) ){ return array(); }
-
-	// 	$RTN = array();
-	// 	if( !is_array( $itemlist ) ){ $itemlist = array(); }
-	// 	foreach( $itemlist as $filename ){
-	// 		if( $filename == '.' || $filename == '..' ){ continue; }
-	// 		if( is_dir( $program_dir.'/'.$filename ) ){
-	// 			array_push( $RTN , $filename );
-	// 		}
-	// 	}
-
-	// 	sort($RTN);
-
-	// 	return	$RTN;
-	// }
-
-
-
-
 	/**
-	 * 新しいプロジェクトを作成する
+	 * セレクタ: コンテンツエリア の入出力
 	 */
-	// public function create_new_project( $project_id ){
-	// 	$this->info_project_id = $project_id;
-	// 	$path_project_dir = $this->get_project_home_dir();
-	// 	if( is_dir( $path_project_dir ) ){
-	// 		#	既にディレクトリが存在していたら、ダメ。
-	// 		return	false;
-	// 	}
-	// 	if( !$this->px->dbh()->mkdir_all( $path_project_dir ) ){
-	// 		#	ディレクトリの作成に失敗したら、ダメ。
-	// 		return	false;
-	// 	}
-	// 	return	true;
+	public function set_selector_contents_main( $selector_contents_main ){
+		$this->info_selector_contents_main = $selector_contents_main;
+		return	true;
+	}
+	public function get_selector_contents_main(){
+		return	$this->info_selector_contents_main;
+	}
 
-	// }
+
 
 	/**
 	 * プロジェクトのホームディレクトリを取得する

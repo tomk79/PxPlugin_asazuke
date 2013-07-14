@@ -7,12 +7,14 @@
 class pxplugin_asazuke_operator_contents{
 
 	private $px;
+	private $obj_proj;
 
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct( $px ){
+	public function __construct( $px, $obj_proj ){
 		$this->px = $px;
+		$this->obj_proj = $obj_proj;
 	}
 
 	/**
@@ -36,8 +38,12 @@ class pxplugin_asazuke_operator_contents{
 
 		// メインコンテンツを取得
 		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
-		$content = $domParser->find('#content');
-		$content_src .= $content[0]['innerHTML'];
+		$content = $domParser->find( $this->obj_proj->get_selector_contents_main() );
+		foreach( $content as $row ){
+			$content_src .= $row['innerHTML']."\n";
+		}
+
+		$content_src = preg_replace( '/\r\n|\r|\n/si', "\r\n", $content_src );
 
 		$result = $this->px->dbh()->file_overwrite( $fullpath_save_to, $content_src );
 		return $result;

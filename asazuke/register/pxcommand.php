@@ -37,7 +37,7 @@ class pxplugin_asazuke_register_pxcommand extends px_bases_pxcommand{
 		//     'crawlctrl'=>'crawlctrl',
 		// );
 
-		# PicklesCrawlerに付与するホームディレクトリを設定。
+		# ASAZUKEに付与するホームディレクトリを設定。
 		# RAMデータディレクトリ内に専用の領域を付与している。
 		if( !$pcconf->set_home_dir( $this->px->get_conf('paths.px_dir').'_sys/ramdata/plugins/asazuke' ) ){
 			$src = '';
@@ -51,7 +51,7 @@ class pxplugin_asazuke_register_pxcommand extends px_bases_pxcommand{
 
 		$cmd = $this->pxcommand_name;
 		array_shift($cmd);// "plugins" をトル
-		array_shift($cmd);// "PicklesCrawler" をトル
+		array_shift($cmd);// "asazuke" をトル
 
 		if( $cmd[0] == 'run' ){
 			// クロールを実行する
