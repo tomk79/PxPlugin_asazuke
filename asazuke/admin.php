@@ -154,7 +154,7 @@ class pxplugin_asazuke_admin{
 	 */
 	private function page_start(){
 
-		$project_model = &$this->pcconf->factory_model_project();
+		$project_model = $this->pcconf->factory_model_project();
 		$project_model->load_project();
 
 		// $this->local_sitemap[ ':'.implode('.',$this->cmd) ] = array( 'title'=>'プロジェクト『'.htmlspecialchars( $project_model->get_project_name() ).'』の詳細情報' );
@@ -181,11 +181,86 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	<p class="center"><input type="submit" value="プロジェクト情報を編集する" /></p>'."\n";
 		$RTN .= '</form>'."\n";
 
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':execute_program' ) ).'" method="post">'."\n";
+		#======================================
+		$program_model = $project_model->factory_program();
+
+		$RTN .= '<div class="unit cols">'."\n";
+		$RTN .= '	<div class="cols-col cols-2of3"><div class="cols-pad">'."\n";
+
+		$RTN .= '<p>'."\n";
+		$RTN .= '	プロジェクトを実行します。設定を確認してください。<br />'."\n";
+		$RTN .= '</p>'."\n";
+
+		if( $this->px->dbh()->is_unix() ){
+			#--------------------------------------
+			#	UNIXの場合→コマンドラインでの実行方法を案内。
+			$RTN .= $this->mk_hx('このプログラムの実行')."\n";
+			$RTN .= '<p>'."\n";
+			$RTN .= '	この操作は、次のコマンドラインからも実行することができます。<br />'."\n";
+			$RTN .= '</p>'."\n";
+			$RTN .= '<div class="unit">'."\n";
+			$RTN .= '	<div class="code"><pre><code>'.htmlspecialchars( ''.escapeshellcmd( $this->pcconf->get_path_command('php') ).' '.escapeshellarg( realpath( './_px_execute.php' ) ).' '.escapeshellarg( 'PX=plugins.asazuke.run&output_encoding='.urlencode('UTF-8').'' ) ).'</code></pre></div>'."\n";
+			$RTN .= '</div>'."\n";
+			$RTN .= ''."\n";
+
+			$RTN .= '<p>'."\n";
+			$RTN .= '	このコマンドを、ウェブから起動するには、次の「書き換えを実行する」ボタンをクリックします。<br />'."\n";
+			$RTN .= '</p>'."\n";
+		}else{
+			#--------------------------------------
+			#	Windowsの場合→コマンドラインで実行できない・・・。
+			$RTN .= $this->mk_hx('このプログラムの実行')."\n";
+			$RTN .= '<p>'."\n";
+			$RTN .= '	プログラムを実行するには、次の「書き換えを実行する」ボタンをクリックしてください。<br />'."\n";
+			$RTN .= '</p>'."\n";
+		}
+
+		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':run' ) ).'" method="post" target="_blank">'."\n";
 		$RTN .= '	<p class="center"><input type="submit" value="書き換えを実行する" /></p>'."\n";
 		$RTN .= '</form>'."\n";
 
-		$RTN .= ''."\n";
+
+		$RTN .= '	</div></div>'."\n";
+		$RTN .= '	<div class="cols-col cols-1of3 cols-last"><div class="cols-pad">'."\n";
+
+		$RTN .= $this->mk_hx('書き出したデータのダウンロード')."\n";
+		$is_zip = array();
+		if( class_exists( 'ZipArchive' ) ){
+			$is_zip['zip'] = true;
+		}
+		if( strlen( $this->pcconf->get_path_command('tar') ) ){
+			$is_zip['tgz'] = true;
+		}
+		if( count( $is_zip ) ){
+			#	tarコマンドが使えたら(UNIXのみ)
+			$RTN .= '<p>'."\n";
+			$RTN .= '	書き出したデータを';
+			$RTN .= implode( ', ' , array_keys( $is_zip ) );
+			$RTN .= '形式でダウンロードすることができます。';
+			$RTN .= '<br />'."\n";
+			$RTN .= '</p>'."\n";
+			$RTN .= '<ul class="none">'."\n";
+			foreach( array_keys( $is_zip ) as $type ){
+				$RTN .= '	<li>'.$this->mk_link( ':execute_program'.'&mode=download&ext='.strtolower($type) , array('label'=>strtoupper($type).'形式でダウンロード','active'=>false,'style'=>'inside') ).'</li>'."\n";
+			}
+			$RTN .= '</ul>'."\n";
+		}else{
+			#	圧縮解凍系機能が利用できなかったら
+			$RTN .= '<p>'."\n";
+			$RTN .= '	<span class="error">tarコマンドのパスがセットされていません</span>。<code>$conf->path_commands[\'tar\']</code>に、tarコマンドのパスを設定してください。<br />'."\n";
+			$RTN .= '</p>'."\n";
+		}
+
+		$RTN .= $this->mk_hx('書き出したデータの削除')."\n";
+		$RTN .= '<p>'."\n";
+		$RTN .= '	書き出したデータを削除します。<br />'."\n";
+		$RTN .= '</p>'."\n";
+		$RTN .= '<ul class="none">'."\n";
+		$RTN .= '	<li>'.$this->mk_link( ':delete_program_content' , array('label'=>'削除する','active'=>false,'style'=>'inside') ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= '	</div></div>'."\n";
+		$RTN .= '</div>'."\n";
 
 		return	$RTN;
 	}
@@ -223,7 +298,7 @@ class pxplugin_asazuke_admin{
 		$RTN = ''."\n";
 
 		$RTN .= '<p>'."\n";
-		$RTN .= '	プロジェクトの情報を入力して、「確認する」ボタンをクリックしてください。<span class="form_elements-must">必須</span>印の項目は必ず入力してください。<br />'."\n";
+		$RTN .= '	プロジェクトの情報を入力して、「確認する」ボタンをクリックしてください。<span class="must">必須</span>印の項目は必ず入力してください。<br />'."\n";
 		$RTN .= '</p>'."\n";
 		if( is_array( $error ) && count( $error ) ){
 			$RTN .= '<p class="error">'."\n";
@@ -233,7 +308,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '<form action="'.htmlspecialchars( $this->href() ).'" method="post">'."\n";
 		$RTN .= '<table style="width:100%;" class="form_elements">'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス <span class="form_elements-must">必須</span></div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス <span class="must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
 		$RTN .= '			<div><input type="text" name="path_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['path_docroot'] ) ){
@@ -242,7 +317,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>スタートページのパス <span class="form_elements-must">必須</span></div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>スタートページのパス <span class="must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
 		$RTN .= '			<div><input type="text" name="path_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['path_stargpage'] ) ){
@@ -251,7 +326,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>コンテンツエリアのセレクタ <span class="form_elements-must">必須</span></div></th>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>コンテンツエリアのセレクタ <span class="must">必須</span></div></th>'."\n";
 		$RTN .= '		<td style="width:70%;">'."\n";
 		$RTN .= '			<div><input type="text" name="selector_contents_main" value="'.htmlspecialchars( $this->px->req()->get_param('selector_contents_main') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['selector_contents_main'] ) ){
@@ -426,85 +501,7 @@ class pxplugin_asazuke_admin{
 
 		$exec_page_id = ':run';
 
-		$RTN = ''."\n";
-		$RTN .= '<div class="unit cols">'."\n";
-		$RTN .= '	<div class="cols-col cols-2of3"><div class="cols-pad">'."\n";
-
-		$RTN .= '<p>'."\n";
-		$RTN .= '	プロジェクトを実行します。設定を確認してください。<br />'."\n";
-		$RTN .= '</p>'."\n";
-
-		if( $this->px->dbh()->is_unix() ){
-			#--------------------------------------
-			#	UNIXの場合→コマンドラインでの実行方法を案内。
-			$RTN .= $this->mk_hx('このプログラムの実行')."\n";
-			$RTN .= '<p>'."\n";
-			$RTN .= '	この操作は、次のコマンドラインからも実行することができます。<br />'."\n";
-			$RTN .= '</p>'."\n";
-			$RTN .= '<blockquote><div>';
-			$RTN .= htmlspecialchars( ''.escapeshellcmd( $this->pcconf->get_path_command('php') ).' '.escapeshellarg( realpath( './_px_execute.php' ) ).' '.escapeshellarg( 'PX=plugins.asazuke.run.'.$this->cmd[1].'.'.$this->cmd[2].'&output_encoding='.urlencode('UTF-8').'' ) );
-			$RTN .= '</div></blockquote>'."\n";
-
-			$RTN .= '<p>'."\n";
-			$RTN .= '	このコマンドを、ウェブから起動するには、次の「実行する」ボタンをクリックします。<br />'."\n";
-			$RTN .= '</p>'."\n";
-		}else{
-			#--------------------------------------
-			#	Windowsの場合→コマンドラインで実行できない・・・。
-			$RTN .= $this->mk_hx('このプログラムの実行')."\n";
-			$RTN .= '<p>'."\n";
-			$RTN .= '	プログラムを実行するには、次の「実行する」ボタンをクリックしてください。<br />'."\n";
-			$RTN .= '</p>'."\n";
-		}
-
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( $exec_page_id ) ).'" method="post" target="_blank">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="実行する" /></p>'."\n";
-		$RTN .= '</form>'."\n";
-
-
-		$RTN .= '	</div></div>'."\n";
-		$RTN .= '	<div class="cols-col cols-1of3 cols-last"><div class="cols-pad">'."\n";
-
-		$RTN .= $this->mk_hx('書き出したデータのダウンロード')."\n";
-		$is_zip = array();
-		if( class_exists( 'ZipArchive' ) ){
-			$is_zip['zip'] = true;
-		}
-		if( strlen( $this->pcconf->get_path_command('tar') ) ){
-			$is_zip['tgz'] = true;
-		}
-		if( count( $is_zip ) ){
-			#	tarコマンドが使えたら(UNIXのみ)
-			$RTN .= '<p>'."\n";
-			$RTN .= '	書き出したデータを';
-			$RTN .= implode( ', ' , array_keys( $is_zip ) );
-			$RTN .= '形式でダウンロードすることができます。';
-			$RTN .= '<br />'."\n";
-			$RTN .= '</p>'."\n";
-			$RTN .= '<ul class="none">'."\n";
-			foreach( array_keys( $is_zip ) as $type ){
-				$RTN .= '	<li>'.$this->mk_link( ':'.implode('.', $this->cmd).'&mode=download&ext='.strtolower($type) , array('label'=>strtoupper($type).'形式でダウンロード','active'=>false,'style'=>'inside') ).'</li>'."\n";
-			}
-			$RTN .= '</ul>'."\n";
-		}else{
-			#	圧縮解凍系機能が利用できなかったら
-			$RTN .= '<p>'."\n";
-			$RTN .= '	<span class="error">tarコマンドのパスがセットされていません</span>。<code>$conf->path_commands[\'tar\']</code>に、tarコマンドのパスを設定してください。<br />'."\n";
-			$RTN .= '</p>'."\n";
-		}
-
-		$RTN .= $this->mk_hx('書き出したデータの削除')."\n";
-		$RTN .= '<p>'."\n";
-		$RTN .= '	書き出したデータを削除します。<br />'."\n";
-		$RTN .= '</p>'."\n";
-		$RTN .= '<ul class="none">'."\n";
-		$RTN .= '	<li>'.$this->mk_link( ':delete_program_content' , array('label'=>'削除する','active'=>false,'style'=>'inside') ).'</li>'."\n";
-		$RTN .= '</ul>'."\n";
-
-		$RTN .= '	</div></div>'."\n";
-		$RTN .= '</div>'."\n";
-
-		$RTN .= '<hr />'."\n";
+		$RTN = '';
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':' ) ).'" method="post">'."\n";
 		$RTN .= '	<p class="center"><input type="submit" value="戻る" /></p>'."\n";
 		$RTN .= '	'.$this->mk_form_defvalues( ':detail.'.$this->cmd[1] )."\n";
@@ -547,7 +544,7 @@ class pxplugin_asazuke_admin{
 				if( !strlen( $end_datetime ) ){
 					$end_datetime = date('Y-m-d H:i:s');
 				}
-				$dl_filename = $this->cmd[1].'_'.date('Ymd_Hi',$this->px->dbh()->datetime2int($end_datetime)).'_'.$this->cmd[2].'.tgz';
+				$dl_filename = 'PxFW_asazuke_'.date('Ymd_Hi',$this->px->dbh()->datetime2int($end_datetime)).'.tgz';
 			}
 			$download_zipto_path = $download_zipto_path.'.tgz';
 
@@ -574,7 +571,7 @@ class pxplugin_asazuke_admin{
 				if( !strlen( $end_datetime ) ){
 					$end_datetime = date('Y-m-d H:i:s');
 				}
-				$dl_filename = $this->cmd[1].'_'.date('Ymd_Hi',$this->px->dbh()->datetime2int($end_datetime)).'_'.$this->cmd[2].'.zip';
+				$dl_filename = 'PxFW_asazuke_'.date('Ymd_Hi',$this->px->dbh()->datetime2int($end_datetime)).'.zip';
 			}
 			$download_zipto_path = $download_zipto_path.'.zip';
 
@@ -620,7 +617,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '</form>'."\n";
 		$RTN .= '</div>'."\n";
 		$RTN .= '<hr />'."\n";
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':execute_program' ) ).'" method="post">'."\n";
+		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':' ) ).'" method="post">'."\n";
 		$RTN .= '	<p class="center"><input type="submit" value="キャンセル" /></p>'."\n";
 		$RTN .= '</form>'."\n";
 		return	$RTN;
@@ -652,7 +649,7 @@ class pxplugin_asazuke_admin{
 	private function page_delete_program_content_thanks(){
 		$RTN = ''."\n";
 		$RTN .= '<p>プログラムコンテンツの削除処理を完了しました。</p>';
-		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':execute_program' ) ).'" method="post">'."\n";
+		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':' ) ).'" method="post">'."\n";
 		$RTN .= '	<input type="submit" value="戻る" />'."\n";
 		$RTN .= '</form>'."\n";
 		return	$RTN;
