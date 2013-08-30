@@ -20,13 +20,13 @@ class pxplugin_asazuke_operator_sitemap{
 	/**
 	 * ファクトリ：DOMパーサー
 	 */
-	private function &factory_dom_parser($path){
+	private function &factory_dom_parser($path, $type = 'path'){
 		$className = $this->px->load_px_plugin_class( '/asazuke/resources/PxXMLDomParser.php' );
 		if( !$className ){
 			$this->error_log( 'DOMパーサーのロードに失敗しました。' , __FILE__ , __LINE__ );
 			return	$this->exit_process();
 		}
-		$obj = new $className( $path , 'path' );
+		$obj = new $className( $path , $type );
 		return	$obj;
 	}
 
@@ -37,6 +37,7 @@ class pxplugin_asazuke_operator_sitemap{
 		$row_info = array();
 		$row_info['path'] = preg_replace('/\/index\.html$/s', '/', $path);
 		$row_info['title'] = $this->get_page_title($fullpath_savetmpfile_to);
+		$row_info['logical_path'] = $this->get_page_logical_path($path, $fullpath_savetmpfile_to);
 		$row_info['list_flg'] = 1;
 
 		$this->save_sitemap_row( $row_info );
@@ -52,6 +53,29 @@ class pxplugin_asazuke_operator_sitemap{
 		return htmlspecialchars_decode($title[0]['innerHTML']);
 	}
 
+	/**
+	 * パンくず情報を抜き出す
+	 */
+	private function get_page_logical_path($path, $fullpath_savetmpfile_to){
+		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
+		$breadcrumb = $domParser->find('.breadcrumb');
+		$domParser = $this->factory_dom_parser($breadcrumb[0]['innerHTML'], 'bin');
+		$links = $domParser->find('a');
+		$paths = array();
+		foreach($links as $link){
+			$href = $link['attributes']['href'];
+			if( !preg_match('/^\//', $href) ){
+				$href = $this->px->dbh()->get_realpath(dirname($path).'/'.$href);
+			}
+			$href = preg_replace('/\/index\.html((?:\?|\#).*)?$/', '/$1', $href);
+			if( $href == '/' ){
+				// トップページは追加しない
+				continue;
+			}
+			array_push( $paths, $href );
+		}
+		return implode('>', $paths);
+	}
 
 	/**
 	 * サイトマップ行を書き出す

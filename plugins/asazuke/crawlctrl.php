@@ -84,18 +84,18 @@ class pxplugin_asazuke_crawlctrl{
 	}
 
 
-	/**
-	 * ファクトリ：HTMLメタ情報抽出オブジェクト
-	 */
-	private function &factory_parsehtmlmetainfo(){
-		$className = $this->px->load_px_plugin_class( '/asazuke/resources/parsehtmlmetainfo.php' );
-		if( !$className ){
-			$this->error_log( 'HTMLメタ情報抽出オブジェクトのロードに失敗しました。' , __FILE__ , __LINE__ );
-			return	$this->exit_process();
-		}
-		$obj = new $className();
-		return	$obj;
-	}
+	// /**
+	//  * ファクトリ：HTMLメタ情報抽出オブジェクト
+	//  */
+	// private function &factory_parsehtmlmetainfo(){
+	// 	$className = $this->px->load_px_plugin_class( '/asazuke/resources/parsehtmlmetainfo.php' );
+	// 	if( !$className ){
+	// 		$this->error_log( 'HTMLメタ情報抽出オブジェクトのロードに失敗しました。' , __FILE__ , __LINE__ );
+	// 		return	$this->exit_process();
+	// 	}
+	// 	$obj = new $className();
+	// 	return	$obj;
+	// }
 
 
 
@@ -200,12 +200,11 @@ class pxplugin_asazuke_crawlctrl{
 		$this->save_executed_url_row(
 			array(
 				'url'=>'URL' ,
-				'title'=>'タイトルタグ' ,
-				'description'=>'メタタグ(description)' ,
-				'keywords'=>'メタタグ(keywords)' ,
+				// 'title'=>'タイトルタグ' ,
+				// 'description'=>'メタタグ(description)' ,
+				// 'keywords'=>'メタタグ(keywords)' ,
 				'save_to'=>'保存先のパス' ,
 				'time'=>'アクセス日時' ,
-				'object_error'=>'通信エラー' ,
 				'crawl_error'=>'クロールエラー' ,
 			)
 		);
@@ -249,7 +248,7 @@ class pxplugin_asazuke_crawlctrl{
 				}
 
 				$this->msg( '-----' );
-				$this->msg( 'Downloading ['.$url.']...' );
+				$this->msg( 'Executing ['.$url.']...' );
 				$this->touch_lockfile();//ロックファイルを更新
 
 				preg_match( '/^([a-z0-9]+)\:\/\/(.+?)(\/.*)$/i' , $url , $url_info );
@@ -288,9 +287,13 @@ class pxplugin_asazuke_crawlctrl{
 
 				clearstatcache();
 
+				// オペレータを準備
+				$obj_contents_operator = $this->factory_contents_operator();
+				$obj_sitemap_operator = $this->factory_sitemap_operator();
+
 				// ----------
 				// スクレイピングしてサイトマップを追記
-				$this->factory_sitemap_operator()->scrape($url, $fullpath_savetmpfile_to);
+				$obj_sitemap_operator->scrape($url, $fullpath_savetmpfile_to);
 				// ----------
 
 				#--------------------------------------
@@ -320,7 +323,7 @@ class pxplugin_asazuke_crawlctrl{
 
 					clearstatcache();
 
-					if( !$this->factory_contents_operator()->scrape( $fullpath_savetmpfile_to, $fullpath_save_to ) ){
+					if( !$obj_contents_operator->scrape( $fullpath_savetmpfile_to, $fullpath_save_to ) ){
 						$this->error_log( 'コンテンツのスクレイピングに失敗しました。' , __FILE__ , __LINE__ );
 						$program_model->crawl_error( 'FAILD to scraping file; ['.$fullpath_save_to.']' , $url , $fullpath_save_to );
 					}
@@ -346,17 +349,17 @@ class pxplugin_asazuke_crawlctrl{
 				// #	サイトマップにページを追記
 				// $this->add_page_to_sitemap( $url );
 
-				#	HTMLのメタ情報を抽出する
-				$html_meta_info = array();
-				$obj_parsehtmlmetainfo = &$this->factory_parsehtmlmetainfo();
-				$obj_parsehtmlmetainfo->execute( $fullpath_save_to );
-				$html_meta_info = $obj_parsehtmlmetainfo->get_metadata();
-				unset( $obj_parsehtmlmetainfo );
+				// #	HTMLのメタ情報を抽出する
+				// $html_meta_info = array();
+				// $obj_parsehtmlmetainfo = &$this->factory_parsehtmlmetainfo();
+				// $obj_parsehtmlmetainfo->execute( $fullpath_save_to );
+				// $html_meta_info = $obj_parsehtmlmetainfo->get_metadata();
+				// unset( $obj_parsehtmlmetainfo );
 
 				#--------------------------------------
 				#	画面にメッセージを出力
-				$this->msg( 'Content-type=text/html' );
-				$this->msg( 'title: ['.$html_meta_info['title'].']' );
+				// $this->msg( 'Content-type=text/html' );
+				// $this->msg( 'title: ['.$html_meta_info['title'].']' );
 				// $this->msg( 'description: ['.$html_meta_info['description'].']' );
 				// $this->msg( 'keywords: ['.$html_meta_info['keywords'].']' );
 				#	/ 画面にメッセージを出力
@@ -373,9 +376,9 @@ class pxplugin_asazuke_crawlctrl{
 				$this->save_executed_url_row(
 					array(
 						'url'=>$url ,
-						'title'=>$html_meta_info['title'] ,
-						'description'=>$html_meta_info['description'] ,
-						'keywords'=>$html_meta_info['keywords'] ,
+						// 'title'=>$html_meta_info['title'] ,
+						// 'description'=>$html_meta_info['description'] ,
+						// 'keywords'=>$html_meta_info['keywords'] ,
 						'save_to'=>$path_save_to ,
 						'time'=>date('Y/m/d H:i:s') ,
 						'crawl_error'=>$tmp_crawlerror ,
@@ -577,8 +580,8 @@ class pxplugin_asazuke_crawlctrl{
 
 		$csv_line = $this->px->dbh()->mk_csv( array( $array_csv_line ) , array('charset'=>$csv_charset) );
 
-		error_log( $csv_line , 3 , $path_dir_download_to.'/__LOGS__/download_list.csv' );
-		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/download_list.csv' );
+		error_log( $csv_line , 3 , $path_dir_download_to.'/__LOGS__/execute_list.csv' );
+		$this->px->dbh()->chmod( $path_dir_download_to.'/__LOGS__/execute_list.csv' );
 
 		return	true;
 	}//save_executed_url_row();
