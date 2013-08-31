@@ -9,6 +9,7 @@ class pxplugin_asazuke_operator_contents{
 	private $px;
 	private $obj_proj;
 	private $path = null;
+	private $report = array();
 
 	/**
 	 * コンストラクタ
@@ -29,6 +30,13 @@ class pxplugin_asazuke_operator_contents{
 		}
 		$obj = new $className( $path, $type );
 		return	$obj;
+	}
+
+	/**
+	 * 結果を受け取る
+	 */
+	public function get_result(){
+		return $this->report;
 	}
 
 	/**
@@ -139,6 +147,11 @@ class pxplugin_asazuke_operator_contents{
 		}
 		if( $this->obj_proj->is_ignore_common_resources( $href ) ){
 			// 除外リソースなら削除する
+			// 報告
+			if( !is_array($this->report['ignore_common_resources']) ){
+				$this->report['ignore_common_resources'] = array();
+			}
+			array_push( $this->report['ignore_common_resources'], $this->obj_proj->last_matched_ignore_common_resources() );
 			return '';
 		}
 		return $dom['outerHTML'];
@@ -160,6 +173,9 @@ class pxplugin_asazuke_operator_contents{
 				continue;
 			}
 			$src .= $this->src_standard_replacement( $tmpDOM[$ruleRow['index']]['innerHTML'] );
+
+			// 報告
+			$this->report['main_contents:pattern'] = $ruleRow['name'];
 			break;
 		}
 		return $src;
@@ -184,6 +200,12 @@ class pxplugin_asazuke_operator_contents{
 			$src .= $this->src_standard_replacement( $tmpDOM[$ruleRow['index']]['innerHTML'] )."\n";
 			$src .= '<'.'?php $px->theme()->send_content(ob_get_clean(), '.t::data2text( $ruleRow['cabinet_name'] ).'); ?'.'>'."\n";
 			$src .= "\n";
+
+			// 報告
+			if( !is_array($this->report['sub_contents:pattern']) ){
+				$this->report['sub_contents:pattern'] = array();
+			}
+			array_push( $this->report['sub_contents:pattern'], $ruleRow['name'] );
 		}
 		return $src;
 	}
@@ -205,6 +227,12 @@ class pxplugin_asazuke_operator_contents{
 		foreach( $replaceRules as $ruleRow ){
 			if( preg_match($ruleRow['preg_pattern'], $str) ){
 				$str = preg_replace($ruleRow['preg_pattern'], $ruleRow['replace_to'], $str);
+
+				// 報告
+				if( !is_array($this->report['replace_strings']) ){
+					$this->report['replace_strings'] = array();
+				}
+				array_push( $this->report['replace_strings'], $ruleRow['name'] );
 			}
 		}
 		return $str;

@@ -203,16 +203,23 @@ class pxplugin_asazuke_model_project{
 	public function get_ignore_common_resources(){ return $this->info_ignore_common_resources; }
 	public function set_ignore_common_resources( $ary ){ $this->info_ignore_common_resources = $ary; return true; }
 	public function is_ignore_common_resources($path){
+		$this->matched_ignore_common_resources = null;
 		$rules = $this->get_ignore_common_resources();
 		foreach( $rules as $rule ){
 			$preg_pattern = preg_quote($rule['path'], '/');
 			$preg_pattern = preg_replace('/'.preg_quote('\*','/').'/s', '(?:.*?)', $preg_pattern);
 			if( preg_match( '/^'.$preg_pattern.'$/s', $path ) ){
+				// 報告
+				$this->matched_ignore_common_resources = $rule['name'];
 				return true;
 			}
 		}
 		return false;
 	}
+	public function last_matched_ignore_common_resources(){
+		return $this->matched_ignore_common_resources;
+	}
+
 
 
 	/**

@@ -28,7 +28,7 @@ class pxplugin_asazuke_config{
 		#	クロール結果を管理画面からダウンロードするときに、
 		#	ファイル名にクロール日時を含めるか否か。
 
-	private $conf_download_list_csv_charset = 'Shift_JIS';
+	private $conf_download_list_csv_charset = 'SJIS-win';
 		#	ダウンロードリストCSVの文字コード。
 		#	null を指定すると、mb_internal_encoding() になる。
 
@@ -43,8 +43,8 @@ class pxplugin_asazuke_config{
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct( &$px ){
-		$this->px = &$px;
+	public function __construct( $px ){
+		$this->px = $px;
 	}
 
 	/**

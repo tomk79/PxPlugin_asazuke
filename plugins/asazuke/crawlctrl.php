@@ -184,13 +184,13 @@ class pxplugin_asazuke_crawlctrl{
 		#	UTODO: 要項目見直し
 		$this->save_executed_url_row(
 			array(
-				'url'=>'URL' ,
-				// 'title'=>'タイトルタグ' ,
-				// 'description'=>'メタタグ(description)' ,
-				// 'keywords'=>'メタタグ(keywords)' ,
-				'save_to'=>'保存先のパス' ,
-				'time'=>'アクセス日時' ,
-				'crawl_error'=>'クロールエラー' ,
+				'url'=>'* path' ,
+				'title'=>'タイトル' ,
+				'title:replace_pattern'=>'タイトル置換パターン名' ,
+				'main_contents:pattern'=>'メインコンテンツ抽出パターン名' ,
+				'sub_contents:pattern'=>'サブコンテンツ抽出パターン名' ,
+				'replace_strings'=>'置換パターン名' ,
+				'time'=>'日時' ,
 			)
 		);
 
@@ -330,23 +330,23 @@ class pxplugin_asazuke_crawlctrl{
 				#	/ 実際のあるべき場所へファイルを移動
 				#--------------------------------------
 
-
-				// #	サイトマップにページを追記
-				// $this->add_page_to_sitemap( $url );
-
-				// #	HTMLのメタ情報を抽出する
-				// $html_meta_info = array();
-				// $obj_parsehtmlmetainfo = &$this->factory_parsehtmlmetainfo();
-				// $obj_parsehtmlmetainfo->execute( $fullpath_save_to );
-				// $html_meta_info = $obj_parsehtmlmetainfo->get_metadata();
-				// unset( $obj_parsehtmlmetainfo );
+				// 結果報告を受け取る
+				$result_cont = $obj_contents_operator->get_result();
+				$result_sitemap = $obj_sitemap_operator->get_result();
+				// var_dump($result_cont);
+				// var_dump($result_sitemap);
 
 				#--------------------------------------
 				#	画面にメッセージを出力
-				// $this->msg( 'Content-type=text/html' );
-				// $this->msg( 'title: ['.$html_meta_info['title'].']' );
-				// $this->msg( 'description: ['.$html_meta_info['description'].']' );
-				// $this->msg( 'keywords: ['.$html_meta_info['keywords'].']' );
+				$this->msg( 'title: ['.$result_sitemap['title'].']' );
+				$this->msg( 'title:replace_pattern: ['.$result_sitemap['title:replace_pattern'].']' );
+				$this->msg( 'main contents pattern: ['.$result_cont['main_contents:pattern'].']' );
+				if( count($result_cont['sub_contents:pattern']) ){
+					$this->msg( 'sub contents pattern: ['.implode(', ', $result_cont['sub_contents:pattern']).']' );
+				}
+				if( count($result_cont['replace_strings']) ){
+					$this->msg( 'replace strings: ['.implode(', ', $result_cont['replace_strings']).']' );
+				}
 				#	/ 画面にメッセージを出力
 				#--------------------------------------
 
@@ -361,12 +361,12 @@ class pxplugin_asazuke_crawlctrl{
 				$this->save_executed_url_row(
 					array(
 						'url'=>$url ,
-						// 'title'=>$html_meta_info['title'] ,
-						// 'description'=>$html_meta_info['description'] ,
-						// 'keywords'=>$html_meta_info['keywords'] ,
-						'save_to'=>$path_save_to ,
+						'title'=>$result_sitemap['title'] ,
+						'title:replace_pattern'=>$result_sitemap['title:replace_pattern'] ,
+						'main_contents:pattern'=>$result_cont['main_contents:pattern'] ,
+						'sub_contents:pattern'=>implode(', ', $result_cont['sub_contents:pattern']) ,
+						'replace_strings'=>implode(', ', $result_cont['replace_strings']) ,
 						'time'=>date('Y/m/d H:i:s') ,
-						'crawl_error'=>$tmp_crawlerror ,
 					)
 				);
 				unset( $tmp_crawlerror );

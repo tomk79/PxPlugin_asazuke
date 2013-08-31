@@ -9,6 +9,7 @@ class pxplugin_asazuke_operator_sitemap{
 	private $px;
 	private $obj_proj;
 	private $path_sitemap_csv;
+	private $report = array();
 
 	/**
 	 * コンストラクタ
@@ -33,14 +34,25 @@ class pxplugin_asazuke_operator_sitemap{
 	}
 
 	/**
+	 * 結果を受け取る
+	 */
+	public function get_result(){
+		return $this->report;
+	}
+
+	/**
 	 * スクレイピングを実行する
 	 */
 	public function scrape($path, $fullpath_savetmpfile_to){
 		$row_info = array();
 		$row_info['path'] = preg_replace('/\/index\.html$/s', '/', $path);
 		$row_info['title'] = $this->get_page_title($fullpath_savetmpfile_to);
+		$row_info['keywords'] = $this->get_page_keywords($fullpath_savetmpfile_to);
+		$row_info['description'] = $this->get_page_description($fullpath_savetmpfile_to);
 		$row_info['logical_path'] = $this->get_page_logical_path($path, $fullpath_savetmpfile_to);
 		$row_info['list_flg'] = 1;
+
+		$this->report['title'] = $row_info['title'];
 
 		$this->save_sitemap_row( $row_info );
 		return true;
@@ -57,10 +69,31 @@ class pxplugin_asazuke_operator_sitemap{
 		foreach( $title_replace_rules as $ruleRow ){
 			if( preg_match($ruleRow['preg_pattern'], $title) ){
 				$title = preg_replace($ruleRow['preg_pattern'], $ruleRow['replace_to'], $title);
+				$this->report['title:replace_pattern'] = $ruleRow['name'];
 				break;
 			}
 		}
 		return $title;
+	}
+
+	/**
+	 * キーワード を取得
+	 */
+	private function get_page_keywords($path){
+		$domParser = $this->factory_dom_parser($path);
+		$meta = $domParser->find('meta[name=keywords]');
+		$rtn = htmlspecialchars_decode( $meta[0]['attributes']['content'] );
+		return $rtn;
+	}
+
+	/**
+	 * description を取得
+	 */
+	private function get_page_description($path){
+		$domParser = $this->factory_dom_parser($path);
+		$meta = $domParser->find('meta[name=description]');
+		$rtn = htmlspecialchars_decode( $meta[0]['attributes']['content'] );
+		return $rtn;
 	}
 
 	/**
