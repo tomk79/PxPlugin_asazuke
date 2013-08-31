@@ -208,6 +208,12 @@ class pxplugin_asazuke_admin{
 		test::var_dump( $project_model->get_replace_strings() );
 		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>除外共通リソース設定</div></th>'."\n";
+		ob_start();
+		test::var_dump( $project_model->get_ignore_common_resources() );
+		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
+		$RTN .= '	</tr>'."\n";
 
 		$RTN .= '</table>'."\n";
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_proj' ) ).'" method="post">'."\n";
@@ -456,10 +462,6 @@ class pxplugin_asazuke_admin{
 	 * 新規プロジェクト作成/編集：実行
 	 */
 	private function execute_edit_proj_execute(){
-		// if( !$this->user->save_t_lastaction() ){
-		// 	#	2重書き込み防止
-		// 	return $this->px->redirect( $this->href().'&mode=thanks' );
-		// }
 
 		$project_model = &$this->pcconf->factory_model_project();
 

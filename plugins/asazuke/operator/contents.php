@@ -8,6 +8,7 @@ class pxplugin_asazuke_operator_contents{
 
 	private $px;
 	private $obj_proj;
+	private $path = null;
 
 	/**
 	 * コンストラクタ
@@ -33,7 +34,9 @@ class pxplugin_asazuke_operator_contents{
 	/**
 	 * スクレイピングを実行する
 	 */
-	public function scrape($fullpath_savetmpfile_to , $fullpath_save_to){
+	public function scrape($path, $fullpath_savetmpfile_to , $fullpath_save_to){
+		$this->path = $path;
+
 		$content_src = '';
 
 		// ヘッドセクションのソースを取得
@@ -109,6 +112,14 @@ class pxplugin_asazuke_operator_contents{
 	 * callback: scriptタグを置き換える。
 	 */
 	public function callback_replace_dom_script( $dom , $num ){
+		$src = trim($dom['attributes']['src']);
+		if( !preg_match('/^\//', $src) ){
+			$src = $this->px->dbh()->get_realpath( dirname($this->path).'/'.$src );
+		}
+		if( $this->obj_proj->is_ignore_common_resources( $src ) ){
+			// 除外リソースなら削除する
+			return '';
+		}
 		return $dom['outerHTML'];
 	}//callback_replace_dom_script()
 	/**
@@ -121,6 +132,14 @@ class pxplugin_asazuke_operator_contents{
 				break;
 			default:
 				return '';
+		}
+		$href = trim($dom['attributes']['href']);
+		if( !preg_match('/^\//', $href) ){
+			$href = $this->px->dbh()->get_realpath( dirname($this->path).'/'.$href );
+		}
+		if( $this->obj_proj->is_ignore_common_resources( $href ) ){
+			// 除外リソースなら削除する
+			return '';
 		}
 		return $dom['outerHTML'];
 	}//callback_replace_dom_link()

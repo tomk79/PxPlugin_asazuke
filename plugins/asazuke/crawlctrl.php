@@ -84,21 +84,6 @@ class pxplugin_asazuke_crawlctrl{
 	}
 
 
-	// /**
-	//  * ファクトリ：HTMLメタ情報抽出オブジェクト
-	//  */
-	// private function &factory_parsehtmlmetainfo(){
-	// 	$className = $this->px->load_px_plugin_class( '/asazuke/resources/parsehtmlmetainfo.php' );
-	// 	if( !$className ){
-	// 		$this->error_log( 'HTMLメタ情報抽出オブジェクトのロードに失敗しました。' , __FILE__ , __LINE__ );
-	// 		return	$this->exit_process();
-	// 	}
-	// 	$obj = new $className();
-	// 	return	$obj;
-	// }
-
-
-
 
 	#########################################################################################################################################################
 
@@ -323,7 +308,7 @@ class pxplugin_asazuke_crawlctrl{
 
 					clearstatcache();
 
-					if( !$obj_contents_operator->scrape( $fullpath_savetmpfile_to, $fullpath_save_to ) ){
+					if( !$obj_contents_operator->scrape( $url, $fullpath_savetmpfile_to, $fullpath_save_to ) ){
 						$this->error_log( 'コンテンツのスクレイピングに失敗しました。' , __FILE__ , __LINE__ );
 						$program_model->crawl_error( 'FAILD to scraping file; ['.$fullpath_save_to.']' , $url , $fullpath_save_to );
 					}

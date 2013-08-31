@@ -18,6 +18,7 @@ class pxplugin_asazuke_model_project{
 	private $info_select_breadcrumb = array();
 	private $info_replace_title = array();
 	private $info_replace_strings = array();
+	private $info_ignore_common_resources = array();
 
 
 	/**
@@ -43,29 +44,6 @@ class pxplugin_asazuke_model_project{
 
 		return	$obj;
 	}
-
-	// /**
-	//  * 既存プロジェクトの一覧を開く
-	//  */
-	// public function get_project_list(){
-	// 	// ※プロジェクトは単一とする方針としたので、このメソッドは常に単一の値を返します。
-	// 	// 　将来的には不要なメソッドになります。
-	// 	$dir = $this->pcconf->get_home_dir().'/proj';
-
-	// 	$RTN = array();
-
-	// 	$project_ini = $this->load_ini( $dir.'/project.ini' );
-	// 	$MEMO = array();
-
-	// 	$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
-	// 	$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
-
-
-	// 	array_push( $RTN , $MEMO );
-	// 	unset( $MEMO );
-
-	// 	return	$RTN;
-	// }
 
 	/**
 	 * 既存のプロジェクト情報を開いて、メンバにセット。
@@ -167,7 +145,17 @@ class pxplugin_asazuke_model_project{
 			array_push($tmpAry, $tmpAryRow);
 		}
 
-		$this->set_replace_strings( $tmpAry );
+		#	ignore_common_resources
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/ignore_common_resources.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['path'] = $csvRow[1];
+			array_push($tmpAry, $tmpAryRow);
+		}
+
+		$this->set_ignore_common_resources( $tmpAry );
 		unset($tmpAry);
 
 		return	true;
@@ -208,6 +196,23 @@ class pxplugin_asazuke_model_project{
 	 */
 	public function get_replace_strings(){ return $this->info_replace_strings; }
 	public function set_replace_strings( $ary ){ $this->info_replace_strings = $ary; return true; }
+
+	/**
+	 * 除外共通リソース設定を読み込む
+	 */
+	public function get_ignore_common_resources(){ return $this->info_ignore_common_resources; }
+	public function set_ignore_common_resources( $ary ){ $this->info_ignore_common_resources = $ary; return true; }
+	public function is_ignore_common_resources($path){
+		$rules = $this->get_ignore_common_resources();
+		foreach( $rules as $rule ){
+			$preg_pattern = preg_quote($rule['path'], '/');
+			$preg_pattern = preg_replace('/'.preg_quote('\*','/').'/s', '(?:.*?)', $preg_pattern);
+			if( preg_match( '/^'.$preg_pattern.'$/s', $path ) ){
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 	/**
