@@ -37,17 +37,62 @@ class pxplugin_asazuke_operator_contents{
 		$content_src = '';
 
 		// メインコンテンツを取得
-		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
-		$content = $domParser->find( $this->obj_proj->get_selector_contents_main() );
-		foreach( $content as $row ){
-			$content_src .= $row['innerHTML']."\n";
-		}
+		$content_src .= $this->get_main_contents_src( $fullpath_savetmpfile_to );
+		$content_src .= "\n"."\n";
 
-		$content_src = preg_replace( '/\r\n|\r|\n/si', "\r\n", $content_src );
+		// サブコンテンツを取得
+		$content_src .= $this->get_sub_contents_src( $fullpath_savetmpfile_to );
+		$content_src .= "\n"."\n";
+
+		$content_src = preg_replace( '/\r\n|\r|\n/si', "\r\n", $content_src );//CRLFに変換
 
 		$result = $this->px->dbh()->file_overwrite( $fullpath_save_to, $content_src );
 		return $result;
 	}//scrape()
+
+
+
+	/**
+	 * メインコンテンツソースを取得する
+	 */
+	private function get_main_contents_src( $fullpath_savetmpfile_to ){
+		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
+		$selectRules = $this->obj_proj->get_select_cont_main();
+
+		$tmpDOM = null;
+		$src = '';
+		foreach( $selectRules as $ruleRow ){
+			$tmpDOM = $domParser->find( $ruleRow['selector'] );
+			if( is_null($tmpDOM[$ruleRow['index']]) ){
+				continue;
+			}
+			$src .= $tmpDOM[$ruleRow['index']]['innerHTML'];
+			break;
+		}
+		return $src;
+	}
+
+	/**
+	 * サブコンテンツソースを取得する
+	 */
+	private function get_sub_contents_src( $fullpath_savetmpfile_to ){
+		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
+		$selectRules = $this->obj_proj->get_select_cont_subs();
+
+		$tmpDOM = null;
+		$src = '';
+		foreach( $selectRules as $ruleRow ){
+			$tmpDOM = $domParser->find( $ruleRow['selector'] );
+			if( is_null($tmpDOM[$ruleRow['index']]) ){
+				continue;
+			}
+			$src .= '<'.'?php ob_start(); ?'.'>'."\n";
+			$src .= $tmpDOM[$ruleRow['index']]['innerHTML']."\n";
+			$src .= '<'.'?php $px->theme()->send_content(ob_get_clean(), '.t::data2text( $ruleRow['cabinet_name'] ).'); ?'.'>'."\n";
+			$src .= "\n";
+		}
+		return $src;
+	}
 
 }
 

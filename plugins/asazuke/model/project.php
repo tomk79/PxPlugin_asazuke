@@ -107,7 +107,8 @@ class pxplugin_asazuke_model_project{
 			$tmpAryRow = array();
 			$tmpAryRow['name'] = $csvRow[0];
 			$tmpAryRow['selector'] = $csvRow[1];
-			$tmpAryRow['cavinet_name'] = $csvRow[2];
+			$tmpAryRow['index'] = $csvRow[2];
+			$tmpAryRow['cabinet_name'] = $csvRow[3];
 			array_push($tmpAry, $tmpAryRow);
 		}
 
