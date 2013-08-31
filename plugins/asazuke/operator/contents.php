@@ -20,13 +20,13 @@ class pxplugin_asazuke_operator_contents{
 	/**
 	 * ファクトリ：DOMパーサー
 	 */
-	private function &factory_dom_parser($path){
+	private function &factory_dom_parser($path, $type = 'path'){
 		$className = $this->px->load_px_plugin_class( '/asazuke/resources/PxXMLDomParser.php' );
 		if( !$className ){
 			$this->error_log( 'DOMパーサーのロードに失敗しました。' , __FILE__ , __LINE__ );
 			return	$this->exit_process();
 		}
-		$obj = new $className( $path , 'path' );
+		$obj = new $className( $path, $type );
 		return	$obj;
 	}
 
@@ -35,6 +35,10 @@ class pxplugin_asazuke_operator_contents{
 	 */
 	public function scrape($fullpath_savetmpfile_to , $fullpath_save_to){
 		$content_src = '';
+
+		// ヘッドセクションのソースを取得
+		$content_src .= $this->get_header_src( $fullpath_savetmpfile_to );
+		$content_src .= "\n"."\n";
 
 		// メインコンテンツを取得
 		$content_src .= $this->get_main_contents_src( $fullpath_savetmpfile_to );
@@ -50,6 +54,76 @@ class pxplugin_asazuke_operator_contents{
 		return $result;
 	}//scrape()
 
+
+	/**
+	 * ヘッダー部分のソースを取得する
+	 */
+	private function get_header_src( $fullpath_savetmpfile_to ){
+		$selectRules = $this->obj_proj->get_select_cont_subs();
+
+		$tmpDOM = null;
+		$src = '';
+		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
+		$tmpDOM = $domParser->find( 'head' );
+		$header_src = $tmpDOM[0]['innerHTML'];
+
+		$domParser = $this->factory_dom_parser($header_src, 'bin');
+		// titleタグを削除
+		$domParser->select('title');
+		$domParser->replace( array( $this , 'callback_replace_dom_title' ) );
+		// metaタグを精査
+		$domParser->select('meta');
+		$domParser->replace( array( $this , 'callback_replace_dom_meta' ) );
+		// scriptタグを精査
+		$domParser->select('script');
+		$domParser->replace( array( $this , 'callback_replace_dom_script' ) );
+		// linkタグを精査
+		$domParser->select('link');
+		$domParser->replace( array( $this , 'callback_replace_dom_link' ) );
+
+		$header_src = $domParser->get_src();
+
+		$src .= '<'.'?php ob_start(); ?'.'>'."\n";
+		$src .= '<'.'?php /* ------ head section contents ------ */ ?'.'>'."\n";
+		$src .= $header_src."\n";
+		$src .= '<'.'?php $px->theme()->send_content(ob_get_clean(), '.t::data2text( 'head' ).'); ?'.'>'."\n";
+		$src .= "\n";
+
+		return $src;
+	}
+	/**
+	 * callback: titleタグを置き換える。
+	 */
+	public function callback_replace_dom_title( $dom , $num ){
+		// タイトルタグは削除
+		// サイトマップパースのプロセスで拾っているので捨ててよし。
+		return '';
+	}//callback_replace_dom_title()
+	/**
+	 * callback: metaタグを置き換える。
+	 */
+	public function callback_replace_dom_meta( $dom , $num ){
+		return '';
+	}//callback_replace_dom_meta()
+	/**
+	 * callback: scriptタグを置き換える。
+	 */
+	public function callback_replace_dom_script( $dom , $num ){
+		return $dom['outerHTML'];
+	}//callback_replace_dom_script()
+	/**
+	 * callback: linkタグを置き換える。
+	 */
+	public function callback_replace_dom_link( $dom , $num ){
+		$rel = trim(strtolower($dom['attributes']['rel']));
+		switch( $rel ){
+			case 'stylesheet':
+				break;
+			default:
+				return '';
+		}
+		return $dom['outerHTML'];
+	}//callback_replace_dom_link()
 
 
 	/**
