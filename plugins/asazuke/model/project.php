@@ -11,7 +11,6 @@ class pxplugin_asazuke_model_project{
 
 	private $info_path_startpage = null;
 	private $info_path_docroot = null;
-	private $info_selector_contents_main = '#content';
 
 	private $info_select_cont_main = array();
 	private $info_select_cont_subs = array();
@@ -60,7 +59,6 @@ class pxplugin_asazuke_model_project{
 
 	// 	$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
 	// 	$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
-	// 	$MEMO['selector_contents_main'] = $project_ini['common']['selector_contents_main'];
 
 
 	// 	array_push( $RTN , $MEMO );
@@ -83,7 +81,6 @@ class pxplugin_asazuke_model_project{
 
 		$this->set_path_startpage( $project_ini['common']['path_startpage'] );
 		$this->set_path_docroot( $project_ini['common']['path_docroot'] );
-		$this->set_selector_contents_main( $project_ini['common']['selector_contents_main'] );
 
 		$this->px->dbh()->fclose( $path_project_dir.'/project.ini' );
 
@@ -232,7 +229,6 @@ class pxplugin_asazuke_model_project{
 
 		$project_ini_src .= 'path_startpage='.$this->get_path_startpage()."\n";
 		$project_ini_src .= 'path_docroot='.$this->get_path_docroot()."\n";
-		$project_ini_src .= 'selector_contents_main='.$this->get_selector_contents_main()."\n";
 
 		$project_ini_src .= ''."\n";
 
@@ -266,18 +262,6 @@ class pxplugin_asazuke_model_project{
 	public function get_path_docroot(){
 		return	$this->info_path_docroot;
 	}
-
-	/**
-	 * セレクタ: コンテンツエリア の入出力
-	 */
-	public function set_selector_contents_main( $selector_contents_main ){
-		$this->info_selector_contents_main = $selector_contents_main;
-		return	true;
-	}
-	public function get_selector_contents_main(){
-		return	$this->info_selector_contents_main;
-	}
-
 
 
 	/**

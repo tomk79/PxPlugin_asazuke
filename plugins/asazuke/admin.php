@@ -173,10 +173,6 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>コンテンツエリアのセレクタ</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_selector_contents_main() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>メインコンテンツエリアのセレクタ</div></th>'."\n";
 		ob_start();
 		test::var_dump( $project_model->get_select_cont_main() );
@@ -324,7 +320,6 @@ class pxplugin_asazuke_admin{
 			$project_model->load_project();
 			$this->px->req()->set_param( 'path_stargpage' , $project_model->get_path_startpage() );
 			$this->px->req()->set_param( 'path_docroot' , $project_model->get_path_docroot() );
-			$this->px->req()->set_param( 'selector_contents_main' , $project_model->get_selector_contents_main() );
 		}
 		return	$this->page_edit_proj_input( $error );
 	}
@@ -362,15 +357,6 @@ class pxplugin_asazuke_admin{
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>コンテンツエリアのセレクタ <span class="must">必須</span></div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div><input type="text" name="selector_contents_main" value="'.htmlspecialchars( $this->px->req()->get_param('selector_contents_main') ).'" style="width:80%;" /></div>'."\n";
-		if( strlen( $error['selector_contents_main'] ) ){
-			$RTN .= '			<div class="error">'.$error['selector_contents_main'].'</div>'."\n";
-		}
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 		$RTN .= '	<div class="center"><input type="submit" value="確認する" /></div>'."\n";
 		$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
@@ -401,13 +387,6 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		<td style="width:70%;">'."\n";
 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'</div>'."\n";
 		$HIDDEN .= '<input type="hidden" name="path_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'" />';
-		$RTN .= '		</td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>コンテンツエリアのセレクタ</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;">'."\n";
-		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('selector_contents_main') ).'</div>'."\n";
-		$HIDDEN .= '<input type="hidden" name="selector_contents_main" value="'.htmlspecialchars( $this->px->req()->get_param('selector_contents_main') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
@@ -471,12 +450,6 @@ class pxplugin_asazuke_admin{
 			$RTN['path_stargpage'] = 'スタートページのパスのファイルが存在しません。';
 		}
 
-		if( !strlen( $this->px->req()->get_param('selector_contents_main') ) ){
-			$RTN['selector_contents_main'] = 'コンテンツエリアのセレクタは必須項目です。';
-		}elseif( preg_match( '/\r\n|\r|\n/' , $this->px->req()->get_param('selector_contents_main') ) ){
-			$RTN['selector_contents_main'] = 'コンテンツエリアのセレクタはに改行を含めることはできません。';
-		}
-
 		return	$RTN;
 	}
 	/**
@@ -495,7 +468,6 @@ class pxplugin_asazuke_admin{
 
 		$project_model->set_path_startpage( $this->px->req()->get_param('path_stargpage') );
 		$project_model->set_path_docroot( $this->px->req()->get_param('path_docroot') );
-		$project_model->set_selector_contents_main( $this->px->req()->get_param('selector_contents_main') );
 
 		#	出来上がったプロジェクトを保存
 		if( !$project_model->save_project() ){
