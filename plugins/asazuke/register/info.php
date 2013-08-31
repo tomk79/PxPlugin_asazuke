@@ -11,7 +11,7 @@ class pxplugin_asazuke_register_info{
 	 * @return string バージョン番号を示す文字列
 	 */
 	public function get_version(){
-		return '1.0.0b1-nb';
+		return '0.1.0a1-nb';
 	}
 
 }
