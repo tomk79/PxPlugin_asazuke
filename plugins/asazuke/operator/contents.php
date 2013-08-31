@@ -66,7 +66,7 @@ class pxplugin_asazuke_operator_contents{
 			if( is_null($tmpDOM[$ruleRow['index']]) ){
 				continue;
 			}
-			$src .= $tmpDOM[$ruleRow['index']]['innerHTML'];
+			$src .= $this->src_standard_replacement( $tmpDOM[$ruleRow['index']]['innerHTML'] );
 			break;
 		}
 		return $src;
@@ -87,11 +87,44 @@ class pxplugin_asazuke_operator_contents{
 				continue;
 			}
 			$src .= '<'.'?php ob_start(); ?'.'>'."\n";
-			$src .= $tmpDOM[$ruleRow['index']]['innerHTML']."\n";
+			$src .= '<'.'?php /* ------ sub contents '.t::data2text( $ruleRow['cabinet_name'] ).' ------ */ ?'.'>'."\n";
+			$src .= $this->src_standard_replacement( $tmpDOM[$ruleRow['index']]['innerHTML'] )."\n";
 			$src .= '<'.'?php $px->theme()->send_content(ob_get_clean(), '.t::data2text( $ruleRow['cabinet_name'] ).'); ?'.'>'."\n";
 			$src .= "\n";
 		}
 		return $src;
+	}
+
+	/**
+	 * ソースの標準置換処理
+	 */
+	private function src_standard_replacement( $src ){
+		$src = $this->dom_convert( $src );
+		$src = $this->replace_strings( $src );
+		return $src;
+	}
+
+	/**
+	 * 文字列置換を実行する。
+	 */
+	private function replace_strings( $str ){
+		$replaceRules = $this->obj_proj->get_replace_strings();
+		foreach( $replaceRules as $ruleRow ){
+			if( preg_match($ruleRow['preg_pattern'], $str) ){
+				$str = preg_replace($ruleRow['preg_pattern'], $ruleRow['replace_to'], $str);
+			}
+		}
+		return $str;
+	}
+
+	/**
+	 * DOM置換を実行する。
+	 */
+	private function dom_convert( $str ){
+		// [UTODO] 開発中
+		$replaceRules = $this->obj_proj->get_dom_convert();
+
+		return $str;
 	}
 
 }
