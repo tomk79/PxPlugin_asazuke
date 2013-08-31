@@ -68,8 +68,22 @@ class pxplugin_asazuke_operator_sitemap{
 	 */
 	private function get_page_logical_path($path, $fullpath_savetmpfile_to){
 		$domParser = $this->factory_dom_parser($fullpath_savetmpfile_to);
-		$breadcrumb = $domParser->find('.breadcrumb');
-		$domParser = $this->factory_dom_parser($breadcrumb[0]['innerHTML'], 'bin');
+
+		$breadcrumbSelector = $this->obj_proj->get_select_breadcrumb();
+		$breadcrumb = null;
+		foreach( $breadcrumbSelector as $selectorRow ){
+			$tmpDOM = $domParser->find($selectorRow['selector']);
+			if( is_null($tmpDOM[$selectorRow['index']]) ){
+				continue;
+			}
+			$breadcrumb = $tmpDOM[$selectorRow['index']]['innerHTML'];
+		}
+		if(!is_string($breadcrumb)){
+			// 設定されたリストでパンくずを発見できなかった場合。
+			return '';
+		}
+
+		$domParser = $this->factory_dom_parser($breadcrumb, 'bin');
 		$links = $domParser->find('a');
 		$paths = array();
 		foreach($links as $link){
