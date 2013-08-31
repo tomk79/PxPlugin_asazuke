@@ -65,7 +65,7 @@ class pxplugin_asazuke_crawlctrl{
 			return	$this->exit_process();
 		}
 		$path_sitemap_csv = realpath( $this->get_path_download_to() ).'/sitemaps/sitemap.csv';
-		$obj = new $className( $this->px, $path_sitemap_csv );
+		$obj = new $className( $this->px, $this->project_model, $path_sitemap_csv );
 		return	$obj;
 	}
 

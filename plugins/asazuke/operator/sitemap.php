@@ -7,13 +7,15 @@
 class pxplugin_asazuke_operator_sitemap{
 
 	private $px;
+	private $obj_proj;
 	private $path_sitemap_csv;
 
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct( $px, $path_sitemap_csv ){
+	public function __construct( $px, $obj_proj, $path_sitemap_csv ){
 		$this->px = $px;
+		$this->obj_proj = $obj_proj;
 		$this->path_sitemap_csv = $path_sitemap_csv;
 	}
 
@@ -50,7 +52,15 @@ class pxplugin_asazuke_operator_sitemap{
 	private function get_page_title($path){
 		$domParser = $this->factory_dom_parser($path);
 		$title = $domParser->find('title');
-		return htmlspecialchars_decode($title[0]['innerHTML']);
+		$title = htmlspecialchars_decode( $title[0]['innerHTML'] );
+		$title_replace_rules = $this->obj_proj->get_replace_title();
+		foreach( $title_replace_rules as $ruleRow ){
+			if( preg_match($ruleRow['preg_pattern'], $title) ){
+				$title = preg_replace($ruleRow['preg_pattern'], $ruleRow['replace_to'], $title);
+				break;
+			}
+		}
+		return $title;
 	}
 
 	/**

@@ -13,6 +13,14 @@ class pxplugin_asazuke_model_project{
 	private $info_path_docroot = null;
 	private $info_selector_contents_main = '#content';
 
+	private $info_select_cont_main = array();
+	private $info_select_cont_subs = array();
+	private $info_dom_convert = array();
+	private $info_select_breadcrumb = array();
+	private $info_replace_title = array();
+	private $info_replace_strings = array();
+
+
 	/**
 	 * コンストラクタ
 	 */
@@ -37,29 +45,29 @@ class pxplugin_asazuke_model_project{
 		return	$obj;
 	}
 
-	/**
-	 * 既存プロジェクトの一覧を開く
-	 */
-	public function get_project_list(){
-		// ※プロジェクトは単一とする方針としたので、このメソッドは常に単一の値を返します。
-		// 　将来的には不要なメソッドになります。
-		$dir = $this->pcconf->get_home_dir().'/proj';
+	// /**
+	//  * 既存プロジェクトの一覧を開く
+	//  */
+	// public function get_project_list(){
+	// 	// ※プロジェクトは単一とする方針としたので、このメソッドは常に単一の値を返します。
+	// 	// 　将来的には不要なメソッドになります。
+	// 	$dir = $this->pcconf->get_home_dir().'/proj';
 
-		$RTN = array();
+	// 	$RTN = array();
 
-		$project_ini = $this->load_ini( $dir.'/project.ini' );
-		$MEMO = array();
+	// 	$project_ini = $this->load_ini( $dir.'/project.ini' );
+	// 	$MEMO = array();
 
-		$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
-		$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
-		$MEMO['selector_contents_main'] = $project_ini['common']['selector_contents_main'];
+	// 	$MEMO['path_docroot'] = $project_ini['common']['path_docroot'];
+	// 	$MEMO['path_startpage'] = $project_ini['common']['path_startpage'];
+	// 	$MEMO['selector_contents_main'] = $project_ini['common']['selector_contents_main'];
 
 
-		array_push( $RTN , $MEMO );
-		unset( $MEMO );
+	// 	array_push( $RTN , $MEMO );
+	// 	unset( $MEMO );
 
-		return	$RTN;
-	}
+	// 	return	$RTN;
+	// }
 
 	/**
 	 * 既存のプロジェクト情報を開いて、メンバにセット。
@@ -79,8 +87,130 @@ class pxplugin_asazuke_model_project{
 
 		$this->px->dbh()->fclose( $path_project_dir.'/project.ini' );
 
+		#	select_cont_main
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/select_cont_main.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['selector'] = $csvRow[1];
+			$tmpAryRow['index'] = $csvRow[2];
+			array_push($tmpAry, $tmpAryRow);
+		}
+		$this->set_select_cont_main( $tmpAry );
+		unset($tmpAry);
+
+		#	select_cont_subs
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/select_cont_subs.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['selector'] = $csvRow[1];
+			$tmpAryRow['cavinet_name'] = $csvRow[2];
+			array_push($tmpAry, $tmpAryRow);
+		}
+
+		$this->set_select_cont_subs( $tmpAry );
+		unset($tmpAry);
+
+
+		#	dom_convert
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/dom_convert.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['selector'] = $csvRow[1];
+			$tmpAryRow['replace_to'] = $csvRow[2];
+			array_push($tmpAry, $tmpAryRow);
+		}
+
+		$this->set_dom_convert( $tmpAry );
+		unset($tmpAry);
+
+
+		#	select_breadcrumb
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/select_breadcrumb.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['selector'] = $csvRow[1];
+			$tmpAryRow['index'] = $csvRow[2];
+			array_push($tmpAry, $tmpAryRow);
+		}
+
+		$this->set_select_breadcrumb( $tmpAry );
+		unset($tmpAry);
+
+		#	replace_title
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/replace_title.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['preg_pattern'] = $csvRow[1];
+			$tmpAryRow['replace_to'] = $csvRow[2];
+			array_push($tmpAry, $tmpAryRow);
+		}
+
+		$this->set_replace_title( $tmpAry );
+		unset($tmpAry);
+
+		#	replace_strings
+		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/replace_strings.csv' );
+		$tmpAry = array();
+		foreach($csv as $csvRow){
+			$tmpAryRow = array();
+			$tmpAryRow['name'] = $csvRow[0];
+			$tmpAryRow['preg_pattern'] = $csvRow[1];
+			$tmpAryRow['replace_to'] = $csvRow[2];
+			array_push($tmpAry, $tmpAryRow);
+		}
+
+		$this->set_replace_strings( $tmpAry );
+		unset($tmpAry);
+
 		return	true;
 	}//load_project()
+
+	/**
+	 * メインコンテンツセレクタ設定を読み込む
+	 */
+	public function get_select_cont_main(){ return $this->info_select_cont_main; }
+	public function set_select_cont_main( $ary ){ $this->info_select_cont_main = $ary; return true; }
+
+	/**
+	 * サブコンテンツセレクタ設定を読み込む
+	 */
+	public function get_select_cont_subs(){ return $this->info_select_cont_subs; }
+	public function set_select_cont_subs( $ary ){ $this->info_select_cont_subs = $ary; return true; }
+
+	/**
+	 * DOM変換設定を読み込む
+	 */
+	public function get_dom_convert(){ return $this->info_dom_convert; }
+	public function set_dom_convert( $ary ){ $this->info_dom_convert = $ary; return true; }
+
+	/**
+	 * パンくず解析ルール設定を読み込む
+	 */
+	public function get_select_breadcrumb(){ return $this->info_select_breadcrumb; }
+	public function set_select_breadcrumb( $ary ){ $this->info_select_breadcrumb = $ary; return true; }
+
+	/**
+	 * タイトル置換ルール設定を読み込む
+	 */
+	public function get_replace_title(){ return $this->info_replace_title; }
+	public function set_replace_title( $ary ){ $this->info_replace_title = $ary; return true; }
+
+	/**
+	 * 文字列置換ルール設定を読み込む
+	 */
+	public function get_replace_strings(){ return $this->info_replace_strings; }
+	public function set_replace_strings( $ary ){ $this->info_replace_strings = $ary; return true; }
+
 
 	/**
 	 * プロジェクトの現在の状態を保存する
