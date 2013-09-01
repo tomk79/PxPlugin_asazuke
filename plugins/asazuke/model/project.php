@@ -144,6 +144,8 @@ class pxplugin_asazuke_model_project{
 			$tmpAryRow['replace_to'] = $csvRow[2];
 			array_push($tmpAry, $tmpAryRow);
 		}
+		$this->set_replace_strings( $tmpAry );
+		unset($tmpAry);
 
 		#	ignore_common_resources
 		$csv = $this->px->dbh()->read_csv_utf8( $path_project_dir.'/ignore_common_resources.csv' );

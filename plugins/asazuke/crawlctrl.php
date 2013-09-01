@@ -181,7 +181,6 @@ class pxplugin_asazuke_crawlctrl{
 
 
 		#	CSVの定義行を保存
-		#	UTODO: 要項目見直し
 		$this->save_executed_url_row(
 			array(
 				'url'=>'* path' ,
@@ -189,7 +188,8 @@ class pxplugin_asazuke_crawlctrl{
 				'title:replace_pattern'=>'タイトル置換パターン名' ,
 				'main_contents:pattern'=>'メインコンテンツ抽出パターン名' ,
 				'sub_contents:pattern'=>'サブコンテンツ抽出パターン名' ,
-				'replace_strings'=>'置換パターン名' ,
+				'replace_strings'=>'文字列置換パターン名' ,
+				'dom_convert'=>'DOM置換パターン名' ,
 				'time'=>'日時' ,
 			)
 		);
@@ -366,6 +366,7 @@ class pxplugin_asazuke_crawlctrl{
 						'main_contents:pattern'=>$result_cont['main_contents:pattern'] ,
 						'sub_contents:pattern'=>implode(', ', $result_cont['sub_contents:pattern']) ,
 						'replace_strings'=>implode(', ', $result_cont['replace_strings']) ,
+						'dom_convert'=>implode(', ', $result_cont['dom_convert']) ,
 						'time'=>date('Y/m/d H:i:s') ,
 					)
 				);

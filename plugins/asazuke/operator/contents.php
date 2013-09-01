@@ -11,6 +11,8 @@ class pxplugin_asazuke_operator_contents{
 	private $path = null;
 	private $report = array();
 
+	private $dom_convert_replace_template = null;
+
 	/**
 	 * コンストラクタ
 	 */
@@ -245,8 +247,35 @@ class pxplugin_asazuke_operator_contents{
 		// [UTODO] 開発中
 		$replaceRules = $this->obj_proj->get_dom_convert();
 
+		foreach( $replaceRules as $ruleRow ){
+			$domParser = $this->factory_dom_parser($str, 'bin');
+			// DOM変換
+			if( count( $domParser->find($ruleRow['selector']) ) ){
+				$domParser->select($ruleRow['selector']);
+				$this->dom_convert_replace_template = $ruleRow['replace_to'];
+				$domParser->replace( array( $this , 'callback_replace_dom_convert' ) );
+				$this->dom_convert_replace_template = null;
+				$str = $domParser->get_src();
+
+				// 報告
+				if( !is_array($this->report['dom_convert']) ){
+					$this->report['dom_convert'] = array();
+				}
+				array_push( $this->report['dom_convert'], $ruleRow['name'] );
+			}
+
+		}
+
 		return $str;
 	}
+	/**
+	 * callback: DOMを置き換える。
+	 */
+	public function callback_replace_dom_convert( $dom , $num ){
+		$template = $this->dom_convert_replace_template;
+		$template = preg_replace( '/'.preg_quote('{$innerHTML}','/').'/s', $dom['innerHTML'], $template );
+		return $template;
+	}//callback_replace_dom_convert()
 
 }
 
