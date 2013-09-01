@@ -44,6 +44,15 @@ class pxplugin_asazuke_operator_sitemap{
 	 * スクレイピングを実行する
 	 */
 	public function scrape($path, $fullpath_savetmpfile_to){
+		$ext = $this->px->dbh()->get_extension($path);
+		switch( strtolower($ext) ){
+			case 'html':
+				break;
+			default:
+				return true;
+				break;
+		}
+
 		$row_info = array();
 		$row_info['path'] = preg_replace('/\/index\.html$/s', '/', $path);
 		$row_info['title'] = $this->get_page_title($fullpath_savetmpfile_to);
@@ -125,7 +134,7 @@ class pxplugin_asazuke_operator_sitemap{
 				$href = $this->px->dbh()->get_realpath(dirname($path).'/'.$href);
 			}
 			$href = preg_replace('/\/index\.html((?:\?|\#).*)?$/', '/$1', $href);
-			if( $href == '/' ){
+			if( $href == $this->obj_proj->get_path_startpage() ){
 				// トップページは追加しない
 				continue;
 			}

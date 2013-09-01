@@ -46,6 +46,16 @@ class pxplugin_asazuke_operator_contents{
 	 */
 	public function scrape($path, $fullpath_savetmpfile_to , $fullpath_save_to){
 		$this->path = $path;
+		$ext = $this->px->dbh()->get_extension($this->path);
+		switch( strtolower($ext) ){
+			case 'html':
+				break;
+			default:
+				// HTML以外はコピーするだけ。
+				$this->px->dbh()->mkdir_all( dirname($fullpath_save_to) );
+				return $this->px->dbh()->copy( $fullpath_savetmpfile_to, $fullpath_save_to );
+				break;
+		}
 
 		$content_src = '';
 

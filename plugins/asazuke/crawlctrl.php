@@ -183,7 +183,8 @@ class pxplugin_asazuke_crawlctrl{
 		#	CSVの定義行を保存
 		$this->save_executed_url_row(
 			array(
-				'url'=>'* path' ,
+				'url'=>'Path' ,
+				'extension'=>'拡張子' ,
 				'title'=>'タイトル' ,
 				'title:replace_pattern'=>'タイトル置換パターン名' ,
 				'main_contents:pattern'=>'メインコンテンツ抽出パターン名' ,
@@ -361,6 +362,7 @@ class pxplugin_asazuke_crawlctrl{
 				$this->save_executed_url_row(
 					array(
 						'url'=>$url ,
+						'extension'=>$this->px->dbh()->get_extension($url) ,
 						'title'=>$result_sitemap['title'] ,
 						'title:replace_pattern'=>$result_sitemap['title:replace_pattern'] ,
 						'main_contents:pattern'=>$result_cont['main_contents:pattern'] ,
@@ -450,10 +452,17 @@ class pxplugin_asazuke_crawlctrl{
 				$this->scan_starting_files($project_model, $path.$base_name.'/');
 			}elseif( is_file( $path_base.$path.$base_name ) ){
 				$ext = $this->px->dbh()->get_extension( $path_base.$path.$base_name );
+				$target_path = '/'.$path.$base_name;
 				switch( strtolower($ext) ){
 					case 'html':
-						$target_path = '/'.$path.$base_name;
 						$target_path = preg_replace( '/\/index\.html$/s', '/', $target_path );
+						if( $this->add_target_path( $target_path ) ){
+							$this->msg( 'set ['.$target_path.'] as the Startpage.' );
+						}else{
+							$this->msg( 'FAILD to add ['.$target_path.'] as the Startpage.' );
+						}
+						break;
+					default:
 						if( $this->add_target_path( $target_path ) ){
 							$this->msg( 'set ['.$target_path.'] as the Startpage.' );
 						}else{
@@ -479,8 +488,9 @@ class pxplugin_asazuke_crawlctrl{
 		#--------------------------------------
 		#	要求を評価
 
-		if( !preg_match( '/^\/.+\.html$/' , $path ) ){ return false; }
+		if( !preg_match( '/^\//' , $path ) ){ return false; }
 			// 定形外のURLは省く
+#		if( !preg_match( '/\.html$/' , $path ) ){ return false; }
 			// ここで扱うのは、*.html のみ
 		if( is_array( $this->target_path_list[$path] ) ){ return false; }
 			// すでに予約済みだったら省く
