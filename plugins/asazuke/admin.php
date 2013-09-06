@@ -217,7 +217,7 @@ class pxplugin_asazuke_admin{
 
 		$RTN .= '</table>'."\n";
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_proj' ) ).'" method="post">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="プロジェクト情報を編集する" /></p>'."\n";
+		$RTN .= '	<p class="center"><input type="submit" value="基本情報を編集する" /></p>'."\n";
 		$RTN .= '</form>'."\n";
 
 		#======================================
@@ -226,14 +226,11 @@ class pxplugin_asazuke_admin{
 		$RTN .= '<div class="unit cols">'."\n";
 		$RTN .= '	<div class="cols-col cols-2of3"><div class="cols-pad">'."\n";
 
-		$RTN .= '<p>'."\n";
-		$RTN .= '	プロジェクトを実行します。設定を確認してください。<br />'."\n";
-		$RTN .= '</p>'."\n";
+		$RTN .= ''.$this->mk_hx( '書き出しを実行する' ).''."\n";
 
 		if( $this->px->dbh()->is_unix() ){
 			#--------------------------------------
 			#	UNIXの場合→コマンドラインでの実行方法を案内。
-			$RTN .= $this->mk_hx('このプログラムの実行')."\n";
 			$RTN .= '<p>'."\n";
 			$RTN .= '	この操作は、次のコマンドラインからも実行することができます。<br />'."\n";
 			$RTN .= '</p>'."\n";
@@ -243,19 +240,18 @@ class pxplugin_asazuke_admin{
 			$RTN .= ''."\n";
 
 			$RTN .= '<p>'."\n";
-			$RTN .= '	このコマンドを、ウェブから起動するには、次の「書き換えを実行する」ボタンをクリックします。<br />'."\n";
+			$RTN .= '	このコマンドを、ウェブから起動するには、次の「書き出しを実行する」ボタンをクリックします。<br />'."\n";
 			$RTN .= '</p>'."\n";
 		}else{
 			#--------------------------------------
 			#	Windowsの場合→コマンドラインで実行できない・・・。
-			$RTN .= $this->mk_hx('このプログラムの実行')."\n";
 			$RTN .= '<p>'."\n";
-			$RTN .= '	プログラムを実行するには、次の「書き換えを実行する」ボタンをクリックしてください。<br />'."\n";
+			$RTN .= '	書き出しを実行するには、次の「書き出しを実行する」ボタンをクリックしてください。<br />'."\n";
 			$RTN .= '</p>'."\n";
 		}
 
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':run' ) ).'" method="post" target="_blank">'."\n";
-		$RTN .= '	<p class="center"><input type="submit" value="書き換えを実行する" /></p>'."\n";
+		$RTN .= '	<p class="center"><input type="submit" value="書き出しを実行する" /></p>'."\n";
 		$RTN .= '</form>'."\n";
 
 
