@@ -178,6 +178,7 @@ class pxplugin_asazuke_crawlctrl{
 
 		// 対象のファイルをスキャンして、スクレイピング対象に追加
 		$this->scan_starting_files($project_model);
+		set_time_limit(30);
 
 
 		#	CSVの定義行を保存
@@ -266,6 +267,7 @@ class pxplugin_asazuke_crawlctrl{
 
 
 				// オリジナルを、一時ファイルにコピー
+				$this->msg( 'original file size : '.filesize($fullpath_from).' byte(s)' );
 				if( !$this->px->dbh()->copy( $fullpath_from, $fullpath_savetmpfile_to ) ){
 					$this->error_log( 'クロール対象のファイル ['.$url.'] を一時ファイルに保存できませんでした。' , __FILE__ , __LINE__ );
 					$program_model->crawl_error( 'FAILD to copy file to; ['.$fullpath_save_to.']' , $url , $fullpath_save_to );
@@ -447,6 +449,7 @@ class pxplugin_asazuke_crawlctrl{
 		// スキャン開始
 		$ls = $this->px->dbh()->ls( $path_base.$path );
 		foreach( $ls as $base_name ){
+			set_time_limit(30);
 			if( is_dir( $path_base.$path.$base_name ) ){
 				// 再帰処理
 				$this->scan_starting_files($project_model, $path.$base_name.'/');
@@ -472,6 +475,8 @@ class pxplugin_asazuke_crawlctrl{
 				}
 			}
 		}
+		set_time_limit(30);
+		return true;
 	}//scan_starting_files()
 
 
