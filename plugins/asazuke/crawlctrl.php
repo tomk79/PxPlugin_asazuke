@@ -126,6 +126,7 @@ class pxplugin_asazuke_crawlctrl{
 		$this->msg( 'Process ID ['.getmypid().']' );
 		$this->msg( 'Document root path => '.$project_model->get_path_docroot() );
 		$this->msg( 'Start page path => '.$project_model->get_path_startpage() );
+		$this->msg( 'Accept HTML file max size => '.$project_model->get_accept_html_file_max_size() );
 		$this->msg( 'crawl_max_url_number => '.$this->pcconf->get_value( 'crawl_max_url_number' ) );
 		if( !is_int( $this->pcconf->get_value( 'crawl_max_url_number' ) ) ){
 			$this->error_log( 'Config error: crawl_max_url_number is NOT a number.' , __FILE__ , __LINE__ );
@@ -185,6 +186,8 @@ class pxplugin_asazuke_crawlctrl{
 		$this->save_executed_url_row(
 			array(
 				'url'=>'Path' ,
+				'errors'=>'スクレイプエラー' ,
+				'original_filesize'=>'オリジナルファイルサイズ' ,
 				'extension'=>'拡張子' ,
 				'title'=>'タイトル' ,
 				'title:replace_pattern'=>'タイトル置換パターン名' ,
@@ -267,7 +270,8 @@ class pxplugin_asazuke_crawlctrl{
 
 
 				// オリジナルを、一時ファイルにコピー
-				$this->msg( 'original file size : '.filesize($fullpath_from).' byte(s)' );
+				$original_filesize = filesize($fullpath_from);
+				$this->msg( 'original file size : '.$original_filesize.' byte(s)' );
 				if( !$this->px->dbh()->copy( $fullpath_from, $fullpath_savetmpfile_to ) ){
 					$this->error_log( 'クロール対象のファイル ['.$url.'] を一時ファイルに保存できませんでした。' , __FILE__ , __LINE__ );
 					$program_model->crawl_error( 'FAILD to copy file to; ['.$fullpath_save_to.']' , $url , $fullpath_save_to );
@@ -364,6 +368,8 @@ class pxplugin_asazuke_crawlctrl{
 				$this->save_executed_url_row(
 					array(
 						'url'=>$url ,
+						'errors'=>$result_cont['errors'] ,
+						'original_filesize'=>$original_filesize ,
 						'extension'=>$this->px->dbh()->get_extension($url) ,
 						'title'=>$result_sitemap['title'] ,
 						'title:replace_pattern'=>$result_sitemap['title:replace_pattern'] ,

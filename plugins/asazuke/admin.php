@@ -173,6 +173,10 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>許容するオリジナルファイルの最大サイズ</div></th>'."\n";
+		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_accept_html_file_max_size() ).'</div></td>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>メインコンテンツエリアのセレクタ</div></th>'."\n";
 		ob_start();
 		test::var_dump( $project_model->get_select_cont_main() );
@@ -322,6 +326,7 @@ class pxplugin_asazuke_admin{
 			$project_model->load_project();
 			$this->px->req()->set_param( 'path_stargpage' , $project_model->get_path_startpage() );
 			$this->px->req()->set_param( 'path_docroot' , $project_model->get_path_docroot() );
+			$this->px->req()->set_param( 'accept_html_file_max_size' , $project_model->get_accept_html_file_max_size() );
 		}
 		return	$this->page_edit_proj_input( $error );
 	}
@@ -359,6 +364,15 @@ class pxplugin_asazuke_admin{
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>許容するオリジナルファイルの最大サイズ</div></th>'."\n";
+		$RTN .= '		<td style="width:70%;">'."\n";
+		$RTN .= '			<div><input type="text" name="accept_html_file_max_size" value="'.htmlspecialchars( $this->px->req()->get_param('accept_html_file_max_size') ).'" style="width:80%;" /></div>'."\n";
+		if( strlen( $error['accept_html_file_max_size'] ) ){
+			$RTN .= '			<div class="error">'.$error['accept_html_file_max_size'].'</div>'."\n";
+		}
+		$RTN .= '		</td>'."\n";
+		$RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
 		$RTN .= '	<div class="center"><input type="submit" value="確認する" /></div>'."\n";
 		$RTN .= '	<input type="hidden" name="mode" value="confirm" />'."\n";
@@ -389,6 +403,13 @@ class pxplugin_asazuke_admin{
 		$RTN .= '		<td style="width:70%;">'."\n";
 		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'</div>'."\n";
 		$HIDDEN .= '<input type="hidden" name="path_stargpage" value="'.htmlspecialchars( $this->px->req()->get_param('path_stargpage') ).'" />';
+		$RTN .= '		</td>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th style="width:30%;"><div>許容するオリジナルファイルの最大サイズ</div></th>'."\n";
+		$RTN .= '		<td style="width:70%;">'."\n";
+		$RTN .= '			<div>'.htmlspecialchars( $this->px->req()->get_param('accept_html_file_max_size') ).'</div>'."\n";
+		$HIDDEN .= '<input type="hidden" name="accept_html_file_max_size" value="'.htmlspecialchars( $this->px->req()->get_param('accept_html_file_max_size') ).'" />';
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '</table>'."\n";
@@ -452,6 +473,12 @@ class pxplugin_asazuke_admin{
 			$RTN['path_stargpage'] = 'スタートページのパスのファイルが存在しません。';
 		}
 
+		if( !strlen( $this->px->req()->get_param('accept_html_file_max_size') ) ){
+			// 省略可
+		}elseif( !preg_match('/^[1-9][0-9]*$/s', $this->px->req()->get_param('accept_html_file_max_size')) ){
+			$RTN['accept_html_file_max_size'] = '数値で指定してください。';
+		}
+
 		return	$RTN;
 	}
 	/**
@@ -466,6 +493,7 @@ class pxplugin_asazuke_admin{
 
 		$project_model->set_path_startpage( $this->px->req()->get_param('path_stargpage') );
 		$project_model->set_path_docroot( $this->px->req()->get_param('path_docroot') );
+		$project_model->set_accept_html_file_max_size( $this->px->req()->get_param('accept_html_file_max_size') );
 
 		#	出来上がったプロジェクトを保存
 		if( !$project_model->save_project() ){

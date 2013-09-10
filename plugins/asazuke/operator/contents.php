@@ -57,6 +57,13 @@ class pxplugin_asazuke_operator_contents{
 				break;
 		}
 
+		if( $this->obj_proj->get_accept_html_file_max_size() > 0 && filesize( $fullpath_savetmpfile_to ) > $this->obj_proj->get_accept_html_file_max_size() ){
+			// 設定より大きいファイルは、コピーするだけ。
+			$this->report['errors'] = '[error] file size '.filesize( $fullpath_savetmpfile_to ).' byte(s) is over accept_html_file_max_size '.$this->obj_proj->get_accept_html_file_max_size().' byte(s).';
+			$this->px->dbh()->mkdir_all( dirname($fullpath_save_to) );
+			return $this->px->dbh()->copy( $fullpath_savetmpfile_to, $fullpath_save_to );
+		}
+
 		$content_src = '';
 
 		// ヘッドセクションのソースを取得

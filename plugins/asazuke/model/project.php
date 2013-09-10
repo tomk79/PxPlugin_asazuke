@@ -11,6 +11,7 @@ class pxplugin_asazuke_model_project{
 
 	private $info_path_startpage = null;
 	private $info_path_docroot = null;
+	private $info_accept_html_file_max_size = 0;
 
 	private $info_select_cont_main = array();
 	private $info_select_cont_subs = array();
@@ -59,6 +60,7 @@ class pxplugin_asazuke_model_project{
 
 		$this->set_path_startpage( $project_ini['common']['path_startpage'] );
 		$this->set_path_docroot( $project_ini['common']['path_docroot'] );
+		$this->set_accept_html_file_max_size( $project_ini['common']['accept_html_file_max_size'] );
 
 		$this->px->dbh()->fclose( $path_project_dir.'/project.ini' );
 
@@ -243,6 +245,7 @@ class pxplugin_asazuke_model_project{
 
 		$project_ini_src .= 'path_startpage='.$this->get_path_startpage()."\n";
 		$project_ini_src .= 'path_docroot='.$this->get_path_docroot()."\n";
+		$project_ini_src .= 'accept_html_file_max_size='.$this->get_accept_html_file_max_size()."\n";
 
 		$project_ini_src .= ''."\n";
 
@@ -275,6 +278,17 @@ class pxplugin_asazuke_model_project{
 	}
 	public function get_path_docroot(){
 		return	$this->info_path_docroot;
+	}
+
+	/**
+	 * 許容するオリジナルファイルの最大サイズ の入出力
+	 */
+	public function set_accept_html_file_max_size( $accept_html_file_max_size ){
+		$this->info_accept_html_file_max_size = intval($accept_html_file_max_size);
+		return	true;
+	}
+	public function get_accept_html_file_max_size(){
+		return	$this->info_accept_html_file_max_size;
 	}
 
 

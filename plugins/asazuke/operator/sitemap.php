@@ -49,17 +49,28 @@ class pxplugin_asazuke_operator_sitemap{
 			case 'html':
 				break;
 			default:
+				// HTML以外はパースしない
 				return true;
 				break;
 		}
 
 		$row_info = array();
 		$row_info['path'] = preg_replace('/\/index\.html$/s', '/', $path);
-		$row_info['title'] = $this->get_page_title($fullpath_savetmpfile_to);
-		$row_info['keywords'] = $this->get_page_keywords($fullpath_savetmpfile_to);
-		$row_info['description'] = $this->get_page_description($fullpath_savetmpfile_to);
-		$row_info['logical_path'] = $this->get_page_logical_path($path, $fullpath_savetmpfile_to);
-		$row_info['list_flg'] = 1;
+		if( $this->obj_proj->get_accept_html_file_max_size() > 0 && filesize( $fullpath_savetmpfile_to ) > $this->obj_proj->get_accept_html_file_max_size() ){
+			// 設定より大きいファイルは、パースしない
+			$row_info['title'] = '[error] file size '.filesize( $fullpath_savetmpfile_to ).' byte(s) is over accept_html_file_max_size '.$this->obj_proj->get_accept_html_file_max_size().' byte(s).';
+			$row_info['keywords'] = '';
+			$row_info['description'] = '';
+			$row_info['logical_path'] = '';
+			$row_info['list_flg'] = 1;
+		}else{
+			// 小さいページは普通にパースする
+			$row_info['title'] = $this->get_page_title($fullpath_savetmpfile_to);
+			$row_info['keywords'] = $this->get_page_keywords($fullpath_savetmpfile_to);
+			$row_info['description'] = $this->get_page_description($fullpath_savetmpfile_to);
+			$row_info['logical_path'] = $this->get_page_logical_path($path, $fullpath_savetmpfile_to);
+			$row_info['list_flg'] = 1;
+		}
 
 		$this->report['title'] = $row_info['title'];
 
