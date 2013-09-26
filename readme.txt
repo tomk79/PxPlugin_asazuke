@@ -1,5 +1,5 @@
 /**
- * asazuke (PxPlugin)
+ * PxPlugin "asazuke"
  * @author Tomoya Koyanagi (@tomk79)
  ************************************** */
 
