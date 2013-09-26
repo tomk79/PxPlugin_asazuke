@@ -166,7 +166,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '<table class="def" style="width:100%;">'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>ドキュメントルートのパス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div style="overflow:auto; max-width:450px;">'.htmlspecialchars( $project_model->get_path_docroot() ).'</div></td>'."\n";
+		$RTN .= '		<td style="width:70%;"><div style="word-break:break-all;">'.htmlspecialchars( $project_model->get_path_docroot() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
