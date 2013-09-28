@@ -157,6 +157,8 @@ class pxplugin_asazuke_admin{
 		$project_model = $this->pcconf->factory_model_project();
 		$project_model->load_project();
 
+		$path_project_home_dir = $project_model->get_project_home_dir();
+
 		// $this->local_sitemap[ ':'.implode('.',$this->cmd) ] = array( 'title'=>'プロジェクト『'.htmlspecialchars( $project_model->get_project_name() ).'』の詳細情報' );
 
 		$RTN = '';
@@ -170,59 +172,170 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>スタートページのパス</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
+		$RTN .= '		<td style="width:70%;"><div style="word-break:break-all;">'.htmlspecialchars( $project_model->get_path_startpage() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
 		$RTN .= '	<tr>'."\n";
 		$RTN .= '		<th style="width:30%;"><div>許容するオリジナルファイルの最大サイズ</div></th>'."\n";
-		$RTN .= '		<td style="width:70%;"><div>'.htmlspecialchars( $project_model->get_accept_html_file_max_size() ).'</div></td>'."\n";
+		$RTN .= '		<td style="width:70%;"><div style="word-break:break-all;">'.htmlspecialchars( $project_model->get_accept_html_file_max_size() ).'</div></td>'."\n";
 		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>メインコンテンツエリアのセレクタ</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_select_cont_main() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>サブコンテンツエリアのセレクタ</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_select_cont_subs() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>DOM変換ルール</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_dom_convert() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>パンくずエリアセレクタ</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_select_breadcrumb() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>タイトルの置換ルール</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_replace_title() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>文字列置換ルール</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_replace_strings() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-		$RTN .= '	<tr>'."\n";
-		$RTN .= '		<th style="width:30%;"><div>除外共通リソース設定</div></th>'."\n";
-		ob_start();
-		test::var_dump( $project_model->get_ignore_common_resources() );
-		$RTN .= '		<td style="width:70%;"><div>'.( ob_get_clean() ).'</div></td>'."\n";
-		$RTN .= '	</tr>'."\n";
-
 		$RTN .= '</table>'."\n";
 		$RTN .= '<form action="'.htmlspecialchars( $this->href( ':edit_proj' ) ).'" method="post">'."\n";
 		$RTN .= '	<p class="center"><input type="submit" value="基本情報を編集する" /></p>'."\n";
 		$RTN .= '</form>'."\n";
+
+		$RTN .= ''.$this->mk_hx( 'メインコンテンツエリアのセレクタ' ).''."\n";
+		$list = $project_model->get_select_cont_main();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>selector</div></th>'."\n";
+		$RTN .= '		<th><div>index</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['index']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/select_cont_main.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= ''.$this->mk_hx( 'サブコンテンツエリアのセレクタ' ).''."\n";
+		$list = $project_model->get_select_cont_subs();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>selector</div></th>'."\n";
+		$RTN .= '		<th><div>index</div></th>'."\n";
+		$RTN .= '		<th><div>cabinet_name</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['index']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['cabinet_name']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/select_cont_subs.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= ''.$this->mk_hx( 'DOM変換ルール' ).''."\n";
+		$list = $project_model->get_dom_convert();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>selector</div></th>'."\n";
+		$RTN .= '		<th><div>replace_to</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['replace_to']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/dom_convert.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= ''.$this->mk_hx( 'パンくずエリアセレクタ' ).''."\n";
+		$list = $project_model->get_select_breadcrumb();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>selector</div></th>'."\n";
+		$RTN .= '		<th><div>index</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['index']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/select_breadcrumb.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= ''.$this->mk_hx( 'タイトルの置換ルール' ).''."\n";
+		$list = $project_model->get_replace_title();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>preg_pattern</div></th>'."\n";
+		$RTN .= '		<th><div>replace_to</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['preg_pattern']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['replace_to']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/replace_title.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= ''.$this->mk_hx( '文字列置換ルール' ).''."\n";
+		$list = $project_model->get_replace_strings();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>preg_pattern</div></th>'."\n";
+		$RTN .= '		<th><div>replace_to</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['preg_pattern']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['replace_to']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/replace_strings.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
+
+		$RTN .= ''.$this->mk_hx( '除外共通リソース設定' ).''."\n";
+		$list = $project_model->get_ignore_common_resources();
+		$RTN .= '<table class="def" style="width:100%;">'."\n";
+		$RTN .= '	<thead>'."\n";
+		$RTN .= '	<tr>'."\n";
+		$RTN .= '		<th><div>name</div></th>'."\n";
+		$RTN .= '		<th><div>path</div></th>'."\n";
+		$RTN .= '	</tr>'."\n";
+		$RTN .= '	</thead>'."\n";
+		foreach( $list as $row ){
+			$RTN .= '	<tr>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<td><div>'.t::h($row['path']).'</div></td>'."\n";
+			$RTN .= '	</tr>'."\n";
+		}
+		$RTN .= '</table>'."\n";
+		$RTN .= '<ul>'."\n";
+		$RTN .= '	<li style="word-break:break-all;">'.t::h( $path_project_home_dir.'/ignore_common_resources.csv' ).'</li>'."\n";
+		$RTN .= '</ul>'."\n";
 
 		#======================================
 		$program_model = $project_model->factory_program();
