@@ -195,7 +195,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['index']).'</div></td>'."\n";
 			$RTN .= '	</tr>'."\n";
@@ -218,7 +218,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['index']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['cabinet_name']).'</div></td>'."\n";
@@ -241,7 +241,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['replace_to']).'</div></td>'."\n";
 			$RTN .= '	</tr>'."\n";
@@ -263,7 +263,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['selector']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['index']).'</div></td>'."\n";
 			$RTN .= '	</tr>'."\n";
@@ -285,7 +285,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['preg_pattern']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['replace_to']).'</div></td>'."\n";
 			$RTN .= '	</tr>'."\n";
@@ -307,7 +307,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['preg_pattern']).'</div></td>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['replace_to']).'</div></td>'."\n";
 			$RTN .= '	</tr>'."\n";
@@ -328,7 +328,7 @@ class pxplugin_asazuke_admin{
 		$RTN .= '	</thead>'."\n";
 		foreach( $list as $row ){
 			$RTN .= '	<tr>'."\n";
-			$RTN .= '		<td><div>'.t::h($row['name']).'</div></td>'."\n";
+			$RTN .= '		<th><div>'.t::h($row['name']).'</div></th>'."\n";
 			$RTN .= '		<td><div>'.t::h($row['path']).'</div></td>'."\n";
 			$RTN .= '	</tr>'."\n";
 		}
@@ -419,7 +419,7 @@ class pxplugin_asazuke_admin{
 
 
 
-	###################################################################################################################
+	// ------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * 新規プロジェクト作成/編集
@@ -449,6 +449,8 @@ class pxplugin_asazuke_admin{
 	private function page_edit_proj_input( $error ){
 		$RTN = ''."\n";
 
+		$path_pxc_home_dir = $this->px->dbh()->get_realpath( $this->px->get_conf('paths.px_dir') ).'/_sys/ramdata/plugins/PicklesCrawler/proj/';
+
 		$RTN .= '<p>'."\n";
 		$RTN .= '	プロジェクトの情報を入力して、「確認する」ボタンをクリックしてください。<span class="must">必須</span>印の項目は必ず入力してください。<br />'."\n";
 		$RTN .= '</p>'."\n";
@@ -465,6 +467,34 @@ class pxplugin_asazuke_admin{
 		$RTN .= '			<div><input type="text" name="path_docroot" value="'.htmlspecialchars( $this->px->req()->get_param('path_docroot') ).'" style="width:80%;" /></div>'."\n";
 		if( strlen( $error['path_docroot'] ) ){
 			$RTN .= '			<div class="error">'.$error['path_docroot'].'</div>'."\n";
+		}
+		if( is_dir($path_pxc_home_dir) ){
+			$pxc_projList = $this->px->dbh()->ls($path_pxc_home_dir);
+			// test::var_dump($pxc_projList);
+			$RTN .= '		<p class="small">PicklesCrawler のプロジェクトから選択</p>'."\n";
+			$RTN .= '		<ul class="small">'."\n";
+			foreach( $pxc_projList as $pxc_project_id ){
+				$pxc_prgList = $this->px->dbh()->ls($path_pxc_home_dir.'/'.$pxc_project_id.'/prg/');
+				// test::var_dump($pxc_prgList);
+				foreach( $pxc_prgList as $pxc_prg_id ){
+					$tmp_path = $path_pxc_home_dir.$pxc_project_id.'/prg/'.$pxc_prg_id.'/dl/';
+					foreach( $this->px->dbh()->ls($tmp_path) as $basename ){
+						if( $basename == '__LOGS__' ){ continue; }
+						if( is_dir( $tmp_path.$basename.'/' ) ){
+							$tmp_path .= $basename.'/';
+							foreach( $this->px->dbh()->ls($tmp_path) as $basename ){
+								if( is_dir( $tmp_path.$basename.'/' ) ){
+									$tmp_path .= $basename.'/';
+									break;
+								}
+							}
+							break;
+						}
+					}
+					$RTN .= '			<li><a href="javascript:$(\'input[name=path_docroot]\').val('.t::h( t::data2jssrc( $tmp_path ) ).');">'.t::h( $pxc_project_id ).' / '.t::h( $pxc_prg_id ).'</a></li>'."\n";
+				}
+			}
+			$RTN .= '		</ul>'."\n";
 		}
 		$RTN .= '		</td>'."\n";
 		$RTN .= '	</tr>'."\n";
